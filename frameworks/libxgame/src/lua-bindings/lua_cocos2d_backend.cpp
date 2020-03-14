@@ -1235,6 +1235,9 @@ static int _cocos2d_backend_Device_newBuffer(lua_State *L)
     cocos2d::backend::Buffer *ret = (cocos2d::backend::Buffer *)self->newBuffer((size_t)arg1, (cocos2d::backend::BufferType)arg2, (cocos2d::backend::BufferUsage)arg3);
     int num_ret = olua_push_cppobj(L, ret, "ccb.Buffer");
 
+    // inject code after call
+    ret->autorelease();
+
     olua_endinvoke(L);
 
     return num_ret;
@@ -1251,6 +1254,9 @@ static int _cocos2d_backend_Device_newCommandBuffer(lua_State *L)
     // cocos2d::backend::CommandBuffer *newCommandBuffer()
     cocos2d::backend::CommandBuffer *ret = (cocos2d::backend::CommandBuffer *)self->newCommandBuffer();
     int num_ret = olua_push_cppobj(L, ret, "ccb.CommandBuffer");
+
+    // inject code after call
+    ret->autorelease();
 
     olua_endinvoke(L);
 
@@ -1273,6 +1279,9 @@ static int _cocos2d_backend_Device_newProgram(lua_State *L)
     cocos2d::backend::Program *ret = (cocos2d::backend::Program *)self->newProgram(arg1, arg2);
     int num_ret = olua_push_cppobj(L, ret, "ccb.Program");
 
+    // inject code after call
+    ret->autorelease();
+
     olua_endinvoke(L);
 
     return num_ret;
@@ -1289,6 +1298,9 @@ static int _cocos2d_backend_Device_newRenderPipeline(lua_State *L)
     // cocos2d::backend::RenderPipeline *newRenderPipeline()
     cocos2d::backend::RenderPipeline *ret = (cocos2d::backend::RenderPipeline *)self->newRenderPipeline();
     int num_ret = olua_push_cppobj(L, ret, "ccb.RenderPipeline");
+
+    // inject code after call
+    ret->autorelease();
 
     olua_endinvoke(L);
 
@@ -1308,6 +1320,9 @@ static int _cocos2d_backend_Device_newTexture(lua_State *L)
     // cocos2d::backend::TextureBackend *newTexture(const cocos2d::backend::TextureDescriptor &descriptor)
     cocos2d::backend::TextureBackend *ret = (cocos2d::backend::TextureBackend *)self->newTexture(arg1);
     int num_ret = olua_push_cppobj(L, ret, "ccb.TextureBackend");
+
+    // inject code after call
+    ret->autorelease();
 
     olua_endinvoke(L);
 
@@ -2074,6 +2089,24 @@ static int _cocos2d_backend_ProgramState_getVertexTextureInfos(lua_State *L)
     return num_ret;
 }
 
+static int _cocos2d_backend_ProgramState_new(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    cocos2d::backend::Program *arg1 = nullptr;       /** program */
+
+    olua_check_cppobj(L, 1, (void **)&arg1, "ccb.Program");
+
+    // ProgramState(cocos2d::backend::Program *program)
+    cocos2d::backend::ProgramState *ret = (cocos2d::backend::ProgramState *)new cocos2d::backend::ProgramState(arg1);
+    int num_ret = olua_push_cppobj(L, ret, "ccb.ProgramState");
+    olua_postnew(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
 static int _cocos2d_backend_ProgramState_setParameterAutoBinding(lua_State *L)
 {
     olua_startinvoke(L);
@@ -2180,6 +2213,7 @@ static int luaopen_cocos2d_backend_ProgramState(lua_State *L)
     oluacls_func(L, "getUniformLocation", _cocos2d_backend_ProgramState_getUniformLocation);
     oluacls_func(L, "getVertexLayout", _cocos2d_backend_ProgramState_getVertexLayout);
     oluacls_func(L, "getVertexTextureInfos", _cocos2d_backend_ProgramState_getVertexTextureInfos);
+    oluacls_func(L, "new", _cocos2d_backend_ProgramState_new);
     oluacls_func(L, "setParameterAutoBinding", _cocos2d_backend_ProgramState_setParameterAutoBinding);
     oluacls_func(L, "setTexture", _cocos2d_backend_ProgramState_setTexture);
     oluacls_func(L, "setTextureArray", _cocos2d_backend_ProgramState_setTextureArray);
