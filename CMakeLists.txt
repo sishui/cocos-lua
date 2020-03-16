@@ -40,6 +40,7 @@ option(CCLUA_BUILD_QRCODE "Build with qrcode support" ON)
 option(CCLUA_BUILD_FAIRYGUI "Build with fairygui support" ON)
 option(CCLUA_BUILD_DRAGONBONES "Build with dragonbones support" ON)
 option(CCLUA_BUILD_SWF "Build with swf support" OFF)
+option(CCLUA_FEATURE_MSAA "Support MASS" OFF)
 
 include(config.cmake)
 
@@ -188,7 +189,7 @@ if(CCLUA_BUILD_SWF)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/frameworks/libswf)
     set_target_properties(swf PROPERTIES FOLDER "Internal")
     target_link_libraries(${APP_NAME} swf)
-    target_compile_definitions(${APP_NAME} PUBLIC CCLUA_USE_SWF)
+    target_compile_definitions(${APP_NAME} PUBLIC CCLUA_BUILD_SWF)
 endif()
 
 target_link_libraries(${APP_NAME} cocos2d)
@@ -196,6 +197,11 @@ target_include_directories(${APP_NAME}
     PRIVATE ${RUNTIME_SRC_ROOT}/Classes
     PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 )
+
+# feature
+if(CCLUA_FEATURE_MSAA)
+    target_compile_definitions(${APP_NAME} PUBLIC CCLUA_FEATURE_MSAA)
+endif()
 
 # suspend warnings
 if(APPLE)

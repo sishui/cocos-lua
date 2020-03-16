@@ -508,24 +508,15 @@ void runtime::log(const char *fmt, ...)
 //
 // msaa antialias
 //
-void runtime::setAntialias(bool enabled)
+
+void runtime::setSampleCount(unsigned int samples)
 {
-    preferences::setBoolean(CONF_ANTIALIAS_ENABLED, enabled);
+    preferences::setInteger(CONF_ANTIALIAS_SAMPLES, samples > 0 ? samples : 1);
 }
 
-bool runtime::isAntialias()
+unsigned int runtime::getSampleCount()
 {
-    return preferences::getBoolean(CONF_ANTIALIAS_ENABLED, false);
-}
-
-void runtime::setNumSamples(unsigned int samples)
-{
-    preferences::setInteger(CONF_ANTIALIAS_SAMPLES, samples);
-}
-
-unsigned int runtime::getNumSamples()
-{
-    return (unsigned int)preferences::getInteger(CONF_ANTIALIAS_SAMPLES, 4);
+    return (unsigned int)preferences::getInteger(CONF_ANTIALIAS_SAMPLES, 1);
 }
 
 //
@@ -558,9 +549,9 @@ void runtime::initBugly(const char* appid)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     runtime::log("init bugly: appid=%s", appid);
-#ifdef CCLUA_USE_BUGLY
+#ifdef CCLUA_BUILD_BUGLY
     CrashReport::initCrashReport(appid, false, CrashReport::CRLogLevel::Verbose);
-#endif //CCLUA_USE_BUGLY
+#endif //CCLUA_BUILD_BUGLY
 
 #ifdef COCOS2D_DEBUG
     runtime::disableReport();
@@ -626,9 +617,7 @@ void RuntimeContext::initGLContextAttrs()
     // set OpenGL context attributes: red,green,blue,alpha,depth,stencil
     GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8, 0};
     
-    if (runtime::isAntialias()) {
-        glContextAttrs.multisamplingCount = runtime::getNumSamples();
-    }
+    glContextAttrs.multisamplingCount = runtime::getSampleCount();
     
     GLView::setGLContextAttrs(glContextAttrs);
 }
