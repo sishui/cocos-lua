@@ -60,7 +60,7 @@ static int _cocos2d_XMLHttpRequest_setResponseCallback(lua_State *L)
     std::string func = olua_setcallback(L, cb_store, "responseCallback", 2, OLUA_TAG_REPLACE);
     int ref = olua_ref(L, 1);
     lua_State *MT = olua_mainthread();
-    self->setResponseCallback([cb_store, func, ref, MT](cocos2d::XMLHttpRequest *request) {
+    self->setResponseCallback([cb_store, func, ref, MT] (cocos2d::XMLHttpRequest *request) mutable {
         lua_State *L = olua_mainthread();
         if (MT == L) {
             int top = lua_gettop(L);
@@ -68,7 +68,7 @@ static int _cocos2d_XMLHttpRequest_setResponseCallback(lua_State *L)
             olua_callback(L, cb_store, func.c_str(), 1);
             lua_settop(L, top);
             olua_unref(L, ref);
-            request->setResponseCallback(nullptr);
+            MT = nullptr;
         }
     });
     return 0;
