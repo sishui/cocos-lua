@@ -855,7 +855,7 @@ static int _fairygui_EventContext___gc(lua_State *L)
     auto self = (fairygui::EventContext *)olua_toobj(L, 1, "fgui.EventContext");
     lua_pushstring(L, ".ownership");
     olua_getvariable(L, 1);
-    if (lua_toboolean(L, -1) && self) {
+    if (lua_toboolean(L, -1)) {
         olua_setuserdata(L, 1, nullptr);
         delete self;
     }
@@ -1136,7 +1136,7 @@ static int _fairygui_PixelHitTest___gc(lua_State *L)
     auto self = (fairygui::PixelHitTest *)olua_toobj(L, 1, "fgui.PixelHitTest");
     lua_pushstring(L, ".ownership");
     olua_getvariable(L, 1);
-    if (lua_toboolean(L, -1) && self) {
+    if (lua_toboolean(L, -1)) {
         olua_setuserdata(L, 1, nullptr);
         delete self;
     }
@@ -1343,7 +1343,7 @@ static int _fairygui_PixelHitTestData___gc(lua_State *L)
     auto self = (fairygui::PixelHitTestData *)olua_toobj(L, 1, "fgui.PixelHitTestData");
     lua_pushstring(L, ".ownership");
     olua_getvariable(L, 1);
-    if (lua_toboolean(L, -1) && self) {
+    if (lua_toboolean(L, -1)) {
         olua_setuserdata(L, 1, nullptr);
         delete self;
     }
@@ -1542,7 +1542,7 @@ static int _fairygui_InputProcessor___gc(lua_State *L)
     auto self = (fairygui::InputProcessor *)olua_toobj(L, 1, "fgui.InputProcessor");
     lua_pushstring(L, ".ownership");
     olua_getvariable(L, 1);
-    if (lua_toboolean(L, -1) && self) {
+    if (lua_toboolean(L, -1)) {
         olua_setuserdata(L, 1, nullptr);
         delete self;
     }
@@ -1899,7 +1899,7 @@ static int _fairygui_InputEvent___gc(lua_State *L)
     auto self = (fairygui::InputEvent *)olua_toobj(L, 1, "fgui.InputEvent");
     lua_pushstring(L, ".ownership");
     olua_getvariable(L, 1);
-    if (lua_toboolean(L, -1) && self) {
+    if (lua_toboolean(L, -1)) {
         olua_setuserdata(L, 1, nullptr);
         delete self;
     }
@@ -2220,7 +2220,7 @@ static int _fairygui_TextFormat___gc(lua_State *L)
     auto self = (fairygui::TextFormat *)olua_toobj(L, 1, "fgui.TextFormat");
     lua_pushstring(L, ".ownership");
     olua_getvariable(L, 1);
-    if (lua_toboolean(L, -1) && self) {
+    if (lua_toboolean(L, -1)) {
         olua_setuserdata(L, 1, nullptr);
         delete self;
     }
@@ -17171,8 +17171,6 @@ static int luaopen_fairygui_GTextInput(lua_State *L)
     return 1;
 }
 
-static int _fairygui_PopupMenu_addItemAt(lua_State *L);
-
 static int _fairygui_PopupMenu___move(lua_State *L)
 {
     olua_startinvoke(L);
@@ -17189,48 +17187,112 @@ static int _fairygui_PopupMenu_addItem(lua_State *L)
 {
     olua_startinvoke(L);
 
-    fairygui::PopupMenu *self = (fairygui::PopupMenu *)olua_toobj(L, 1, "fgui.PopupMenu");
-    lua_pushinteger(L, self->getList()->numChildren());
-    lua_insert(L, -2);
+    fairygui::PopupMenu *self = nullptr;
+    std::string arg1;       /** caption */
+    std::function<void(fairygui::EventContext *)> arg2;       /** callback */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.PopupMenu");
+    olua_check_std_string(L, 2, &arg1);
+
+    // inject code before call
+    olua_push_cppobj<fairygui::GList>(L, self->getList());
+    int parent = lua_gettop(L);
+
+    void *callback_store_obj = (void *)olua_allocobjstub(L, "fgui.GButton");
+    std::string tag = makeListenerTag(L, fairygui::UIEventType::ClickMenu, 0);
+    std::string func = olua_setcallback(L, callback_store_obj, tag.c_str(), 3, OLUA_TAG_REPLACE);
+    lua_State *MT = olua_mainthread();
+    arg2 = [callback_store_obj, func, MT](fairygui::EventContext *arg1) {
+        lua_State *L = olua_mainthread();
+
+        if (MT == L) {
+            int top = lua_gettop(L);
+            size_t last = olua_push_objpool(L);
+            olua_enable_objpool(L);
+            olua_push_cppobj(L, arg1, "fgui.EventContext");
+            olua_disable_objpool(L);
+
+            olua_callback(L, callback_store_obj, func.c_str(), 1);
+
+            //pop stack value
+            olua_pop_objpool(L, last);
+            lua_settop(L, top);
+        }
+    };
+
+    // @addref(children | parent) fairygui::GButton *addItem(const std::string &caption, @local std::function<void (EventContext *)> callback)
+    fairygui::GButton *ret = (fairygui::GButton *)self->addItem(arg1, arg2);
+    const char *cls = olua_getluatype(L, ret, "fgui.GButton");
+    if (olua_pushobjstub(L, ret, callback_store_obj, cls) == OLUA_OBJ_EXIST) {
+        olua_removecallback(L, callback_store_obj, tag.c_str(), OLUA_TAG_SUBEQUAL);
+        lua_pushstring(L, func.c_str());
+        lua_pushvalue(L, 3);
+        olua_setvariable(L, -3);
+    } else {
+        olua_postpush(L, ret, OLUA_OBJ_NEW);
+    };
+
+    // inject code after call
+    olua_addref(L, parent, "children", -1, OLUA_MODE_MULTIPLE);
 
     olua_endinvoke(L);
 
-    return _fairygui_PopupMenu_addItemAt(L);
+    return 1;
 }
 
 static int _fairygui_PopupMenu_addItemAt(lua_State *L)
 {
     olua_startinvoke(L);
 
-    fairygui::PopupMenu *self = (fairygui::PopupMenu *)olua_toobj(L, 1, "fgui.PopupMenu");
-    std::string caption = olua_checkstring(L, 2);
-    int index = (int)olua_checkinteger(L, 3);
-    fairygui::GButton *ret = (fairygui::GButton *)self->addItemAt(caption, index, nullptr);
+    fairygui::PopupMenu *self = nullptr;
+    std::string arg1;       /** caption */
+    lua_Integer arg2 = 0;       /** index */
+    std::function<void(fairygui::EventContext *)> arg3;       /** callback */
 
-    void *callback_store_obj = (void *)ret;
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.PopupMenu");
+    olua_check_std_string(L, 2, &arg1);
+    olua_check_int(L, 3, &arg2);
+
+    // inject code before call
+    olua_push_cppobj<fairygui::GList>(L, self->getList());
+    int parent = lua_gettop(L);
+
+    void *callback_store_obj = (void *)olua_allocobjstub(L, "fgui.GButton");
     std::string tag = makeListenerTag(L, fairygui::UIEventType::ClickMenu, 0);
-    std::string func = olua_setcallback(L, callback_store_obj, tag.c_str(), 4, OLUA_TAG_NEW);
-    std::function<void(fairygui::EventContext *)> callback = [callback_store_obj, func, tag](fairygui::EventContext *event) {
+    std::string func = olua_setcallback(L, callback_store_obj, tag.c_str(), 4, OLUA_TAG_REPLACE);
+    lua_State *MT = olua_mainthread();
+    arg3 = [callback_store_obj, func, MT](fairygui::EventContext *arg1) {
         lua_State *L = olua_mainthread();
-        int top = lua_gettop(L);
-        size_t last = olua_push_objpool(L);
-        olua_enable_objpool(L);
-        olua_push_cppobj<fairygui::EventContext>(L, event);
-        olua_disable_objpool(L);
-        olua_callback(L, callback_store_obj, func.c_str(), 1);
 
-        //pop stack value
-        olua_pop_objpool(L, last);
+        if (MT == L) {
+            int top = lua_gettop(L);
+            size_t last = olua_push_objpool(L);
+            olua_enable_objpool(L);
+            olua_push_cppobj(L, arg1, "fgui.EventContext");
+            olua_disable_objpool(L);
 
-        lua_settop(L, top);
+            olua_callback(L, callback_store_obj, func.c_str(), 1);
+
+            //pop stack value
+            olua_pop_objpool(L, last);
+            lua_settop(L, top);
+        }
     };
 
-    ret->addEventListener(fairygui::UIEventType::ClickMenu, callback);
+    // @addref(children | parent) fairygui::GButton *addItemAt(const std::string &caption, int index, @local std::function<void (EventContext *)> callback)
+    fairygui::GButton *ret = (fairygui::GButton *)self->addItemAt(arg1, (int)arg2, arg3);
+    const char *cls = olua_getluatype(L, ret, "fgui.GButton");
+    if (olua_pushobjstub(L, ret, callback_store_obj, cls) == OLUA_OBJ_EXIST) {
+        olua_removecallback(L, callback_store_obj, tag.c_str(), OLUA_TAG_SUBEQUAL);
+        lua_pushstring(L, func.c_str());
+        lua_pushvalue(L, 4);
+        olua_setvariable(L, -3);
+    } else {
+        olua_postpush(L, ret, OLUA_OBJ_NEW);
+    };
 
-    olua_push_cppobj<fairygui::GButton>(L, ret);
-    olua_push_cppobj<fairygui::GComponent>(L, ret->getParent());
-    olua_addref(L, -1, "children", -2, OLUA_MODE_MULTIPLE);
-    lua_pop(L, 1);
+    // inject code after call
+    olua_addref(L, parent, "children", -1, OLUA_MODE_MULTIPLE);
 
     olua_endinvoke(L);
 
@@ -17693,7 +17755,7 @@ static int _fairygui_Relations___gc(lua_State *L)
     auto self = (fairygui::Relations *)olua_toobj(L, 1, "fgui.Relations");
     lua_pushstring(L, ".ownership");
     olua_getvariable(L, 1);
-    if (lua_toboolean(L, -1) && self) {
+    if (lua_toboolean(L, -1)) {
         olua_setuserdata(L, 1, nullptr);
         delete self;
     }
@@ -18022,7 +18084,7 @@ static int _fairygui_RelationItem___gc(lua_State *L)
     auto self = (fairygui::RelationItem *)olua_toobj(L, 1, "fgui.RelationItem");
     lua_pushstring(L, ".ownership");
     olua_getvariable(L, 1);
-    if (lua_toboolean(L, -1) && self) {
+    if (lua_toboolean(L, -1)) {
         olua_setuserdata(L, 1, nullptr);
         delete self;
     }
@@ -22476,7 +22538,7 @@ static int _fairygui_DragDropManager___gc(lua_State *L)
     auto self = (fairygui::DragDropManager *)olua_toobj(L, 1, "fgui.DragDropManager");
     lua_pushstring(L, ".ownership");
     olua_getvariable(L, 1);
-    if (lua_toboolean(L, -1) && self) {
+    if (lua_toboolean(L, -1)) {
         olua_setuserdata(L, 1, nullptr);
         delete self;
     }
@@ -22845,7 +22907,7 @@ static int _fairygui_GearBase___gc(lua_State *L)
     auto self = (fairygui::GearBase *)olua_toobj(L, 1, "fgui.GearBase");
     lua_pushstring(L, ".ownership");
     olua_getvariable(L, 1);
-    if (lua_toboolean(L, -1) && self) {
+    if (lua_toboolean(L, -1)) {
         olua_setuserdata(L, 1, nullptr);
         delete self;
     }
