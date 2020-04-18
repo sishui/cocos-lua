@@ -76,6 +76,7 @@ extern "C" {
 // object status
 #define OLUA_OBJ_EXIST  0
 #define OLUA_OBJ_NEW    1
+#define OLUA_OBJ_UPDATE 2
     
 #define OLUA_VOIDCLS "void *"
     
@@ -167,7 +168,7 @@ OLUA_API void olua_pop_objpool(lua_State *L, size_t level);
 #define OLUA_TAG_WHOLE        2 // compare whole tag string
 #define OLUA_TAG_SUBEQUAL     3 // compare substring after '@'
 #define OLUA_TAG_SUBSTARTWITH 4 // compare substring after '@'
-OLUA_API const char *olua_setcallback(lua_State *L, void *obj, const char *tag, int func, int tagmode);
+OLUA_API const char *olua_setcallback(lua_State *L, void *obj, const char *tag, int fidx, int tagmode);
 OLUA_API int olua_getcallback(lua_State *L, void *obj, const char *tag, int tagmode);
 OLUA_API void olua_removecallback(lua_State *L, void *obj, const char *tag, int tagmode);
 OLUA_API int olua_callback(lua_State *L, void *obj, const char *func, int argc);
