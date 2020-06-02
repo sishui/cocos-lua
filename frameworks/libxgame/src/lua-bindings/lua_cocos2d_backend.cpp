@@ -767,22 +767,22 @@ static int _cocos2d_backend_CommandBuffer_captureScreen(lua_State *L)
 
     olua_to_cppobj(L, 1, (void **)&self, "ccb.CommandBuffer");
 
-    void *callback_store_obj = (void *)self;
+    void *self_obj = (void *)self;
     std::string tag = "captureScreen";
-    std::string func = olua_setcallback(L, callback_store_obj, tag.c_str(), 2, OLUA_TAG_NEW);
-    lua_Unsigned ctx_id = olua_getid(L);
-    arg1 = [callback_store_obj, func, ctx_id](const unsigned char *arg1, int arg2, int arg3) {
+    std::string func = olua_setcallback(L, self_obj, tag.c_str(), 2, OLUA_TAG_NEW);
+    lua_Unsigned ctx = olua_context(L);
+    arg1 = [self_obj, func, ctx](const unsigned char *arg1, int arg2, int arg3) {
         lua_State *L = olua_mainthread(NULL);
 
-        if (L != NULL && (olua_getid(L) == ctx_id)) {
+        if (L != NULL && (olua_context(L) == ctx)) {
             int top = lua_gettop(L);
             olua_push_string(L, (const char *)arg1);
             olua_push_int(L, (lua_Integer)arg2);
             olua_push_int(L, (lua_Integer)arg3);
 
-            olua_callback(L, callback_store_obj, func.c_str(), 3);
+            olua_callback(L, self_obj, func.c_str(), 3);
 
-            olua_removecallback(L, callback_store_obj, func.c_str(), OLUA_TAG_WHOLE);
+            olua_removecallback(L, self_obj, func.c_str(), OLUA_TAG_WHOLE);
 
             lua_settop(L, top);
         }
@@ -1866,6 +1866,51 @@ static int luaopen_cocos2d_backend_ProgramCache(lua_State *L)
     return 1;
 }
 
+static inline void olua_check_value(lua_State *L, int idx, cocos2d::Vec2 *value)
+{
+    auto_olua_check_cocos2d_Vec2(L, idx, value);
+}
+
+static inline void olua_check_value(lua_State *L, int idx, cocos2d::Vec3 *value)
+{
+    auto_olua_check_cocos2d_Vec3(L, idx, value);
+}
+
+static inline void olua_check_value(lua_State *L, int idx, cocos2d::Vec4 *value)
+{
+    auto_olua_check_cocos2d_Vec4(L, idx, value);
+}
+
+static inline void olua_check_value(lua_State *L, int idx, cocos2d::Mat4 *value)
+{
+    manual_olua_check_cocos2d_Mat4(L, idx, value);
+}
+
+static inline void olua_check_value(lua_State *L, int idx, int *value)
+{
+    *value = (int)olua_checkinteger(L, idx);
+}
+
+static inline void olua_check_value(lua_State *L, int idx, float *value)
+{
+    *value = (float)olua_checknumber(L, idx);
+}
+
+template <typename T> int _cocos2d_backend_ProgramState_setUniform(lua_State *L)
+{
+    cocos2d::backend::UniformLocation location;
+    T value;
+    auto self = olua_toobj<cocos2d::backend::ProgramState>(L, 1);
+    if (olua_isstring(L, 2)) {
+        location = self->getUniformLocation(olua_checkstring(L, 2));
+    } else {
+        manual_olua_check_cocos2d_backend_UniformLocation(L, 2, &location);
+    }
+    olua_check_value(L, 3, &value);
+    self->setUniform(location, &value, sizeof(T));
+    return 0;
+}
+
 static int _cocos2d_backend_ProgramState___move(lua_State *L)
 {
     olua_startinvoke(L);
@@ -2202,6 +2247,72 @@ static int _cocos2d_backend_ProgramState_setUniform(lua_State *L)
     return 0;
 }
 
+static int _cocos2d_backend_ProgramState_setUniformFloat(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    _cocos2d_backend_ProgramState_setUniform<float>(L);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cocos2d_backend_ProgramState_setUniformInt(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    _cocos2d_backend_ProgramState_setUniform<int>(L);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cocos2d_backend_ProgramState_setUniformMat4(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    _cocos2d_backend_ProgramState_setUniform<cocos2d::Mat4>(L);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cocos2d_backend_ProgramState_setUniformVec2(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    _cocos2d_backend_ProgramState_setUniform<cocos2d::Vec2>(L);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cocos2d_backend_ProgramState_setUniformVec3(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    _cocos2d_backend_ProgramState_setUniform<cocos2d::Vec3>(L);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cocos2d_backend_ProgramState_setUniformVec4(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    _cocos2d_backend_ProgramState_setUniform<cocos2d::Vec4>(L);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
 static int luaopen_cocos2d_backend_ProgramState(lua_State *L)
 {
     oluacls_class(L, "ccb.ProgramState", "cc.Ref");
@@ -2218,6 +2329,12 @@ static int luaopen_cocos2d_backend_ProgramState(lua_State *L)
     oluacls_func(L, "setTexture", _cocos2d_backend_ProgramState_setTexture);
     oluacls_func(L, "setTextureArray", _cocos2d_backend_ProgramState_setTextureArray);
     oluacls_func(L, "setUniform", _cocos2d_backend_ProgramState_setUniform);
+    oluacls_func(L, "setUniformFloat", _cocos2d_backend_ProgramState_setUniformFloat);
+    oluacls_func(L, "setUniformInt", _cocos2d_backend_ProgramState_setUniformInt);
+    oluacls_func(L, "setUniformMat4", _cocos2d_backend_ProgramState_setUniformMat4);
+    oluacls_func(L, "setUniformVec2", _cocos2d_backend_ProgramState_setUniformVec2);
+    oluacls_func(L, "setUniformVec3", _cocos2d_backend_ProgramState_setUniformVec3);
+    oluacls_func(L, "setUniformVec4", _cocos2d_backend_ProgramState_setUniformVec4);
     oluacls_prop(L, "fragmentTextureInfos", _cocos2d_backend_ProgramState_getFragmentTextureInfos, nullptr);
     oluacls_prop(L, "program", _cocos2d_backend_ProgramState_getProgram, nullptr);
     oluacls_prop(L, "vertexTextureInfos", _cocos2d_backend_ProgramState_getVertexTextureInfos, nullptr);
@@ -2622,22 +2739,22 @@ static int _cocos2d_backend_TextureBackend_getBytes(lua_State *L)
     olua_check_uint(L, 5, &arg4);
     olua_check_bool(L, 6, &arg5);
 
-    void *callback_store_obj = (void *)self;
+    void *self_obj = (void *)self;
     std::string tag = "Bytes";
-    std::string func = olua_setcallback(L, callback_store_obj, tag.c_str(), 7, OLUA_TAG_NEW);
-    lua_Unsigned ctx_id = olua_getid(L);
-    arg6 = [callback_store_obj, func, ctx_id](const unsigned char *arg1, std::size_t arg2, std::size_t arg3) {
+    std::string func = olua_setcallback(L, self_obj, tag.c_str(), 7, OLUA_TAG_NEW);
+    lua_Unsigned ctx = olua_context(L);
+    arg6 = [self_obj, func, ctx](const unsigned char *arg1, std::size_t arg2, std::size_t arg3) {
         lua_State *L = olua_mainthread(NULL);
 
-        if (L != NULL && (olua_getid(L) == ctx_id)) {
+        if (L != NULL && (olua_context(L) == ctx)) {
             int top = lua_gettop(L);
             olua_push_string(L, (const char *)arg1);
             olua_push_uint(L, (lua_Unsigned)arg2);
             olua_push_uint(L, (lua_Unsigned)arg3);
 
-            olua_callback(L, callback_store_obj, func.c_str(), 3);
+            olua_callback(L, self_obj, func.c_str(), 3);
 
-            olua_removecallback(L, callback_store_obj, func.c_str(), OLUA_TAG_WHOLE);
+            olua_removecallback(L, self_obj, func.c_str(), OLUA_TAG_WHOLE);
 
             lua_settop(L, top);
         }
