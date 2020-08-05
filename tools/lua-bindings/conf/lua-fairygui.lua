@@ -12,6 +12,7 @@ M.INCLUDES = [[
 #include "lua-bindings/lua_conv_manual.h"
 #include "xgame/xlua.h"
 #include "FairyGUI.h"
+#include "GLoader3D.h"
 #include "tween/EaseManager.h"
 #include "tween/GPath.h"
 #include "display/FUISprite.h"
@@ -20,7 +21,7 @@ M.INCLUDES = [[
 M.CHUNK = [[
 bool manual_olua_is_fairygui_EventTag(lua_State *L, int idx)
 {
-    return olua_isinteger(L, idx) || olua_isa(L, idx, OLUA_VOIDCLS);
+    return olua_isinteger(L, idx) || olua_isa<void>(L, idx);
 }
 
 void manual_olua_check_fairygui_EventTag(lua_State *L, int idx, fairygui::EventTag *value)
@@ -31,7 +32,7 @@ void manual_olua_check_fairygui_EventTag(lua_State *L, int idx, fairygui::EventT
     if (olua_isinteger(L, idx)) {
         *value = (int)olua_tointeger(L, idx);
     } else {
-        *value = (void *)olua_checkobj(L, idx, OLUA_VOIDCLS);
+        *value = olua_checkobj<void>(L, idx);
     }
 }]]
 
@@ -67,7 +68,7 @@ static std::string makeListenerTag(lua_State *L, lua_Integer type, int tagidx)
         if (olua_isinteger(L, tagidx)) {
             tag = (intptr_t)olua_tointeger(L, tagidx);
         } else {
-            tag = (intptr_t)olua_checkobj(L, tagidx, OLUA_VOIDCLS);
+            tag = (intptr_t)olua_checkobj<void>(L, tagidx);
         }
     }
     if (type < 0) {
@@ -108,8 +109,8 @@ typeconf 'fairygui::InputEvent'
 local TextFormat = typeconf 'fairygui::TextFormat'
 TextFormat.FUNC('setFormat', [[
 {
-    fairygui::TextFormat *self = (fairygui::TextFormat *)olua_toobj(L, 1, "fgui.TextFormat");
-    fairygui::TextFormat *fmt = (fairygui::TextFormat *)olua_checkobj(L, 2, "fgui.TextFormat");
+    fairygui::TextFormat *self = olua_toobj<fairygui::TextFormat>(L, 1);
+    fairygui::TextFormat *fmt = olua_checkobj<fairygui::TextFormat>(L, 2);
     self->setFormat(*fmt);
     return 0;
 }]])
@@ -129,8 +130,8 @@ local GTween = typeconf 'fairygui::GTween'
 GTween.CHUNK = [[
 static bool should_del_tweener_ref(lua_State *L, int idx)
 {
-    if (olua_isa(L, idx, "fgui.GTweener")) {
-        fairygui::GTweener *obj = (fairygui::GTweener *)olua_toobj(L, idx, "fgui.GTweener");
+    if (olua_isa<fairygui::GTweener>(L, idx)) {
+        fairygui::GTweener *obj = olua_toobj<fairygui::GTweener>(L, idx);
         if (obj->getReferenceCount() == 1 || obj->allCompleted()) {
             return true;
         }
@@ -139,14 +140,14 @@ static bool should_del_tweener_ref(lua_State *L, int idx)
 }]]
 local DELREF_TWEEN = {
     AFTER = [[
-        olua_pushclassobj(L, "fgui.GTween");
+        olua_pushclassobj<fairygui::GTween>(L);
         olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
         lua_pop(L, 1);
     ]]
 }
 local REF_TEWEENER = {
     AFTER = [[
-        olua_pushclassobj(L, "fgui.GTween");
+        olua_pushclassobj<fairygui::GTween>(L);
         olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
         olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
         lua_pop(L, 1);
@@ -159,8 +160,9 @@ GTween.INJECT('shake', REF_TEWEENER)
 GTween.INJECT('kill', DELREF_TWEEN)
 GTween.INJECT('clean', {
     AFTER = [[
-        olua_pushclassobj(L, "fgui.GTween");
-        olua_delallrefs(L, 1, "tweeners");
+        olua_pushclassobj<fairygui::GTween>(L);
+        olua_delallrefs(L, -1, "tweeners");
+        lua_pop(L, 1);
     ]]
 })
 
@@ -205,7 +207,7 @@ GObject.PROP('relations', 'Relations* relations()')
 GObject.PROP('displayObject', 'cocos2d::Node* displayObject()')
 GObject.FUNC('getDragBounds', [[
 {
-    fairygui::GObject *self = (fairygui::GObject *)olua_toobj(L, 1, "fgui.GObject");
+    fairygui::GObject *self = olua_toobj<fairygui::GObject>(L, 1);
     cocos2d::Rect *rect = self->getDragBounds();
     manual_olua_push_cocos2d_Rect(L, rect);
     return 1;
@@ -239,6 +241,13 @@ GObject.INJECT('makeFullScreen', {
 })
 
 local GComponent = typeconf 'fairygui::GComponent'
+GComponent.CHUNK = [[
+static int _fairygui_GComponent_getController(lua_State *L);
+static int _fairygui_GComponent_getTransition(lua_State *L);
+static int _fairygui_GComponent_getChild(lua_State *L);
+]]
+GComponent.EXCLUDE 'getChildByPath'
+GComponent.ALIAS('resolve', 'getChildByPath')
 GComponent.ATTR('addChild', {ARG1 = '@addref(children |)'})
 GComponent.ATTR('addChildAt', {ARG1 = '@addref(children |)'})
 GComponent.ATTR('removeChild', {ARG1 = '@delref(children |)'})
@@ -266,44 +275,33 @@ GComponent.FUNC('resolve', [[
     const char *name = olua_checkstring(L, 2);
     char type = '.';
     while (true) {
-        const char *pos = strchr(name, '.');
-        if (!pos) {
-            pos = strchr(name, '#');
-            type = pos ? '#' : type;
-        }
-        if (!pos) {
-            pos = strchr(name, '~');
-            type = pos ? '~' : type;
-        }
-        if (pos == name) {
-            pos = nullptr;
+        const char *sep = strpbrk(name, ".~#");
+        if (sep == name) {
+            type = *sep;
             ++name;
+            continue;
         }
-        if (pos) {
-            lua_pushcfunction(L, _fairygui_GComponent_getChild);
-            olua_push_cppobj<fairygui::GComponent>(L, self);
-            lua_pushlstring(L, name, pos - name);
-            lua_call(L, 2, 1);
-
-            if (olua_isa(L, -1, "fgui.GComponent")) {
-                self = olua_toobj<fairygui::GComponent>(L, -1);
-            } else {
-                return 0;
-            }
-            name = pos + 1;
+        if (!sep) {
+            sep = name + strlen(name);
+        }
+        if (type == '#') {
+            lua_pushcfunction(L, _fairygui_GComponent_getController);
+        } else if (type == '~') {
+            lua_pushcfunction(L, _fairygui_GComponent_getTransition);
         } else {
-            if (type == '#') {
-                lua_pushcfunction(L, _fairygui_GComponent_getController);
-            } else if (type == '~') {
-                lua_pushcfunction(L, _fairygui_GComponent_getTransition);
-            } else {
-                lua_pushcfunction(L, _fairygui_GComponent_getChild);
-            }
-
-            olua_push_cppobj<fairygui::GComponent>(L, self);
-            lua_pushstring(L, name);
-            lua_call(L, 2, 1);
+            lua_pushcfunction(L, _fairygui_GComponent_getChild);
+        }
+        olua_push_cppobj<fairygui::GComponent>(L, self);
+        lua_pushlstring(L, name, sep - name);
+        lua_call(L, 2, 1);
+        
+        if (type != '.' || *sep == '\0') {
             return 1;
+        } else if (olua_isa<fairygui::GComponent>(L, -1)) {
+            self = olua_toobj<fairygui::GComponent>(L, -1);
+            name = sep;
+        } else {
+            return 0;
         }
     }
     return 0;
@@ -323,7 +321,7 @@ GRoot.ATTR('getInputProcessor', {RET = '@addref(inputProcessor ^)'})
 GRoot.PROP('UIRoot', 'static GRoot* getInstance()')
 GRoot.INJECT('create', {
     AFTER = [[
-        olua_push_cppobj<cocos2d::Node>(L, ret->displayObject(), "cc.Node");
+        olua_push_cppobj<cocos2d::Node>(L, ret->displayObject());
         olua_addref(L, -1, "fgui.root", -2, OLUA_MODE_SINGLE);
         olua_addref(L, 1, "children", -1, OLUA_MODE_MULTIPLE);
         lua_pop(L, 1);
@@ -334,7 +332,7 @@ GRoot.INJECT({'hideWindow', 'hideWindowImmediately'}, {
     BEFORE = [[
         int parent = 1;
         if (arg1->getParent()) {
-            olua_push_cppobj<fairygui::GComponent>(L, arg1->getParent(), "fgui.GComponent");
+            olua_push_cppobj<fairygui::GComponent>(L, arg1->getParent());
             parent = lua_gettop(L);
         }
     ]]
@@ -343,20 +341,24 @@ GRoot.INJECT({'hideWindow', 'hideWindowImmediately'}, {
 typeconf 'fairygui::GGroup'
 typeconf 'fairygui::GScrollBar'
 
-local GLoader = typeconf 'fairygui::GLoader'
-GLoader.ATTR('getComponent', {RET = '@addref(component ^)'})
+typeconf 'fairygui::GLoader'
+    .ATTR('getComponent', {RET = '@addref(component ^)'})
+
+typeconf 'fairygui::GLoader3D'
+    .ATTR('getContent', {RET = '@addref(content ^)'})
+    .ATTR('setContent', {ARG1 = '@addref(content ^)'})
 
 local GTextField = typeconf 'fairygui::GTextField'
 GTextField.FUNC('getTemplateVars', [[
 {
-    fairygui::GTextField *self = (fairygui::GTextField *)olua_toobj(L, 1, "fgui.GTextField");
+    fairygui::GTextField *self = olua_toobj<fairygui::GTextField>(L, 1);
     manual_olua_push_cocos2d_ValueMap(L, self->getTemplateVars());
     return 1;
 }]])
 GTextField.FUNC('setTemplateVars', [[
 {
     cocos2d::ValueMap arg;
-    fairygui::GTextField *self = (fairygui::GTextField *)olua_toobj(L, 1, "fgui.GTextField");
+    fairygui::GTextField *self = olua_toobj<fairygui::GTextField>(L, 1);
     manual_olua_check_cocos2d_ValueMap(L, 2, &arg);
     self->setTemplateVars(&arg);
     return 1;
@@ -440,7 +442,7 @@ PopupMenu.INJECT('show', {
     BEFORE = [[
         fairygui::GRoot *root = fairygui::UIRoot;
         if (lua_gettop(L) > 1) {
-            fairygui::GObject *target = (fairygui::GObject *)olua_checkobj(L, 2, "fgui.GObject");
+            fairygui::GObject *target = olua_checkobj<fairygui::GObject>(L, 2);
             root = target->getRoot();
         }
         if (!root) {
@@ -464,8 +466,8 @@ PopupMenu.INJECT({'removeItem', 'clearItems', 'addItem', 'addItemAt'}, {
 local Relations = typeconf 'fairygui::Relations'
 Relations.FUNC('copyFrom', [[
 {
-    fairygui::Relations *self = (fairygui::Relations *)olua_toobj(L, 1, "fgui.Relations");
-    fairygui::Relations *source = (fairygui::Relations *)olua_checkobj(L, 2, "fgui.Relations");
+    fairygui::Relations *self = olua_toobj<fairygui::Relations>(L, 1);
+    fairygui::Relations *source = olua_checkobj<fairygui::Relations>(L, 2);
     // void copyFrom(const Relations& source)
     self->copyFrom(*source);
 
@@ -479,8 +481,8 @@ RelationItem.ATTR('getTarget', {RET = '@addref(target ^)'})
 RelationItem.ATTR('setTarget', {ARG1 = '@addref(target ^)'})
 RelationItem.FUNC('copyFrom', [[
 {
-    fairygui::RelationItem *self = (fairygui::RelationItem *)olua_toobj(L, 1, "fgui.RelationItem");
-    fairygui::RelationItem *source = (fairygui::RelationItem *)olua_checkobj(L, 2, "fgui.RelationItem");
+    fairygui::RelationItem *self = olua_toobj<fairygui::RelationItem>(L, 1);
+    fairygui::RelationItem *source = olua_checkobj<fairygui::RelationItem>(L, 2);
     // void copyFrom(const RelationItem& source)
     self->copyFrom(*source);
 

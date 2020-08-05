@@ -38,13 +38,7 @@ static std::string _timestamp;
 static FILE *_logFile = NULL;
 static std::mutex _logMutex;
 static std::string _logPath;
-static std::string _logCache;
 static std::string _workdir;
-
-#ifdef CCLUA_BUILD_BUGLY
-static std::deque<std::string> _logBugly;
-#endif
-
 static bool _reportError = true;
 
 void runtime::parseLaunchArgs(int argc, char *argv[])
@@ -458,6 +452,28 @@ bool runtime::canOpenURL(const std::string &uri)
     return __runtime_canOpenURL(uri);
 }
 
+void runtime::callref(int func, const std::string &args, bool once)
+{
+    if (!xgame::runtime::isRestarting()) {
+        runtime::runOnCocosThread([func, args, once]() {
+            lua_State *L = olua_mainthread(NULL);
+            int top = lua_gettop(L);
+            olua_geterrorfunc(L);
+            olua_getref(L, func);
+            if (!lua_isnil(L, -1)) {
+                lua_pushstring(L, args.c_str());
+                lua_pcall(L, 1, 0, top + 1);
+            } else {
+                xgame::runtime::log("attempt to call nil: %d %s", func, args.c_str());
+            }
+            if (once) {
+                olua_unref(L, func);
+            }
+            lua_settop(L, top);
+        });
+    }
+}
+
 //
 // log
 //
@@ -495,17 +511,18 @@ const std::string runtime::getLogPath()
 
 void _writeLogToFile(const char *error)
 {
+    static std::string cache;
     if (_logFile) {
-        if (_logCache.size() > 0) {
-            fwrite(_logCache.c_str(), sizeof(char), (size_t)_logCache.size(), _logFile);
-            _logCache.clear();
+        if (cache.size() > 0) {
+            fwrite(cache.c_str(), sizeof(char), (size_t)cache.size(), _logFile);
+            cache.clear();
         }
         fwrite(error, sizeof(char), strlen(error), _logFile);
         fwrite("\n", 1, 1, _logFile);
         fflush(_logFile);
     } else {
-        _logCache.append(error);
-        _logCache.append("\n");
+        cache.append(error);
+        cache.append("\n");
     }
 }
 
@@ -532,11 +549,19 @@ void runtime::log(const char *fmt, ...)
     
     va_end(args);
     
-#ifdef CCLUA_BUILD_BUGLY
-    if (_logBugly.size() >= 200) {
-        _logBugly.pop_front();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    if (_reportError) {
+        static std::thread::id unknow;
+        const std::thread::id &current = Director::getInstance()->getCocos2dThreadId();
+        if (current == unknow || current == std::this_thread::get_id()) {
+            CrashReport::log(CrashReport::Verbose, _logBuf);
+        } else {
+            std::string msg = _logBuf;
+            runtime::runOnCocosThread([msg]() {
+                CrashReport::log(CrashReport::Verbose, msg.c_str());
+            });
+        }
     }
-    _logBugly.push_back(_logBuf);
 #endif
 
 #ifdef COCOS2D_DEBUG
@@ -588,7 +613,7 @@ void runtime::initBugly(const char* appid)
 {
 #ifdef CCLUA_BUILD_BUGLY
     runtime::log("init bugly: appid=%s", appid);
-    CrashReport::initCrashReport(appid, false, CrashReport::CRLogLevel::Verbose);
+    CrashReport::init(appid);
 #endif //CCLUA_BUILD_BUGLY
 
 #ifdef COCOS2D_DEBUG
@@ -605,15 +630,11 @@ void runtime::reportError(const char *err, const char *traceback)
 {
 #if CCLUA_BUILD_BUGLY
     if (_reportError) {
-        for (auto &msg : _logBugly) {
-            CrashReport::log(CrashReport::CRLogLevel::Verbose, "bugly", msg.c_str());
-        }
-        _logBugly.clear();
         std::string errmsg;
         errmsg.append(err).append(traceback);
         if (_tracebackCaches.find(errmsg) == _tracebackCaches.end()) {
             _tracebackCaches[errmsg] = true;
-            CrashReport::reportException(CATEGORY_LUA_EXCEPTION, "", err, traceback);
+            CrashReport::reportException(err, traceback);
         }
     }
 #endif

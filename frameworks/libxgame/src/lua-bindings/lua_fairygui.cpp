@@ -6,13 +6,14 @@
 #include "lua-bindings/lua_conv_manual.h"
 #include "xgame/xlua.h"
 #include "FairyGUI.h"
+#include "GLoader3D.h"
 #include "tween/EaseManager.h"
 #include "tween/GPath.h"
 #include "display/FUISprite.h"
 
 bool manual_olua_is_fairygui_EventTag(lua_State *L, int idx)
 {
-    return olua_isinteger(L, idx) || olua_isa(L, idx, OLUA_VOIDCLS);
+    return olua_isinteger(L, idx) || olua_isa<void>(L, idx);
 }
 
 void manual_olua_check_fairygui_EventTag(lua_State *L, int idx, fairygui::EventTag *value)
@@ -23,7 +24,7 @@ void manual_olua_check_fairygui_EventTag(lua_State *L, int idx, fairygui::EventT
     if (olua_isinteger(L, idx)) {
         *value = (int)olua_tointeger(L, idx);
     } else {
-        *value = (void *)olua_checkobj(L, idx, OLUA_VOIDCLS);
+        *value = olua_checkobj<void>(L, idx);
     }
 }
 
@@ -327,7 +328,7 @@ static std::string makeListenerTag(lua_State *L, lua_Integer type, int tagidx)
         if (olua_isinteger(L, tagidx)) {
             tag = (intptr_t)olua_tointeger(L, tagidx);
         } else {
-            tag = (intptr_t)olua_checkobj(L, tagidx, OLUA_VOIDCLS);
+            tag = (intptr_t)olua_checkobj<void>(L, tagidx);
         }
     }
     if (type < 0) {
@@ -2315,8 +2316,8 @@ static int _fairygui_TextFormat_setFormat(lua_State *L)
 {
     olua_startinvoke(L);
 
-    fairygui::TextFormat *self = (fairygui::TextFormat *)olua_toobj(L, 1, "fgui.TextFormat");
-    fairygui::TextFormat *fmt = (fairygui::TextFormat *)olua_checkobj(L, 2, "fgui.TextFormat");
+    fairygui::TextFormat *self = olua_toobj<fairygui::TextFormat>(L, 1);
+    fairygui::TextFormat *fmt = olua_checkobj<fairygui::TextFormat>(L, 2);
     self->setFormat(*fmt);
 
     olua_endinvoke(L);
@@ -4008,8 +4009,8 @@ static int luaopen_fairygui_GTweener(lua_State *L)
 
 static bool should_del_tweener_ref(lua_State *L, int idx)
 {
-    if (olua_isa(L, idx, "fgui.GTweener")) {
-        fairygui::GTweener *obj = (fairygui::GTweener *)olua_toobj(L, idx, "fgui.GTweener");
+    if (olua_isa<fairygui::GTweener>(L, idx)) {
+        fairygui::GTweener *obj = olua_toobj<fairygui::GTweener>(L, idx);
         if (obj->getReferenceCount() == 1 || obj->allCompleted()) {
             return true;
         }
@@ -4037,8 +4038,9 @@ static int _fairygui_GTween_clean(lua_State *L)
     fairygui::GTween::clean();
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
-    olua_delallrefs(L, 1, "tweeners");
+    olua_pushclassobj<fairygui::GTween>(L);
+    olua_delallrefs(L, -1, "tweeners");
+    lua_pop(L, 1);
 
     olua_endinvoke(L);
 
@@ -4058,7 +4060,7 @@ static int _fairygui_GTween_delayedCall(lua_State *L)
     int num_ret = olua_push_cppobj(L, ret, "fgui.GTweener");
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
@@ -4198,7 +4200,7 @@ static int _fairygui_GTween_kill1(lua_State *L)
     fairygui::GTween::kill(arg1);
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
 
@@ -4221,7 +4223,7 @@ static int _fairygui_GTween_kill2(lua_State *L)
     fairygui::GTween::kill(arg1, arg2);
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
 
@@ -4246,7 +4248,7 @@ static int _fairygui_GTween_kill3(lua_State *L)
     fairygui::GTween::kill(arg1, (fairygui::TweenPropType)arg2, arg3);
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
 
@@ -4302,7 +4304,7 @@ static int _fairygui_GTween_shake(lua_State *L)
     int num_ret = olua_push_cppobj(L, ret, "fgui.GTweener");
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
@@ -4329,7 +4331,7 @@ static int _fairygui_GTween_to1(lua_State *L)
     int num_ret = olua_push_cppobj(L, ret, "fgui.GTweener");
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
@@ -4356,7 +4358,7 @@ static int _fairygui_GTween_to2(lua_State *L)
     int num_ret = olua_push_cppobj(L, ret, "fgui.GTweener");
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
@@ -4383,7 +4385,7 @@ static int _fairygui_GTween_to3(lua_State *L)
     int num_ret = olua_push_cppobj(L, ret, "fgui.GTweener");
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
@@ -4410,7 +4412,7 @@ static int _fairygui_GTween_to4(lua_State *L)
     int num_ret = olua_push_cppobj(L, ret, "fgui.GTweener");
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
@@ -4437,7 +4439,7 @@ static int _fairygui_GTween_to5(lua_State *L)
     int num_ret = olua_push_cppobj(L, ret, "fgui.GTweener");
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
@@ -4500,7 +4502,7 @@ static int _fairygui_GTween_toDouble(lua_State *L)
     int num_ret = olua_push_cppobj(L, ret, "fgui.GTweener");
 
     // inject code after call
-    olua_pushclassobj(L, "fgui.GTween");
+    olua_pushclassobj<fairygui::GTween>(L);
     olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
     olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
     lua_pop(L, 1);
@@ -5765,11 +5767,13 @@ static int luaopen_fairygui_PackageItemType(lua_State *L)
     oluacls_class(L, "fgui.PackageItemType", nullptr);
     oluacls_const_integer(L, "ATLAS", (lua_Integer)fairygui::PackageItemType::ATLAS);
     oluacls_const_integer(L, "COMPONENT", (lua_Integer)fairygui::PackageItemType::COMPONENT);
+    oluacls_const_integer(L, "DRAGONBONES", (lua_Integer)fairygui::PackageItemType::DRAGONBONES);
     oluacls_const_integer(L, "FONT", (lua_Integer)fairygui::PackageItemType::FONT);
     oluacls_const_integer(L, "IMAGE", (lua_Integer)fairygui::PackageItemType::IMAGE);
     oluacls_const_integer(L, "MISC", (lua_Integer)fairygui::PackageItemType::MISC);
     oluacls_const_integer(L, "MOVIECLIP", (lua_Integer)fairygui::PackageItemType::MOVIECLIP);
     oluacls_const_integer(L, "SOUND", (lua_Integer)fairygui::PackageItemType::SOUND);
+    oluacls_const_integer(L, "SPINE", (lua_Integer)fairygui::PackageItemType::SPINE);
     oluacls_const_integer(L, "SWF", (lua_Integer)fairygui::PackageItemType::SWF);
     oluacls_const_integer(L, "UNKNOWN", (lua_Integer)fairygui::PackageItemType::UNKNOWN);
 
@@ -5791,6 +5795,7 @@ static int luaopen_fairygui_ObjectType(lua_State *L)
     oluacls_const_integer(L, "LABEL", (lua_Integer)fairygui::ObjectType::LABEL);
     oluacls_const_integer(L, "LIST", (lua_Integer)fairygui::ObjectType::LIST);
     oluacls_const_integer(L, "LOADER", (lua_Integer)fairygui::ObjectType::LOADER);
+    oluacls_const_integer(L, "LOADER3D", (lua_Integer)fairygui::ObjectType::LOADER3D);
     oluacls_const_integer(L, "MOVIECLIP", (lua_Integer)fairygui::ObjectType::MOVIECLIP);
     oluacls_const_integer(L, "PROGRESSBAR", (lua_Integer)fairygui::ObjectType::PROGRESSBAR);
     oluacls_const_integer(L, "RICHTEXT", (lua_Integer)fairygui::ObjectType::RICHTEXT);
@@ -7050,7 +7055,7 @@ static int _fairygui_GObject_getDragBounds(lua_State *L)
 {
     olua_startinvoke(L);
 
-    fairygui::GObject *self = (fairygui::GObject *)olua_toobj(L, 1, "fgui.GObject");
+    fairygui::GObject *self = olua_toobj<fairygui::GObject>(L, 1);
     cocos2d::Rect *rect = self->getDragBounds();
     manual_olua_push_cocos2d_Rect(L, rect);
 
@@ -9159,6 +9164,10 @@ static int luaopen_fairygui_GObject(lua_State *L)
     return 1;
 }
 
+static int _fairygui_GComponent_getController(lua_State *L);
+static int _fairygui_GComponent_getTransition(lua_State *L);
+static int _fairygui_GComponent_getChild(lua_State *L);
+
 static int _fairygui_GComponent___move(lua_State *L)
 {
     olua_startinvoke(L);
@@ -9444,23 +9453,51 @@ static int _fairygui_GComponent_getChildById(lua_State *L)
     return num_ret;
 }
 
-static int _fairygui_GComponent_getChildByPath(lua_State *L)
+static int _fairygui_GComponent_resolve(lua_State *L)
 {
     olua_startinvoke(L);
 
-    fairygui::GComponent *self = nullptr;
-    std::string arg1;       /** path */
+    auto self = olua_toobj<fairygui::GComponent>(L, 1);
+    const char *name = olua_checkstring(L, 2);
+    char type = '.';
+    while (true) {
+        const char *sep = strpbrk(name, ".~#");
+        if (sep == name) {
+            type = *sep;
+            ++name;
+            continue;
+        }
+        if (!sep) {
+            sep = name + strlen(name);
+        }
+        if (type == '#') {
+            lua_pushcfunction(L, _fairygui_GComponent_getController);
+        } else if (type == '~') {
+            lua_pushcfunction(L, _fairygui_GComponent_getTransition);
+        } else {
+            lua_pushcfunction(L, _fairygui_GComponent_getChild);
+        }
+        olua_push_cppobj<fairygui::GComponent>(L, self);
+        lua_pushlstring(L, name, sep - name);
+        lua_call(L, 2, 1);
 
-    olua_to_cppobj(L, 1, (void **)&self, "fgui.GComponent");
-    olua_check_std_string(L, 2, &arg1);
+        if (type != '.' || *sep == '\0') {
+            olua_endinvoke(L);
 
-    // fairygui::GObject *getChildByPath(const std::string &path)
-    fairygui::GObject *ret = (fairygui::GObject *)self->getChildByPath(arg1);
-    int num_ret = olua_push_cppobj(L, ret, "fgui.GObject");
+            return 1;
+        } else if (olua_isa<fairygui::GComponent>(L, -1)) {
+            self = olua_toobj<fairygui::GComponent>(L, -1);
+            name = sep;
+        } else {
+            olua_endinvoke(L);
+
+            return 0;
+        }
+    }
 
     olua_endinvoke(L);
 
-    return num_ret;
+    return 0;
 }
 
 static int _fairygui_GComponent_getChildInGroup(lua_State *L)
@@ -10033,65 +10070,6 @@ static int _fairygui_GComponent_removeController(lua_State *L)
     return 0;
 }
 
-static int _fairygui_GComponent_resolve(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    auto self = olua_toobj<fairygui::GComponent>(L, 1);
-    const char *name = olua_checkstring(L, 2);
-    char type = '.';
-    while (true) {
-        const char *pos = strchr(name, '.');
-        if (!pos) {
-            pos = strchr(name, '#');
-            type = pos ? '#' : type;
-        }
-        if (!pos) {
-            pos = strchr(name, '~');
-            type = pos ? '~' : type;
-        }
-        if (pos == name) {
-            pos = nullptr;
-            ++name;
-        }
-        if (pos) {
-            lua_pushcfunction(L, _fairygui_GComponent_getChild);
-            olua_push_cppobj<fairygui::GComponent>(L, self);
-            lua_pushlstring(L, name, pos - name);
-            lua_call(L, 2, 1);
-
-            if (olua_isa(L, -1, "fgui.GComponent")) {
-                self = olua_toobj<fairygui::GComponent>(L, -1);
-            } else {
-                olua_endinvoke(L);
-
-                return 0;
-            }
-            name = pos + 1;
-        } else {
-            if (type == '#') {
-                lua_pushcfunction(L, _fairygui_GComponent_getController);
-            } else if (type == '~') {
-                lua_pushcfunction(L, _fairygui_GComponent_getTransition);
-            } else {
-                lua_pushcfunction(L, _fairygui_GComponent_getChild);
-            }
-
-            olua_push_cppobj<fairygui::GComponent>(L, self);
-            lua_pushstring(L, name);
-            lua_call(L, 2, 1);
-
-            olua_endinvoke(L);
-
-            return 1;
-        }
-    }
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
 static int _fairygui_GComponent_setApexIndex(lua_State *L)
 {
     olua_startinvoke(L);
@@ -10400,7 +10378,7 @@ static int luaopen_fairygui_GComponent(lua_State *L)
     oluacls_func(L, "getChild", _fairygui_GComponent_getChild);
     oluacls_func(L, "getChildAt", _fairygui_GComponent_getChildAt);
     oluacls_func(L, "getChildById", _fairygui_GComponent_getChildById);
-    oluacls_func(L, "getChildByPath", _fairygui_GComponent_getChildByPath);
+    oluacls_func(L, "getChildByPath", _fairygui_GComponent_resolve);
     oluacls_func(L, "getChildInGroup", _fairygui_GComponent_getChildInGroup);
     oluacls_func(L, "getChildIndex", _fairygui_GComponent_getChildIndex);
     oluacls_func(L, "getChildren", _fairygui_GComponent_getChildren);
@@ -10555,7 +10533,7 @@ static int _fairygui_GRoot_create1(lua_State *L)
     int num_ret = olua_push_cppobj(L, ret, "fgui.GRoot");
 
     // inject code after call
-    olua_push_cppobj<cocos2d::Node>(L, ret->displayObject(), "cc.Node");
+    olua_push_cppobj<cocos2d::Node>(L, ret->displayObject());
     olua_addref(L, -1, "fgui.root", -2, OLUA_MODE_SINGLE);
     olua_addref(L, 1, "children", -1, OLUA_MODE_MULTIPLE);
     lua_pop(L, 1);
@@ -10578,7 +10556,7 @@ static int _fairygui_GRoot_create2(lua_State *L)
     int num_ret = olua_push_cppobj(L, ret, "fgui.GRoot");
 
     // inject code after call
-    olua_push_cppobj<cocos2d::Node>(L, ret->displayObject(), "cc.Node");
+    olua_push_cppobj<cocos2d::Node>(L, ret->displayObject());
     olua_addref(L, -1, "fgui.root", -2, OLUA_MODE_SINGLE);
     olua_addref(L, 1, "children", -1, OLUA_MODE_MULTIPLE);
     lua_pop(L, 1);
@@ -10910,7 +10888,7 @@ static int _fairygui_GRoot_hideWindow(lua_State *L)
     // inject code before call
     int parent = 1;
     if (arg1->getParent()) {
-        olua_push_cppobj<fairygui::GComponent>(L, arg1->getParent(), "fgui.GComponent");
+        olua_push_cppobj<fairygui::GComponent>(L, arg1->getParent());
         parent = lua_gettop(L);
     }
     olua_startcmpdelref(L, parent, "children");
@@ -10939,7 +10917,7 @@ static int _fairygui_GRoot_hideWindowImmediately(lua_State *L)
     // inject code before call
     int parent = 1;
     if (arg1->getParent()) {
-        olua_push_cppobj<fairygui::GComponent>(L, arg1->getParent(), "fgui.GComponent");
+        olua_push_cppobj<fairygui::GComponent>(L, arg1->getParent());
         parent = lua_gettop(L);
     }
     olua_startcmpdelref(L, parent, "children");
@@ -12600,6 +12578,557 @@ static int luaopen_fairygui_GLoader(lua_State *L)
     return 1;
 }
 
+static int _fairygui_GLoader3D___move(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    auto self = (fairygui::GLoader3D *)olua_toobj(L, 1, "fgui.GLoader3D");
+    olua_push_cppobj(L, self, "fgui.GLoader3D");
+
+    olua_endinvoke(L);
+
+    return 1;
+}
+
+static int _fairygui_GLoader3D_create(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    // static fairygui::GLoader3D *create()
+    fairygui::GLoader3D *ret = (fairygui::GLoader3D *)fairygui::GLoader3D::create();
+    int num_ret = olua_push_cppobj(L, ret, "fgui.GLoader3D");
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getAlign(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // cocos2d::TextHAlignment getAlign()
+    cocos2d::TextHAlignment ret = (cocos2d::TextHAlignment)self->getAlign();
+    int num_ret = olua_push_uint(L, (lua_Unsigned)ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getAnimationName(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // const std::string &getAnimationName()
+    const std::string &ret = (const std::string &)self->getAnimationName();
+    int num_ret = olua_push_std_string(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getAutoSize(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // bool getAutoSize()
+    bool ret = (bool)self->getAutoSize();
+    int num_ret = olua_push_bool(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getColor(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // cocos2d::Color3B getColor()
+    cocos2d::Color3B ret = (cocos2d::Color3B)self->getColor();
+    int num_ret = manual_olua_push_cocos2d_Color3B(L, &ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getContent(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // @addref(content ^) const cocos2d::Node *getContent()
+    const cocos2d::Node *ret = (const cocos2d::Node *)self->getContent();
+    int num_ret = olua_push_cppobj(L, ret, "cc.Node");
+
+    // inject code after call
+    olua_addref(L, 1, "content", -1, OLUA_MODE_SINGLE);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getFill(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // fairygui::LoaderFillType getFill()
+    fairygui::LoaderFillType ret = (fairygui::LoaderFillType)self->getFill();
+    int num_ret = olua_push_uint(L, (lua_Unsigned)ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getFrame(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // int getFrame()
+    int ret = (int)self->getFrame();
+    int num_ret = olua_push_int(L, (lua_Integer)ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getLoop(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // bool getLoop()
+    bool ret = (bool)self->getLoop();
+    int num_ret = olua_push_bool(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getSkinName(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // const std::string &getSkinName()
+    const std::string &ret = (const std::string &)self->getSkinName();
+    int num_ret = olua_push_std_string(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getURL(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // const std::string &getURL()
+    const std::string &ret = (const std::string &)self->getURL();
+    int num_ret = olua_push_std_string(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_getVerticalAlign(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // cocos2d::TextVAlignment getVerticalAlign()
+    cocos2d::TextVAlignment ret = (cocos2d::TextVAlignment)self->getVerticalAlign();
+    int num_ret = olua_push_uint(L, (lua_Unsigned)ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_isPlaying(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // bool isPlaying()
+    bool ret = (bool)self->isPlaying();
+    int num_ret = olua_push_bool(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_isShrinkOnly(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+
+    // bool isShrinkOnly()
+    bool ret = (bool)self->isShrinkOnly();
+    int num_ret = olua_push_bool(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_new(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    // GLoader3D()
+    fairygui::GLoader3D *ret = (fairygui::GLoader3D *)new fairygui::GLoader3D();
+    int num_ret = olua_push_cppobj(L, ret, "fgui.GLoader3D");
+    olua_postnew(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _fairygui_GLoader3D_setAlign(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    lua_Unsigned arg1 = 0;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_uint(L, 2, &arg1);
+
+    // void setAlign(cocos2d::TextHAlignment value)
+    self->setAlign((cocos2d::TextHAlignment)arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setAnimationName(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    std::string arg1;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_std_string(L, 2, &arg1);
+
+    // void setAnimationName(const std::string &value)
+    self->setAnimationName(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setAutoSize(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    bool arg1 = false;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_bool(L, 2, &arg1);
+
+    // void setAutoSize(bool value)
+    self->setAutoSize(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setColor(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    cocos2d::Color3B arg1;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    manual_olua_check_cocos2d_Color3B(L, 2, &arg1);
+
+    // void setColor(const cocos2d::Color3B &value)
+    self->setColor(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setContent(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    cocos2d::Node *arg1 = nullptr;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_cppobj(L, 2, (void **)&arg1, "cc.Node");
+
+    // void setContent(@addref(content ^) cocos2d::Node *value)
+    self->setContent(arg1);
+
+    // inject code after call
+    olua_addref(L, 1, "content", 2, OLUA_MODE_SINGLE);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setFill(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    lua_Unsigned arg1 = 0;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_uint(L, 2, &arg1);
+
+    // void setFill(fairygui::LoaderFillType value)
+    self->setFill((fairygui::LoaderFillType)arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setFrame(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    lua_Integer arg1 = 0;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_int(L, 2, &arg1);
+
+    // void setFrame(int value)
+    self->setFrame((int)arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setLoop(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    bool arg1 = false;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_bool(L, 2, &arg1);
+
+    // void setLoop(bool value)
+    self->setLoop(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setPlaying(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    bool arg1 = false;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_bool(L, 2, &arg1);
+
+    // void setPlaying(bool value)
+    self->setPlaying(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setShrinkOnly(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    bool arg1 = false;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_bool(L, 2, &arg1);
+
+    // void setShrinkOnly(bool value)
+    self->setShrinkOnly(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setSkinName(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    std::string arg1;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_std_string(L, 2, &arg1);
+
+    // void setSkinName(const std::string &value)
+    self->setSkinName(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setURL(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    std::string arg1;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_std_string(L, 2, &arg1);
+
+    // void setURL(const std::string &value)
+    self->setURL(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _fairygui_GLoader3D_setVerticalAlign(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    fairygui::GLoader3D *self = nullptr;
+    lua_Unsigned arg1 = 0;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "fgui.GLoader3D");
+    olua_check_uint(L, 2, &arg1);
+
+    // void setVerticalAlign(cocos2d::TextVAlignment value)
+    self->setVerticalAlign((cocos2d::TextVAlignment)arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int luaopen_fairygui_GLoader3D(lua_State *L)
+{
+    oluacls_class(L, "fgui.GLoader3D", "fgui.GObject");
+    oluacls_func(L, "__move", _fairygui_GLoader3D___move);
+    oluacls_func(L, "create", _fairygui_GLoader3D_create);
+    oluacls_func(L, "getAlign", _fairygui_GLoader3D_getAlign);
+    oluacls_func(L, "getAnimationName", _fairygui_GLoader3D_getAnimationName);
+    oluacls_func(L, "getAutoSize", _fairygui_GLoader3D_getAutoSize);
+    oluacls_func(L, "getColor", _fairygui_GLoader3D_getColor);
+    oluacls_func(L, "getContent", _fairygui_GLoader3D_getContent);
+    oluacls_func(L, "getFill", _fairygui_GLoader3D_getFill);
+    oluacls_func(L, "getFrame", _fairygui_GLoader3D_getFrame);
+    oluacls_func(L, "getLoop", _fairygui_GLoader3D_getLoop);
+    oluacls_func(L, "getSkinName", _fairygui_GLoader3D_getSkinName);
+    oluacls_func(L, "getURL", _fairygui_GLoader3D_getURL);
+    oluacls_func(L, "getVerticalAlign", _fairygui_GLoader3D_getVerticalAlign);
+    oluacls_func(L, "isPlaying", _fairygui_GLoader3D_isPlaying);
+    oluacls_func(L, "isShrinkOnly", _fairygui_GLoader3D_isShrinkOnly);
+    oluacls_func(L, "new", _fairygui_GLoader3D_new);
+    oluacls_func(L, "setAlign", _fairygui_GLoader3D_setAlign);
+    oluacls_func(L, "setAnimationName", _fairygui_GLoader3D_setAnimationName);
+    oluacls_func(L, "setAutoSize", _fairygui_GLoader3D_setAutoSize);
+    oluacls_func(L, "setColor", _fairygui_GLoader3D_setColor);
+    oluacls_func(L, "setContent", _fairygui_GLoader3D_setContent);
+    oluacls_func(L, "setFill", _fairygui_GLoader3D_setFill);
+    oluacls_func(L, "setFrame", _fairygui_GLoader3D_setFrame);
+    oluacls_func(L, "setLoop", _fairygui_GLoader3D_setLoop);
+    oluacls_func(L, "setPlaying", _fairygui_GLoader3D_setPlaying);
+    oluacls_func(L, "setShrinkOnly", _fairygui_GLoader3D_setShrinkOnly);
+    oluacls_func(L, "setSkinName", _fairygui_GLoader3D_setSkinName);
+    oluacls_func(L, "setURL", _fairygui_GLoader3D_setURL);
+    oluacls_func(L, "setVerticalAlign", _fairygui_GLoader3D_setVerticalAlign);
+    oluacls_prop(L, "align", _fairygui_GLoader3D_getAlign, _fairygui_GLoader3D_setAlign);
+    oluacls_prop(L, "animationName", _fairygui_GLoader3D_getAnimationName, _fairygui_GLoader3D_setAnimationName);
+    oluacls_prop(L, "autoSize", _fairygui_GLoader3D_getAutoSize, _fairygui_GLoader3D_setAutoSize);
+    oluacls_prop(L, "color", _fairygui_GLoader3D_getColor, _fairygui_GLoader3D_setColor);
+    oluacls_prop(L, "content", _fairygui_GLoader3D_getContent, _fairygui_GLoader3D_setContent);
+    oluacls_prop(L, "fill", _fairygui_GLoader3D_getFill, _fairygui_GLoader3D_setFill);
+    oluacls_prop(L, "frame", _fairygui_GLoader3D_getFrame, _fairygui_GLoader3D_setFrame);
+    oluacls_prop(L, "loop", _fairygui_GLoader3D_getLoop, _fairygui_GLoader3D_setLoop);
+    oluacls_prop(L, "playing", _fairygui_GLoader3D_isPlaying, _fairygui_GLoader3D_setPlaying);
+    oluacls_prop(L, "shrinkOnly", _fairygui_GLoader3D_isShrinkOnly, _fairygui_GLoader3D_setShrinkOnly);
+    oluacls_prop(L, "skinName", _fairygui_GLoader3D_getSkinName, _fairygui_GLoader3D_setSkinName);
+    oluacls_prop(L, "url", _fairygui_GLoader3D_getURL, _fairygui_GLoader3D_setURL);
+    oluacls_prop(L, "verticalAlign", _fairygui_GLoader3D_getVerticalAlign, _fairygui_GLoader3D_setVerticalAlign);
+
+    olua_registerluatype<fairygui::GLoader3D>(L, "fgui.GLoader3D");
+
+    return 1;
+}
+
 static int _fairygui_GTextField___move(lua_State *L)
 {
     olua_startinvoke(L);
@@ -12716,7 +13245,7 @@ static int _fairygui_GTextField_getTemplateVars(lua_State *L)
 {
     olua_startinvoke(L);
 
-    fairygui::GTextField *self = (fairygui::GTextField *)olua_toobj(L, 1, "fgui.GTextField");
+    fairygui::GTextField *self = olua_toobj<fairygui::GTextField>(L, 1);
     manual_olua_push_cocos2d_ValueMap(L, self->getTemplateVars());
 
     olua_endinvoke(L);
@@ -12887,7 +13416,7 @@ static int _fairygui_GTextField_setTemplateVars(lua_State *L)
     olua_startinvoke(L);
 
     cocos2d::ValueMap arg;
-    fairygui::GTextField *self = (fairygui::GTextField *)olua_toobj(L, 1, "fgui.GTextField");
+    fairygui::GTextField *self = olua_toobj<fairygui::GTextField>(L, 1);
     manual_olua_check_cocos2d_ValueMap(L, 2, &arg);
     self->setTemplateVars(&arg);
 
@@ -17651,7 +18180,7 @@ static int _fairygui_PopupMenu_show1(lua_State *L)
     // inject code before call
     fairygui::GRoot *root = fairygui::UIRoot;
     if (lua_gettop(L) > 1) {
-        fairygui::GObject *target = (fairygui::GObject *)olua_checkobj(L, 2, "fgui.GObject");
+        fairygui::GObject *target = olua_checkobj<fairygui::GObject>(L, 2);
         root = target->getRoot();
     }
     if (!root) {
@@ -17688,7 +18217,7 @@ static int _fairygui_PopupMenu_show2(lua_State *L)
     // inject code before call
     fairygui::GRoot *root = fairygui::UIRoot;
     if (lua_gettop(L) > 1) {
-        fairygui::GObject *target = (fairygui::GObject *)olua_checkobj(L, 2, "fgui.GObject");
+        fairygui::GObject *target = olua_checkobj<fairygui::GObject>(L, 2);
         root = target->getRoot();
     }
     if (!root) {
@@ -17913,8 +18442,8 @@ static int _fairygui_Relations_copyFrom(lua_State *L)
 {
     olua_startinvoke(L);
 
-    fairygui::Relations *self = (fairygui::Relations *)olua_toobj(L, 1, "fgui.Relations");
-    fairygui::Relations *source = (fairygui::Relations *)olua_checkobj(L, 2, "fgui.Relations");
+    fairygui::Relations *self = olua_toobj<fairygui::Relations>(L, 1);
+    fairygui::Relations *source = olua_checkobj<fairygui::Relations>(L, 2);
     // void copyFrom(const Relations& source)
     self->copyFrom(*source);
 
@@ -18166,8 +18695,8 @@ static int _fairygui_RelationItem_copyFrom(lua_State *L)
 {
     olua_startinvoke(L);
 
-    fairygui::RelationItem *self = (fairygui::RelationItem *)olua_toobj(L, 1, "fgui.RelationItem");
-    fairygui::RelationItem *source = (fairygui::RelationItem *)olua_checkobj(L, 2, "fgui.RelationItem");
+    fairygui::RelationItem *self = olua_toobj<fairygui::RelationItem>(L, 1);
+    fairygui::RelationItem *source = olua_checkobj<fairygui::RelationItem>(L, 2);
     // void copyFrom(const RelationItem& source)
     self->copyFrom(*source);
 
@@ -25403,6 +25932,7 @@ int luaopen_fairygui(lua_State *L)
     olua_require(L, "fgui.GGroup", luaopen_fairygui_GGroup);
     olua_require(L, "fgui.GScrollBar", luaopen_fairygui_GScrollBar);
     olua_require(L, "fgui.GLoader", luaopen_fairygui_GLoader);
+    olua_require(L, "fgui.GLoader3D", luaopen_fairygui_GLoader3D);
     olua_require(L, "fgui.GTextField", luaopen_fairygui_GTextField);
     olua_require(L, "fgui.GBasicTextField", luaopen_fairygui_GBasicTextField);
     olua_require(L, "fgui.GGraph", luaopen_fairygui_GGraph);
