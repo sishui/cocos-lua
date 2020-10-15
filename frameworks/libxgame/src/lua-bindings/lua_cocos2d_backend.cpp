@@ -1,7 +1,7 @@
 //
 // AUTO BUILD, DON'T MODIFY!
 //
-#include "lua-bindings/lua_cocos2d_backend.h"
+#include "lua_cocos2d_backend.h"
 #include "lua-bindings/lua_conv.h"
 #include "lua-bindings/lua_conv_manual.h"
 #include "cocos2d.h"
@@ -767,22 +767,22 @@ static int _cocos2d_backend_CommandBuffer_captureScreen(lua_State *L)
 
     olua_to_cppobj(L, 1, (void **)&self, "ccb.CommandBuffer");
 
-    void *self_obj = (void *)self;
-    std::string tag = "captureScreen";
-    std::string func = olua_setcallback(L, self_obj, tag.c_str(), 2, OLUA_TAG_NEW);
-    lua_Unsigned ctx = olua_context(L);
-    arg1 = [self_obj, func, ctx](const unsigned char *arg1, int arg2, int arg3) {
+    void *cb_store = (void *)self;
+    std::string cb_tag = "captureScreen";
+    std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_NEW);
+    lua_Unsigned cb_ctx = olua_context(L);
+    arg1 = [cb_store, cb_name, cb_ctx](const unsigned char *arg1, int arg2, int arg3) {
         lua_State *L = olua_mainthread(NULL);
 
-        if (L != NULL && (olua_context(L) == ctx)) {
+        if (L != NULL && olua_context(L) == cb_ctx) {
             int top = lua_gettop(L);
             olua_push_string(L, (const char *)arg1);
             olua_push_int(L, (lua_Integer)arg2);
             olua_push_int(L, (lua_Integer)arg3);
 
-            olua_callback(L, self_obj, func.c_str(), 3);
+            olua_callback(L, cb_store, cb_name.c_str(), 3);
 
-            olua_removecallback(L, self_obj, func.c_str(), OLUA_TAG_WHOLE);
+            olua_removecallback(L, cb_store, cb_name.c_str(), OLUA_TAG_WHOLE);
 
             lua_settop(L, top);
         }
@@ -1235,7 +1235,7 @@ static int _cocos2d_backend_Device_newBuffer(lua_State *L)
     cocos2d::backend::Buffer *ret = (cocos2d::backend::Buffer *)self->newBuffer((size_t)arg1, (cocos2d::backend::BufferType)arg2, (cocos2d::backend::BufferUsage)arg3);
     int num_ret = olua_push_cppobj(L, ret, "ccb.Buffer");
 
-    // inject code after call
+    // insert code after call
     ret->autorelease();
 
     olua_endinvoke(L);
@@ -1255,7 +1255,7 @@ static int _cocos2d_backend_Device_newCommandBuffer(lua_State *L)
     cocos2d::backend::CommandBuffer *ret = (cocos2d::backend::CommandBuffer *)self->newCommandBuffer();
     int num_ret = olua_push_cppobj(L, ret, "ccb.CommandBuffer");
 
-    // inject code after call
+    // insert code after call
     ret->autorelease();
 
     olua_endinvoke(L);
@@ -1279,7 +1279,7 @@ static int _cocos2d_backend_Device_newProgram(lua_State *L)
     cocos2d::backend::Program *ret = (cocos2d::backend::Program *)self->newProgram(arg1, arg2);
     int num_ret = olua_push_cppobj(L, ret, "ccb.Program");
 
-    // inject code after call
+    // insert code after call
     ret->autorelease();
 
     olua_endinvoke(L);
@@ -1299,7 +1299,7 @@ static int _cocos2d_backend_Device_newRenderPipeline(lua_State *L)
     cocos2d::backend::RenderPipeline *ret = (cocos2d::backend::RenderPipeline *)self->newRenderPipeline();
     int num_ret = olua_push_cppobj(L, ret, "ccb.RenderPipeline");
 
-    // inject code after call
+    // insert code after call
     ret->autorelease();
 
     olua_endinvoke(L);
@@ -1321,7 +1321,7 @@ static int _cocos2d_backend_Device_newTexture(lua_State *L)
     cocos2d::backend::TextureBackend *ret = (cocos2d::backend::TextureBackend *)self->newTexture(arg1);
     int num_ret = olua_push_cppobj(L, ret, "ccb.TextureBackend");
 
-    // inject code after call
+    // insert code after call
     ret->autorelease();
 
     olua_endinvoke(L);
@@ -2780,22 +2780,22 @@ static int _cocos2d_backend_TextureBackend_getBytes(lua_State *L)
     olua_check_uint(L, 5, &arg4);
     olua_check_bool(L, 6, &arg5);
 
-    void *self_obj = (void *)self;
-    std::string tag = "Bytes";
-    std::string func = olua_setcallback(L, self_obj, tag.c_str(), 7, OLUA_TAG_NEW);
-    lua_Unsigned ctx = olua_context(L);
-    arg6 = [self_obj, func, ctx](const unsigned char *arg1, std::size_t arg2, std::size_t arg3) {
+    void *cb_store = (void *)self;
+    std::string cb_tag = "Bytes";
+    std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 7, OLUA_TAG_NEW);
+    lua_Unsigned cb_ctx = olua_context(L);
+    arg6 = [cb_store, cb_name, cb_ctx](const unsigned char *arg1, std::size_t arg2, std::size_t arg3) {
         lua_State *L = olua_mainthread(NULL);
 
-        if (L != NULL && (olua_context(L) == ctx)) {
+        if (L != NULL && olua_context(L) == cb_ctx) {
             int top = lua_gettop(L);
             olua_push_string(L, (const char *)arg1);
             olua_push_uint(L, (lua_Unsigned)arg2);
             olua_push_uint(L, (lua_Unsigned)arg3);
 
-            olua_callback(L, self_obj, func.c_str(), 3);
+            olua_callback(L, cb_store, cb_name.c_str(), 3);
 
-            olua_removecallback(L, self_obj, func.c_str(), OLUA_TAG_WHOLE);
+            olua_removecallback(L, cb_store, cb_name.c_str(), OLUA_TAG_WHOLE);
 
             lua_settop(L, top);
         }

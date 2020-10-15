@@ -1,7 +1,12 @@
 //
 // AUTO BUILD, DON'T MODIFY!
 //
-#include "lua-bindings/lua_conv.h"
+#include "lua_conv.h"
+#include "xgame/xlua.h"
+#include "cocos2d.h"
+#include "ui/CocosGUI.h"
+#include "network/WebSocket.h"
+#include "navmesh/CCNavMesh.h"
 
 int auto_olua_push_cocos2d_Vec2(lua_State *L, const cocos2d::Vec2 *value)
 {
@@ -1181,6 +1186,100 @@ int auto_olua_unpack_cocos2d_T2F_Quad(lua_State *L, const cocos2d::T2F_Quad *val
 bool auto_olua_ispack_cocos2d_T2F_Quad(lua_State *L, int idx)
 {
     return auto_olua_is_cocos2d_Tex2F(L, idx + 0) && auto_olua_is_cocos2d_Tex2F(L, idx + 1) && auto_olua_is_cocos2d_Tex2F(L, idx + 2) && auto_olua_is_cocos2d_Tex2F(L, idx + 3);
+}
+
+int auto_olua_push_cocos2d_ccBezierConfig(lua_State *L, const cocos2d::ccBezierConfig *value)
+{
+    if (value) {
+        lua_createtable(L, 0, 3);
+
+        auto_olua_push_cocos2d_Vec2(L, &value->endPosition);
+        olua_setfield(L, -2, "endPosition");
+
+        auto_olua_push_cocos2d_Vec2(L, &value->controlPoint_1);
+        olua_setfield(L, -2, "controlPoint_1");
+
+        auto_olua_push_cocos2d_Vec2(L, &value->controlPoint_2);
+        olua_setfield(L, -2, "controlPoint_2");
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
+}
+
+void auto_olua_check_cocos2d_ccBezierConfig(lua_State *L, int idx, cocos2d::ccBezierConfig *value)
+{
+    if (!value) {
+        luaL_error(L, "value is NULL");
+    }
+    idx = lua_absindex(L, idx);
+    luaL_checktype(L, idx, LUA_TTABLE);
+
+    cocos2d::Vec2 arg1;       /** endPosition */
+    cocos2d::Vec2 arg2;       /** controlPoint_1 */
+    cocos2d::Vec2 arg3;       /** controlPoint_2 */
+
+    olua_getfield(L, idx, "endPosition");
+    auto_olua_check_cocos2d_Vec2(L, -1, &arg1);
+    value->endPosition = (cocos2d::Vec2)arg1;
+    lua_pop(L, 1);
+
+    olua_getfield(L, idx, "controlPoint_1");
+    auto_olua_check_cocos2d_Vec2(L, -1, &arg2);
+    value->controlPoint_1 = (cocos2d::Vec2)arg2;
+    lua_pop(L, 1);
+
+    olua_getfield(L, idx, "controlPoint_2");
+    auto_olua_check_cocos2d_Vec2(L, -1, &arg3);
+    value->controlPoint_2 = (cocos2d::Vec2)arg3;
+    lua_pop(L, 1);
+}
+
+bool auto_olua_is_cocos2d_ccBezierConfig(lua_State *L, int idx)
+{
+    return olua_istable(L, idx) && olua_hasfield(L, idx, "controlPoint_2") && olua_hasfield(L, idx, "controlPoint_1") && olua_hasfield(L, idx, "endPosition");
+}
+
+void auto_olua_pack_cocos2d_ccBezierConfig(lua_State *L, int idx, cocos2d::ccBezierConfig *value)
+{
+    if (!value) {
+        luaL_error(L, "value is NULL");
+    }
+    idx = lua_absindex(L, idx);
+
+    cocos2d::Vec2 arg1;       /** endPosition */
+    cocos2d::Vec2 arg2;       /** controlPoint_1 */
+    cocos2d::Vec2 arg3;       /** controlPoint_2 */
+
+    auto_olua_check_cocos2d_Vec2(L, idx + 0, &arg1);
+    value->endPosition = (cocos2d::Vec2)arg1;
+
+    auto_olua_check_cocos2d_Vec2(L, idx + 1, &arg2);
+    value->controlPoint_1 = (cocos2d::Vec2)arg2;
+
+    auto_olua_check_cocos2d_Vec2(L, idx + 2, &arg3);
+    value->controlPoint_2 = (cocos2d::Vec2)arg3;
+}
+
+int auto_olua_unpack_cocos2d_ccBezierConfig(lua_State *L, const cocos2d::ccBezierConfig *value)
+{
+    if (value) {
+        auto_olua_push_cocos2d_Vec2(L, &value->endPosition);
+        auto_olua_push_cocos2d_Vec2(L, &value->controlPoint_1);
+        auto_olua_push_cocos2d_Vec2(L, &value->controlPoint_2);
+    } else {
+        for (int i = 0; i < 3; i++) {
+            lua_pushnil(L);
+        }
+    }
+
+    return 3;
+}
+
+bool auto_olua_ispack_cocos2d_ccBezierConfig(lua_State *L, int idx)
+{
+    return auto_olua_is_cocos2d_Vec2(L, idx + 0) && auto_olua_is_cocos2d_Vec2(L, idx + 1) && auto_olua_is_cocos2d_Vec2(L, idx + 2);
 }
 
 int auto_olua_push_cocos2d_TTFConfig(lua_State *L, const cocos2d::TTFConfig *value)
@@ -2671,7 +2770,7 @@ int auto_olua_push_cocos2d_backend_TextureInfo(lua_State *L, const cocos2d::back
         int value_slot_size = (int)value->slot.size();
         lua_createtable(L, value_slot_size, 0);
         for (int i = 0; i < value_slot_size; i++) {
-            olua_push_uint(L, (lua_Unsigned)((std::vector<uint32_t>)value->slot)[i]);
+            olua_push_uint(L, (lua_Unsigned)value->slot[i]);
             lua_rawseti(L, -2, i + 1);
         }
         olua_setfield(L, -2, "slot");
@@ -2753,7 +2852,7 @@ int auto_olua_unpack_cocos2d_backend_TextureInfo(lua_State *L, const cocos2d::ba
         int value_slot_size = (int)value->slot.size();
         lua_createtable(L, value_slot_size, 0);
         for (int i = 0; i < value_slot_size; i++) {
-            olua_push_uint(L, (lua_Unsigned)((std::vector<uint32_t>)value->slot)[i]);
+            olua_push_uint(L, (lua_Unsigned)value->slot[i]);
             lua_rawseti(L, -2, i + 1);
         }
         olua_push_std_vector(L, value->textures, "ccb.TextureBackend");

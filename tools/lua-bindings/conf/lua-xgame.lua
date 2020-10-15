@@ -5,7 +5,6 @@ local typeconv = M.typeconv
 
 M.PATH = '../../frameworks/libxgame/src/lua-bindings'
 M.INCLUDES = [[
-#include "lua-bindings/lua_xgame.h"
 #include "lua-bindings/lua_conv.h"
 #include "lua-bindings/lua_conv_manual.h"
 #include "xgame/filesystem.h"
@@ -34,21 +33,21 @@ typeconf 'xgame::Permission'
 typeconf 'xgame::PermissionStatus'
 
 local runtime = typeconf 'xgame::runtime'
-runtime.EXCLUDE 'dispatchEvent'
-runtime.EXCLUDE 'parseLaunchArgs'
-runtime.EXCLUDE 'getNativeStackTrace'
-runtime.EXCLUDE 'getTimestamp'
-runtime.EXCLUDE 'handleOpenURL'
-runtime.EXCLUDE 'init'
-runtime.EXCLUDE 'initBugly'
-runtime.EXCLUDE 'log'
-runtime.EXCLUDE 'luaOpen'
-runtime.EXCLUDE 'luaVM'
-runtime.EXCLUDE 'registerFeature'
-runtime.EXCLUDE 'reportError'
-runtime.EXCLUDE 'runOnCocosThread'
-runtime.EXCLUDE 'updateTimestamp'
-runtime.EXCLUDE 'callref'
+runtime.EXCLUDE_FUNC 'dispatchEvent'
+runtime.EXCLUDE_FUNC 'parseLaunchArgs'
+runtime.EXCLUDE_FUNC 'getNativeStackTrace'
+runtime.EXCLUDE_FUNC 'getTimestamp'
+runtime.EXCLUDE_FUNC 'handleOpenURL'
+runtime.EXCLUDE_FUNC 'init'
+runtime.EXCLUDE_FUNC 'initBugly'
+runtime.EXCLUDE_FUNC 'log'
+runtime.EXCLUDE_FUNC 'luaOpen'
+runtime.EXCLUDE_FUNC 'luaVM'
+runtime.EXCLUDE_FUNC 'registerFeature'
+runtime.EXCLUDE_FUNC 'reportError'
+runtime.EXCLUDE_FUNC 'runOnCocosThread'
+runtime.EXCLUDE_FUNC 'updateTimestamp'
+runtime.EXCLUDE_FUNC 'callref'
 runtime.FUNC("testCrash", [[
 {
     xgame::runtime::log("test native crash!!!!");
@@ -92,7 +91,7 @@ runtime.CALLBACK {
 }
 
 local filesystem = typeconf 'xgame::filesystem'
-filesystem.EXCLUDE 'getDirectory'
+filesystem.EXCLUDE_FUNC 'getDirectory'
 filesystem.FUNC('write', [[
 {
     size_t len;
@@ -158,8 +157,6 @@ timer.FUNC('unschedule', [[
 }]])
 
 local window = typeconf 'xgame::window'
-window.NOTCONF = true
-window.REG_LUATYPE = false
 window.FUNC("getVisibleBounds", [[
 {
     auto rect = cocos2d::Director::getInstance()->getOpenGLView()->getVisibleRect();

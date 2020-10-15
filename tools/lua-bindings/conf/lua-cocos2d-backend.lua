@@ -5,7 +5,6 @@ local typedef = M.typedef
 
 M.PATH = '../../frameworks/libxgame/src/lua-bindings'
 M.INCLUDES = [[
-#include "lua-bindings/lua_cocos2d_backend.h"
 #include "lua-bindings/lua_conv.h"
 #include "lua-bindings/lua_conv_manual.h"
 #include "cocos2d.h"
@@ -61,7 +60,7 @@ typeconf 'cocos2d::backend::CommandBuffer'
     .CALLBACK {NAME = 'captureScreen', TAG_SCOPE = 'once', TAG_MODE = 'OLUA_TAG_NEW'}
 
 local Device = typeconf 'cocos2d::backend::Device'
-Device.INJECT({
+Device.INSERT({
     'newProgram',
     'newRenderPipeline',
     'newTexture',
@@ -125,10 +124,10 @@ template <typename T> int _cocos2d_backend_ProgramState_setUniform(lua_State *L)
     return 0;
 }
 ]]
-ProgramState.EXCLUDE 'setCallbackUniform'
-ProgramState.EXCLUDE 'getCallbackUniforms'
-ProgramState.EXCLUDE 'getVertexUniformBuffer'
-ProgramState.EXCLUDE 'getFragmentUniformBuffer'
+ProgramState.EXCLUDE_FUNC 'setCallbackUniform'
+ProgramState.EXCLUDE_FUNC 'getCallbackUniforms'
+ProgramState.EXCLUDE_FUNC 'getVertexUniformBuffer'
+ProgramState.EXCLUDE_FUNC 'getFragmentUniformBuffer'
 ProgramState.FUNC('getVertexLayout', [[
 {
     auto self = olua_toobj<cocos2d::backend::ProgramState>(L, 1);
