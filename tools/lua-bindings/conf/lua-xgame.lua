@@ -57,12 +57,12 @@ runtime.FUNC("testCrash", [[
 }]])
 runtime.FUNC("setDispatcher", [[
 {
-    int handler = olua_reffunc(L, 1);
+    int handler = olua_funcref(L, 1);
     xgame::runtime::setDispatcher([handler](const std::string &event, const std::string &args) {
         lua_State *L = olua_mainthread(NULL);
         if (L != NULL) {
             int top = lua_gettop(L);
-            olua_geterrorfunc(L);
+            olua_pusherrorfunc(L);
             olua_getref(L, handler);
             if (lua_isfunction(L, -1)) {
                 lua_pushstring(L, event.c_str());
@@ -129,12 +129,12 @@ timer.CALLBACK {
 timer.FUNC('schedule', [[
 {
     float interval = (float)olua_checknumber(L, 1);
-    uint32_t callback = olua_reffunc(L, 2);
+    uint32_t callback = olua_funcref(L, 2);
     uint32_t id = xgame::timer::schedule(interval, [callback](float dt) {
         lua_State *L = olua_mainthread(NULL);
         if (L != NULL) {
             int top = lua_gettop(L);
-            olua_geterrorfunc(L);
+            olua_pusherrorfunc(L);
             olua_getref(L, callback);
             if (lua_isfunction(L, -1)) {
                 lua_pushnumber(L, dt);
@@ -160,25 +160,25 @@ local window = typeconf 'xgame::window'
 window.FUNC("getVisibleBounds", [[
 {
     auto rect = cocos2d::Director::getInstance()->getOpenGLView()->getVisibleRect();
-    lua_pushinteger(L, rect.getMinX());
-    lua_pushinteger(L, rect.getMaxX());
-    lua_pushinteger(L, rect.getMaxY());
-    lua_pushinteger(L, rect.getMinY());
+    lua_pushinteger(L, (int)rect.getMinX());
+    lua_pushinteger(L, (int)rect.getMaxX());
+    lua_pushinteger(L, (int)rect.getMaxY());
+    lua_pushinteger(L, (int)rect.getMinY());
     return 4;
 }
 ]])
 window.FUNC('getVisibleSize', [[
 {
     auto rect = cocos2d::Director::getInstance()->getOpenGLView()->getVisibleRect();
-    lua_pushinteger(L, rect.size.width);
-    lua_pushinteger(L, rect.size.height);
+    lua_pushinteger(L, (int)rect.size.width);
+    lua_pushinteger(L, (int)rect.size.height);
     return 2;
 }]])
 window.FUNC('getFrameSize', [[
 {
     auto size = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
-    lua_pushnumber(L, size.width);
-    lua_pushnumber(L, size.height);
+    lua_pushinteger(L, (int)size.width);
+    lua_pushinteger(L, (int)size.height);
     return 2;
 }
 ]])
@@ -196,8 +196,8 @@ window.FUNC('setFrameSize', [[
 window.FUNC('getDesignSize', [[
 {
     auto size = cocos2d::Director::getInstance()->getOpenGLView()->getDesignResolutionSize();
-    lua_pushnumber(L, size.width);
-    lua_pushnumber(L, size.height);
+    lua_pushinteger(L, (int)size.width);
+    lua_pushinteger(L, (int)size.height);
     return 2;
 }]])
 window.FUNC('setDesignSize', [[

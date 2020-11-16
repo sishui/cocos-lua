@@ -282,6 +282,7 @@ M.CONVS = {
             @optional uint32_t height;
             @optional uint32_t depth;
             cocos2d::backend::SamplerDescriptor samplerDescriptor;
+            @optional int sampleCount;
         ]],
     },
     typeconv {
@@ -304,6 +305,16 @@ M.CONVS = {
             @optional bool stencilTestEnabled;
             cocos2d::backend::StencilDescriptor backFaceStencil;
             cocos2d::backend::StencilDescriptor frontFaceStencil;
+        ]],
+    },
+    typeconv {
+        CPPCLS = 'cocos2d::backend::VertexLayout::Attribute',
+        DEF = [[
+            std::string name;
+            @optional cocos2d::backend::VertexFormat format;
+            @optional std::size_t offset;
+            @optional std::size_t index;
+            @optional bool needToBeNormallized;
         ]],
     },
 }

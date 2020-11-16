@@ -54,17 +54,25 @@ typedef struct {
     lua_Unsigned ctxid;
     size_t objcount;
     size_t poolsize;
+    int ref;
     bool poolenabled;
     bool debug;
 } olua_vmstatus_t;
 
+static inline void aux_checkref(olua_vmstatus_t *vms)
+{
+    if (vms->ref + 1 < 0) {
+        vms->ref = 0;
+    }
+}
+
 static int errfunc(lua_State *L)
 {
     if (olua_isthread(L, 1)) {
-        olua_traceback(L, lua_tothread(L, 1), lua_tostring(L, 2), 0);
+        luaL_traceback(L, lua_tothread(L, 1), lua_tostring(L, 2), 0);
         lua_insert(L, 1);
     }
-    olua_traceback(L, L, lua_tostring(L, 1), 1);
+    luaL_traceback(L, L, lua_tostring(L, 1), 1);
     printf("%s\n", lua_tostring(L, -1));
     return 0;
 }
@@ -80,6 +88,7 @@ static olua_vmstatus_t *aux_getvmstatus(lua_State *L)
         vms->poolenabled = false;
         vms->poolsize = 0;
         vms->objcount = 0;
+        vms->ref = 0;
         registry_rawsetp(L, OLUA_VMSTATUS);
         olua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_MAINTHREAD);
         vms->mainthread = lua_tothread(L, -1);
@@ -149,23 +158,22 @@ OLUA_API void olua_rawsetf(lua_State *L, int idx, const char *field)
     idx = lua_absindex(L, idx);
     lua_pushstring(L, field);
     lua_insert(L, -2);
-    lua_rawset(L, idx);
+    olua_rawset(L, idx);
 }
 
-OLUA_API int olua_geterrorfunc(lua_State *L)
+OLUA_API void olua_pusherrorfunc(lua_State *L)
 {
     if (olua_unlikely(olua_getglobal(L, "__TRACEBACK__") != LUA_TFUNCTION)) {
         lua_pop(L, 1);
         lua_pushcfunction(L, errfunc);
     }
-    return lua_gettop(L);
 }
 
 OLUA_API int olua_pcall(lua_State *L, int nargs, int nresults)
 {
     int status;
     int errfunc = lua_absindex(L, -(nargs + 1));
-    olua_geterrorfunc(L);
+    olua_pusherrorfunc(L);
     lua_insert(L, errfunc);
     status = lua_pcall(L, nargs, nresults, errfunc);
     lua_remove(L, errfunc);
@@ -183,7 +191,7 @@ OLUA_API int olua_pcallref(lua_State *L, int funcref, int nargs, int nresults)
 OLUA_API void olua_require(lua_State *L, const char *name, lua_CFunction func)
 {
     int top = lua_gettop(L);
-    olua_requiref(L, name, func, false);
+    luaL_requiref(L, name, func, false);
     lua_settop(L, top);
 }
 
@@ -315,7 +323,7 @@ OLUA_API int olua_pushobj(lua_State *L, void *obj, const char *cls)
         lua_pushvalue(L, -3);                       // L: mt objtable ud mt
         lua_setmetatable(L, -2);                    // L: mt objtable ud     ud.metatable = mt
     } else if (olua_unlikely(!strequal(cls, OLUA_VOIDCLS)
-            && olua_testudata(L, -1, OLUA_VOIDCLS))) {
+            && luaL_testudata(L, -1, OLUA_VOIDCLS))) {
         lua_pushvalue(L, -3);                       // L: mt objtable ud mt
         lua_setmetatable(L, -2);                    // L: mt objtable ud     ud.metatable = mt
         status = OLUA_OBJ_UPDATE;
@@ -403,9 +411,9 @@ OLUA_API void olua_pop_objpool(lua_State *L, size_t position)
             olua_rawgeti(L, -1, (lua_Integer)i);
             void **ud = (void **)lua_touserdata(L, -1);
             lua_pushnil(L);
-            lua_setmetatable(L, -2);
+            lua_setmetatable(L, -2);    // remove metatable
             lua_pushnil(L);
-            lua_setuservalue(L, -2);
+            lua_setuservalue(L, -2);    // remove user value
             lua_pop(L, 1);
             if (olua_likely(*ud != NULL)) {
                 *ud = NULL;
@@ -465,14 +473,26 @@ OLUA_API const char *olua_setcallback(lua_State *L, void *obj, const char *tag, 
                 lua_pop(L, 1);                          // L: obj ut k
                 break;
             }
-            lua_pop(L, 1);                              // L: obj uk k
+            lua_pop(L, 1);                              // L: obj ut k
         }
     }
     
     if (func == NULL) {
-        static lua_Integer ref = 0;
         const char *cls = olua_checkfieldstring(L, -2, "classname");
-        func = lua_pushfstring(L, ".callback#%I$%s@%s", ++ref, cls, tag);
+        olua_vmstatus_t *vms = aux_getvmstatus(L);
+        aux_checkref(vms);
+        while (true) {
+            lua_Integer ref = ++vms->ref;
+            func = lua_pushfstring(L, ".callback#%I$%s@%s", ref, cls, tag);
+            lua_pushvalue(L, -1);                       // L: obj ut k k
+            if (olua_rawget(L, -3) == LUA_TNIL) {
+                lua_pop(L, 1);                          // L: obj ut k
+                break;
+            } else {
+                aux_checkref(vms);
+                lua_pop(L, 2);                          // L: obj ut
+            }
+        }
     }
     
     lua_pushvalue(L, fidx);                             // L: obj ut k v
@@ -535,36 +555,28 @@ OLUA_API void olua_removecallback(lua_State *L, void *obj, const char *tag, int 
 
 OLUA_API int olua_callback(lua_State *L, void *obj, const char *func, int argc)
 {
-    int top = lua_gettop(L) - argc;
-    int status = OLUA_CALL_MISS;
-    
+    int top = lua_gettop(L) - argc + 1;
+    int status = LUA_ERRRUN;
+    olua_pusherrorfunc(L);                  // L: argc errfunc
     if (olua_getcallback(L, obj, func, OLUA_TAG_WHOLE) == LUA_TFUNCTION) {
-        lua_insert(L, top + 1);                         // L: callback arg...n
-        olua_geterrorfunc(L);                           // L: callback arg...n errfunc
-        lua_insert(L, top + 1);                         // L: errfunc callback arg...n
-        if (lua_pcall(L, argc, 1, top + 1) == LUA_OK) {
-            status = OLUA_CALL_OK;
-        } else {
-            status = OLUA_CALL_ERR;
-        }                                               // L: errfunc result
-        lua_replace(L, -2);                             // L: result
-    }
-
-    if (status != OLUA_CALL_OK) {
-        if (status == OLUA_CALL_MISS) {
-            olua_geterrorfunc(L);
-            if (olua_getrawobj(L, obj)) {
-                lua_pop(L, 1);
-                lua_pushfstring(L, "callback missed: %s", func);
-            } else {
-                lua_pushfstring(L, "object missed: %s", func);
-            }
-            lua_pcall(L, 1, 0, 0);
+        for (int i = 0; i < argc; i++) {
+            lua_pushvalue(L, -(2 + argc));  // L: argc errfunc func argc
         }
-        lua_settop(L, top);
+        status = lua_pcall(L, argc, 1, -(2 + argc));
+    } else {
+        if (olua_getrawobj(L, obj)) {
+            lua_pop(L, 1);
+            lua_pushfstring(L, "callback missed: %s", func);
+        } else {
+            lua_pushfstring(L, "object missed: %s", func);
+        }
+        lua_pcall(L, 1, 0, 0);
+    }
+    if (status != LUA_OK) {
         lua_pushnil(L);
     }
-    
+    lua_replace(L, top);
+    lua_settop(L, top);
     return status;
 }
 
@@ -613,26 +625,21 @@ static void aux_pushmappingtable(lua_State *L)
 
 OLUA_API int olua_ref(lua_State *L, int idx)
 {
-    static int ref = 0;
     if (!olua_isnil(L, idx)) {
+        olua_vmstatus_t *vms = aux_getvmstatus(L);
         idx = lua_absindex(L, idx);
-        aux_pushmappingtable(L);    // L: reft
-        while (olua_rawgeti(L, -1, ++ref) != LUA_TNIL) {
+        aux_pushmappingtable(L);        // L: reft
+        aux_checkref(vms);
+        while (olua_rawgeti(L, -1, ++vms->ref) != LUA_TNIL) {
             lua_pop(L, 1);
-            ref = ref < 0 ? 0 : ref;
-        }                           // L: reft nil
-        lua_pushvalue(L, idx);      // L: reft nil value
-        lua_rawseti(L, -3, ref);    // L: reft nil       reft[ref] = value
-        lua_pop(L, 2);              // L:
-        return ref;
+            aux_checkref(vms);
+        }                               // L: reft nil
+        lua_pushvalue(L, idx);          // L: reft nil value
+        lua_rawseti(L, -3, vms->ref);   // L: reft nil       reft[ref] = value
+        lua_pop(L, 2);                  // L:
+        return vms->ref;
     }
     return LUA_REFNIL;
-}
-
-OLUA_API int olua_reffunc(lua_State *L, int idx)
-{
-    luaL_checktype(L, idx, LUA_TFUNCTION);
-    return olua_ref(L, idx);
 }
 
 OLUA_API void olua_unref(lua_State *L, int ref)
@@ -655,7 +662,7 @@ OLUA_API void olua_getreftable(lua_State *L, int idx, const char *name)
     olua_assert(olua_isuserdata(L, idx));
     aux_getusertable(L, idx);               // L: uv
     name = aux_pushrefkey(L, name);         // L: uv holdkey
-    olua_getsubtable(L, -2, name);          // L: uv holdkey holdtable
+    luaL_getsubtable(L, -2, name);          // L: uv holdkey holdtable
     lua_insert(L, -3);                      // L: holdtable uv holdkey
     lua_pop(L, 2);                          // L: holdtable
 }
@@ -756,10 +763,8 @@ static bool lookupfunc(lua_State *L, int t, int kidx)
         }
         lua_rawset(L, t);                       // L: v
     }
-    if (olua_unlikely(type == LUA_TLIGHTUSERDATA
-            && lua_touserdata(L, -1) == NILOBJ)) {
+    if (type == LUA_TLIGHTUSERDATA && lua_touserdata(L, -1) == NILOBJ) {
         lua_pop(L, 1);
-        lua_pushnil(L);
         type = LUA_TNIL;
     }
     return type != LUA_TNIL;
@@ -777,7 +782,7 @@ static int cls_metamethod(lua_State *L)
             lua_call(L, lua_gettop(L) - 1, LUA_MULTRET);
             return lua_gettop(L);
         } else if (olua_isuserdata(L, 2)) {
-            olua_geterrorfunc(L);
+            olua_pusherrorfunc(L);
             lua_insert(L, 1);
             lua_pcall(L, lua_gettop(L) - 2, LUA_MULTRET, 1);
             return lua_gettop(L) - 1;
@@ -831,16 +836,14 @@ static int cls_newindex(lua_State *L)
         return 0;
     }
     
+    // store value in class table
     if (olua_unlikely(olua_istable(L, 1))) {
         lua_settop(L, 3);                       // L: t k v
         lua_rawset(L, CLS_FUNCIDX);             // L: t
         return 0;
     }
     
-    if (olua_unlikely(lookupfunc(L, CLS_GETIDX, 2))) {
-        luaL_error(L, "readonly property: %s", olua_tostring(L, 2));
-    }
-    
+#ifdef OLUA_DEBUG
     if (olua_likely(olua_isstring(L, 2))) {
         size_t len;
         const char *key = olua_tolstring(L, 2, &len);
@@ -848,6 +851,7 @@ static int cls_newindex(lua_State *L)
             luaL_error(L, "variable name '%s' start with '.' char", key);
         }
     }
+#endif
     
     olua_assert(olua_isuserdata(L, 1));
     lua_settop(L, 3);
@@ -864,6 +868,19 @@ static int cls_tostring(lua_State *L)
 static int cls_eq(lua_State *L)
 {
     return 0;
+}
+
+static int cls_readonly(lua_State *L)
+{
+    lua_pushvalue(L, lua_upvalueindex(1));
+    luaL_error(L, "readonly property: %s", olua_tostring(L, -1));
+    return 0;
+}
+
+static int cls_const(lua_State *L)
+{
+    lua_pushvalue(L, lua_upvalueindex(1));
+    return 1;
 }
 
 static void create_table(lua_State *L, int idx, const char *field, const char *supercls, bool copy)
@@ -931,7 +948,7 @@ OLUA_API void oluacls_class(lua_State *L, const char *cls, const char *super)
         create_table(L, idx, CLS_FUNC, super, false);   // L: mt .isa .func
         create_table(L, idx, CLS_GET, super, false);    // L: mt .isa .func .get
         create_table(L, idx, CLS_SET, super, false);    // L: mt .isa .func .get .set
-        olua_setfuncs(L, lib,  4);                      // L: mt
+        luaL_setfuncs(L, lib,  4);                      // L: mt
         
         // init meta method and isa
         olua_rawgetf(L, -1, CLS_FUNC);                  // L: mt .func
@@ -996,7 +1013,12 @@ static void aux_setfunc(lua_State *L, const char *t, const char *name, lua_CFunc
 OLUA_API void oluacls_prop(lua_State *L, const char *name, lua_CFunction getter, lua_CFunction setter)
 {
     aux_setfunc(L, CLS_GET, name, getter, 0);
-    aux_setfunc(L, CLS_SET, name, setter, 0);
+    if (setter) {
+        aux_setfunc(L, CLS_SET, name, setter, 0);
+    } else {
+        lua_pushstring(L, name);
+        aux_setfunc(L, CLS_SET, name, cls_readonly, 1);
+    }
 }
 
 OLUA_API void oluacls_func(lua_State *L, const char *name, lua_CFunction func)
@@ -1004,15 +1026,9 @@ OLUA_API void oluacls_func(lua_State *L, const char *name, lua_CFunction func)
     aux_setfunc(L, CLS_FUNC, name, func, 0);
 }
 
-static int cls_index_const(lua_State *L)
-{
-    lua_pushvalue(L, lua_upvalueindex(1));
-    return 1;
-}
-
 OLUA_API void oluacls_const(lua_State *L, const char *name)
 {
-    aux_setfunc(L, CLS_GET, name, cls_index_const, 1);
+    aux_setfunc(L, CLS_GET, name, cls_const, 1);
 }
 
 static void aux_checkfield(lua_State *L, int t, const char *field, int type, bool isinteger)
@@ -1034,7 +1050,7 @@ static void aux_checkfield(lua_State *L, int t, const char *field, int type, boo
         } else {
             typearg = luaL_typename(L, idx);
         }
-        msg = lua_pushfstring(L, "olua check '%s': %s expected, got %s", field, tname, typearg);
+        msg = lua_pushfstring(L, "check '%s': %s expected, got %s", field, tname, typearg);
         luaL_argerror(L, idx, msg);
     }
 }
@@ -1248,7 +1264,7 @@ OLUA_API int luaopen_olua(lua_State *L)
         {NULL, NULL}
     };
     
-    olua_newlib(L,lib);
+    luaL_newlib(L,lib);
     
     return 1;
 }
@@ -1296,7 +1312,7 @@ OLUA_API int lua_isinteger(lua_State *L, int idx)
     return false;
 }
 
-OLUA_API void olua_setfuncs(lua_State *L, const luaL_Reg *l, int nup)
+OLUA_API void luaL_setfuncs(lua_State *L, const luaL_Reg *l, int nup)
 {
     luaL_checkstack(L, nup, "too many upvalues");
     for (; l->name != NULL; l++) {
@@ -1309,7 +1325,7 @@ OLUA_API void olua_setfuncs(lua_State *L, const luaL_Reg *l, int nup)
     lua_pop(L, nup);
 }
 
-OLUA_API int olua_getsubtable(lua_State *L, int idx, const char *fname) {
+OLUA_API int luaL_getsubtable(lua_State *L, int idx, const char *fname) {
     if (olua_getfield(L, idx, fname) == LUA_TTABLE) {
         return 1;
     } else {
@@ -1322,8 +1338,8 @@ OLUA_API int olua_getsubtable(lua_State *L, int idx, const char *fname) {
     }
 }
 
-OLUA_API void olua_requiref(lua_State *L, const char *modname, lua_CFunction openf, int glb) {
-    olua_getsubtable(L, LUA_REGISTRYINDEX, LUA_LOADED_TABLE);
+OLUA_API void luaL_requiref(lua_State *L, const char *modname, lua_CFunction openf, int glb) {
+    luaL_getsubtable(L, LUA_REGISTRYINDEX, LUA_LOADED_TABLE);
     lua_getfield(L, -1, modname);
     if (!lua_toboolean(L, -1)) {
         lua_pop(L, 1);
@@ -1340,7 +1356,7 @@ OLUA_API void olua_requiref(lua_State *L, const char *modname, lua_CFunction ope
     }
 }
 
-OLUA_API void *olua_testudata(lua_State *L, int ud, const char *tname) {
+OLUA_API void *luaL_testudata(lua_State *L, int ud, const char *tname) {
     void *p = lua_touserdata(L, ud);
     if (p != NULL) {
         if (lua_getmetatable(L, ud)) {
@@ -1355,7 +1371,7 @@ OLUA_API void *olua_testudata(lua_State *L, int ud, const char *tname) {
     return NULL;
 }
 
-OLUA_API void olua_traceback(lua_State *L, lua_State *L1, const char *msg, int level)
+OLUA_API void luaL_traceback(lua_State *L, lua_State *L1, const char *msg, int level)
 {
     lua_getglobal(L, "debug");
     lua_getfield(L, -1, "traceback");

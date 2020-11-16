@@ -210,7 +210,7 @@ lua_State *runtime::luaVM()
         _luaVM = xlua_new();
         luaopen_bindings(_luaVM);
         for (auto func : _luaLibs) {
-            olua_dofunc(_luaVM, func);
+            olua_callfunc(_luaVM, func);
         }
         olua_pushobj<cocos2d::Director>(_luaVM, cocos2d::Director::getInstance());
         lua_setfield(_luaVM, LUA_REGISTRYINDEX, "__cocos2d_ref_chain__");
@@ -237,7 +237,7 @@ void runtime::luaOpen(lua_CFunction libfunc)
 //
 const std::string runtime::getVersion()
 {
-    return "1.13.4";
+    return "1.16.0";
 }
 
 const std::string runtime::getPackageName()
@@ -302,11 +302,10 @@ const std::string runtime::getNetworkStatus()
     return __runtime_getNetworkStatus();
 }
 
-RenderTexture *runtime::capture(Node *node, backend::PixelFormat format, backend::PixelFormat depthStencilFormat)
+RenderTexture *runtime::capture(Node *node, float width, float height, backend::PixelFormat format, backend::PixelFormat depthStencilFormat)
 {
     auto director = Director::getInstance();
-    auto size = node->getContentSize();
-    auto image = RenderTexture::create(size.width, size.height, format, depthStencilFormat);
+    auto image = RenderTexture::create((int)width, (int)height, format, depthStencilFormat);
     image->getSprite()->setIgnoreAnchorPointForPosition(true);
     image->retain();
     node->retain();
@@ -323,7 +322,7 @@ RenderTexture *runtime::capture(Node *node, backend::PixelFormat format, backend
             anchor = node->getAnchorPoint();
         }
         node->setVisible(true);
-        node->setPosition(Point(size.width * anchor.x, size.height * anchor.y));
+        node->setPosition(Point(width * anchor.x, height * anchor.y));
         image->begin();
         node->visit();
         image->end();
@@ -458,7 +457,7 @@ void runtime::callref(int func, const std::string &args, bool once)
         runtime::runOnCocosThread([func, args, once]() {
             lua_State *L = olua_mainthread(NULL);
             int top = lua_gettop(L);
-            olua_geterrorfunc(L);
+            olua_pusherrorfunc(L);
             olua_getref(L, func);
             if (!lua_isnil(L, -1)) {
                 lua_pushstring(L, args.c_str());

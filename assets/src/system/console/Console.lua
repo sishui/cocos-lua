@@ -1,5 +1,4 @@
 local class         = require "xgame.class"
-local assets        = require "xgame.assets"
 local R             = require "xgame.R"
 local Mediator      = require "xgame.Mediator"
 local Event         = require "xgame.event.Event"
@@ -36,12 +35,6 @@ function M:onCreate()
 
     local fileBrowser = FileBrowser.new(self, 'https://codetypes.com/testswf/')
     fileBrowser:addListener(Event.SELECT, function (_, data)
-        if string.find(data.url, '%.swf$') then
-            self.view.visible = false
-            xGame:startScene('system.console.TestSWF', data.url, function ()
-                self.view.visible = true
-            end)
-        end
     end)
 
     self.tab = {

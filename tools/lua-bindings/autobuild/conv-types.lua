@@ -224,7 +224,7 @@ typedef {
     LUACLS = nil,
     DECLTYPE = nil,
     CONV = 'auto_olua_$$_cocos2d_backend_TextureDescriptor',
-    NUM_VARS = 7,
+    NUM_VARS = 8,
 }
 
 typedef {
@@ -241,5 +241,13 @@ typedef {
     DECLTYPE = nil,
     CONV = 'auto_olua_$$_cocos2d_backend_DepthStencilDescriptor',
     NUM_VARS = 6,
+}
+
+typedef {
+    CPPCLS = 'cocos2d::backend::VertexLayout::Attribute',
+    LUACLS = nil,
+    DECLTYPE = nil,
+    CONV = 'auto_olua_$$_cocos2d_backend_VertexLayout_Attribute',
+    NUM_VARS = 5,
 }
 

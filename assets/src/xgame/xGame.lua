@@ -4,14 +4,12 @@ local timer         = require "xgame.timer"
 local runtime       = require "xgame.runtime"
 local Array         = require "xgame.Array"
 local MediatorMap   = require "xgame.MediatorMap"
-local updater       = require "xgame.updater"
 local Stage         = require "xgame.ui.Stage"
 local FGUINode      = require "xgame.ui.FGUINode"
 local SceneStack    = require "xgame.SceneStack"
 local Event         = require "xgame.event.Event"
-local Dispatcher    = require "xgame.event.Dispatcher"
-local fileloader    = require "xgame.loader.fileloader"
-local LoadQueue     = require "xgame.loader.LoadQueue"
+local Dispatcher    = require "xgame.Dispatcher"
+local LoadQueue     = require "xgame.LoadQueue"
 local Director      = require "cc.Director"
 
 local director = Director.instance
@@ -33,14 +31,10 @@ function xGame:ctor()
     local keepUIRootNotNull = FGUINode.new()
     director.runningScene:addChild(keepUIRootNotNull.cobj)
     director.runningScene:addChild(self.stage.cobj)
-    fileloader.addModule(updater.LOCAL_MANIFEST_PATH, updater.REMOTE_MANIFEST_PATH)
 end
 
 function xGame:setMaxIdleDuration(duration)
     self._maxIdleDuration = duration
-end
-
-function xGame:capture(node)
 end
 
 function xGame:gc()
