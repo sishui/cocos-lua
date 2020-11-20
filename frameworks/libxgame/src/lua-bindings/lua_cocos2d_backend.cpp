@@ -770,7 +770,7 @@ static int _cocos2d_backend_CommandBuffer_captureScreen(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "captureScreen";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](const unsigned char *arg1, int arg2, int arg3) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -2271,8 +2271,8 @@ static int _cocos2d_backend_ProgramState_setTextureArray(lua_State *L)
     olua_to_cppobj(L, 1, (void **)&self, "ccb.ProgramState");
     manual_olua_check_cocos2d_backend_UniformLocation(L, 2, &arg1);
     luaL_checktype(L, 3, LUA_TTABLE);
-    size_t arg2_total = lua_rawlen(L, 3);
-    arg2.reserve(arg2_total);
+    int arg2_total = (int)lua_rawlen(L, 3);
+    arg2.reserve((size_t)arg2_total);
     for (int i = 1; i <= arg2_total; i++) {
         lua_Unsigned obj;
         lua_rawgeti(L, 3, i);
@@ -2879,7 +2879,7 @@ static int _cocos2d_backend_TextureBackend_getBytes(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "Bytes";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 7, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg6 = [cb_store, cb_name, cb_ctx](const unsigned char *arg1, std::size_t arg2, std::size_t arg3) {
         lua_State *L = olua_mainthread(NULL);
 

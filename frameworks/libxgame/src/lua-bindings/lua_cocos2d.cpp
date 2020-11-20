@@ -3114,7 +3114,7 @@ static int _cocos2d_Scheduler_schedule1(lua_State *L)
     void *cb_store = (void *)arg2;
     std::string cb_tag = makeScheduleCallbackTag(arg7);
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](float arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -3156,7 +3156,7 @@ static int _cocos2d_Scheduler_schedule2(lua_State *L)
     void *cb_store = (void *)arg2;
     std::string cb_tag = makeScheduleCallbackTag(arg5);
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](float arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -3434,7 +3434,7 @@ static int _cocos2d_EventDispatcher_addCustomEventListener(lua_State *L)
     void *cb_store = (void *)olua_newobjstub(L, "cc.EventListenerCustom");
     std::string cb_tag = (arg1);
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](cocos2d::EventCustom *arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -4231,7 +4231,7 @@ static int _cocos2d_EventListenerTouchOneByOne_set_onTouchBegan(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Touch *arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
             bool ret = false;       
@@ -4303,7 +4303,7 @@ static int _cocos2d_EventListenerTouchOneByOne_set_onTouchCancelled(lua_State *L
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Touch *arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -4370,7 +4370,7 @@ static int _cocos2d_EventListenerTouchOneByOne_set_onTouchEnded(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Touch *arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -4437,7 +4437,7 @@ static int _cocos2d_EventListenerTouchOneByOne_set_onTouchMoved(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Touch *arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -4563,7 +4563,7 @@ static int _cocos2d_EventListenerTouchAllAtOnce_set_onTouchesBegan(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](const std::vector<cocos2d::Touch *> &arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -4630,7 +4630,7 @@ static int _cocos2d_EventListenerTouchAllAtOnce_set_onTouchesCancelled(lua_State
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](const std::vector<cocos2d::Touch *> &arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -4697,7 +4697,7 @@ static int _cocos2d_EventListenerTouchAllAtOnce_set_onTouchesEnded(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](const std::vector<cocos2d::Touch *> &arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -4764,7 +4764,7 @@ static int _cocos2d_EventListenerTouchAllAtOnce_set_onTouchesMoved(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](const std::vector<cocos2d::Touch *> &arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -4837,7 +4837,7 @@ static int _cocos2d_EventListenerCustom_create(lua_State *L)
     void *cb_store = (void *)olua_newobjstub(L, "cc.EventListenerCustom");
     std::string cb_tag = "listener";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](cocos2d::EventCustom *arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -4972,7 +4972,7 @@ static int _cocos2d_EventListenerKeyboard_set_onKeyPressed(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::EventKeyboard::KeyCode arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -5039,7 +5039,7 @@ static int _cocos2d_EventListenerKeyboard_set_onKeyReleased(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::EventKeyboard::KeyCode arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -5107,7 +5107,7 @@ static int _cocos2d_EventListenerAcceleration_create(lua_State *L)
     void *cb_store = (void *)olua_newobjstub(L, "cc.EventListenerAcceleration");
     std::string cb_tag = "listener";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 1, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Acceleration *arg1, cocos2d::Event *arg2) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -5244,7 +5244,7 @@ static int _cocos2d_EventListenerFocus_set_onFocusChanged(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::ui::Widget *arg1, cocos2d::ui::Widget *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -5364,7 +5364,7 @@ static int _cocos2d_EventListenerMouse_set_onMouseDown(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::EventMouse *arg1) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -5430,7 +5430,7 @@ static int _cocos2d_EventListenerMouse_set_onMouseMove(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::EventMouse *arg1) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -5496,7 +5496,7 @@ static int _cocos2d_EventListenerMouse_set_onMouseScroll(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::EventMouse *arg1) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -5562,7 +5562,7 @@ static int _cocos2d_EventListenerMouse_set_onMouseUp(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::EventMouse *arg1) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -5899,7 +5899,7 @@ static int _cocos2d_EventListenerController_set_onAxisEvent(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Controller *arg1, int arg2, cocos2d::Event *arg3) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -5967,7 +5967,7 @@ static int _cocos2d_EventListenerController_set_onConnected(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Controller *arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -6034,7 +6034,7 @@ static int _cocos2d_EventListenerController_set_onDisconnected(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Controller *arg1, cocos2d::Event *arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -6101,7 +6101,7 @@ static int _cocos2d_EventListenerController_set_onKeyDown(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Controller *arg1, int arg2, cocos2d::Event *arg3) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -6169,7 +6169,7 @@ static int _cocos2d_EventListenerController_set_onKeyRepeat(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Controller *arg1, int arg2, cocos2d::Event *arg3) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -6237,7 +6237,7 @@ static int _cocos2d_EventListenerController_set_onKeyUp(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Controller *arg1, int arg2, cocos2d::Event *arg3) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -8443,7 +8443,7 @@ static int _cocos2d_AudioEngine_preload2(lua_State *L)
     void *cb_store = (void *)olua_pushclassobj(L, "cc.AudioEngine");
     std::string cb_tag = "preload";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -8567,7 +8567,7 @@ static int _cocos2d_AudioEngine_setFinishCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg2 = [cb_store, cb_name, cb_ctx](int arg1, const std::string &arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -9423,7 +9423,7 @@ static int _cocos2d_FileUtils_createDirectory2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "createDirectory";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -9576,7 +9576,7 @@ static int _cocos2d_FileUtils_getDataFromFile2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "DataFromFile";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](cocos2d::Data arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -9722,7 +9722,7 @@ static int _cocos2d_FileUtils_getFileSize2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "FileSize";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](long arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -9926,7 +9926,7 @@ static int _cocos2d_FileUtils_getStringFromFile2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "StringFromFile";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](std::string arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -10120,7 +10120,7 @@ static int _cocos2d_FileUtils_isDirectoryExist2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "isDirectoryExist";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -10200,7 +10200,7 @@ static int _cocos2d_FileUtils_isFileExist2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "isFileExist";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -10303,7 +10303,7 @@ static int _cocos2d_FileUtils_listFilesAsync(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "listFilesAsync";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](std::vector<std::string> arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -10378,7 +10378,7 @@ static int _cocos2d_FileUtils_listFilesRecursivelyAsync(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "listFilesRecursivelyAsync";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](std::vector<std::string> arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -10479,7 +10479,7 @@ static int _cocos2d_FileUtils_removeDirectory2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "removeDirectory";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -10559,7 +10559,7 @@ static int _cocos2d_FileUtils_removeFile2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "removeFile";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -10647,7 +10647,7 @@ static int _cocos2d_FileUtils_renameFile2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "renameFile";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 5, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg4 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -10708,7 +10708,7 @@ static int _cocos2d_FileUtils_renameFile4(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "renameFile";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 4, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg3 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -10846,8 +10846,8 @@ static int _cocos2d_FileUtils_setSearchPaths(lua_State *L)
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.FileUtils");
     luaL_checktype(L, 2, LUA_TTABLE);
-    size_t arg1_total = lua_rawlen(L, 2);
-    arg1.reserve(arg1_total);
+    int arg1_total = (int)lua_rawlen(L, 2);
+    arg1.reserve((size_t)arg1_total);
     for (int i = 1; i <= arg1_total; i++) {
         std::string obj;
         lua_rawgeti(L, 2, i);
@@ -10873,8 +10873,8 @@ static int _cocos2d_FileUtils_setSearchResolutionsOrder(lua_State *L)
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.FileUtils");
     luaL_checktype(L, 2, LUA_TTABLE);
-    size_t arg1_total = lua_rawlen(L, 2);
-    arg1.reserve(arg1_total);
+    int arg1_total = (int)lua_rawlen(L, 2);
+    arg1.reserve((size_t)arg1_total);
     for (int i = 1; i <= arg1_total; i++) {
         std::string obj;
         lua_rawgeti(L, 2, i);
@@ -10946,7 +10946,7 @@ static int _cocos2d_FileUtils_writeDataToFile2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "writeDataToFile";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 4, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg3 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -11030,7 +11030,7 @@ static int _cocos2d_FileUtils_writeStringToFile2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "writeStringToFile";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 4, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg3 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -11135,7 +11135,7 @@ static int _cocos2d_FileUtils_writeValueMapToFile2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "writeValueMapToFile";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 4, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg3 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -11219,7 +11219,7 @@ static int _cocos2d_FileUtils_writeValueVectorToFile2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "writeValueVectorToFile";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 4, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg3 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -11922,8 +11922,8 @@ static int _cocos2d_GLView_setIcon2(lua_State *L)
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.GLView");
     luaL_checktype(L, 2, LUA_TTABLE);
-    size_t arg1_total = lua_rawlen(L, 2);
-    arg1.reserve(arg1_total);
+    int arg1_total = (int)lua_rawlen(L, 2);
+    arg1.reserve((size_t)arg1_total);
     for (int i = 1; i <= arg1_total; i++) {
         std::string obj;
         lua_rawgeti(L, 2, i);
@@ -15787,7 +15787,7 @@ static int _cocos2d_CustomCommand_setAfterCallback(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "AfterCallback";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx]() {
         lua_State *L = olua_mainthread(NULL);
 
@@ -15820,7 +15820,7 @@ static int _cocos2d_CustomCommand_setBeforeCallback(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "BeforeCallback";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx]() {
         lua_State *L = olua_mainthread(NULL);
 
@@ -16138,7 +16138,7 @@ static int _cocos2d_CustomCommand_set_func(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx]() {
             lua_State *L = olua_mainthread(NULL);
 
@@ -16370,7 +16370,7 @@ static int _cocos2d_TextureCache_addImageAsync1(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = makeTextureCacheCallbackTag(arg1);
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](cocos2d::Texture2D *arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -16410,7 +16410,7 @@ static int _cocos2d_TextureCache_addImageAsync2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = makeTextureCacheCallbackTag(arg3);
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](cocos2d::Texture2D *arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -18958,7 +18958,7 @@ static int _cocos2d_LuaWebSocketDelegate_set_onCloseCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::network::WebSocket *arg1) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -19024,7 +19024,7 @@ static int _cocos2d_LuaWebSocketDelegate_set_onErrorCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::network::WebSocket *arg1, const cocos2d::network::WebSocket::ErrorCode &arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -19091,7 +19091,7 @@ static int _cocos2d_LuaWebSocketDelegate_set_onMessageCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::network::WebSocket *arg1, const cocos2d::network::WebSocket::Data &arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -19158,7 +19158,7 @@ static int _cocos2d_LuaWebSocketDelegate_set_onOpenCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](cocos2d::network::WebSocket *arg1) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -19924,7 +19924,7 @@ static int _cocos2d_LuaComponent_set_onAddCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx]() {
             lua_State *L = olua_mainthread(NULL);
 
@@ -19984,7 +19984,7 @@ static int _cocos2d_LuaComponent_set_onEnterCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx]() {
             lua_State *L = olua_mainthread(NULL);
 
@@ -20044,7 +20044,7 @@ static int _cocos2d_LuaComponent_set_onExitCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx]() {
             lua_State *L = olua_mainthread(NULL);
 
@@ -20104,7 +20104,7 @@ static int _cocos2d_LuaComponent_set_onRemoveCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx]() {
             lua_State *L = olua_mainthread(NULL);
 
@@ -20164,7 +20164,7 @@ static int _cocos2d_LuaComponent_set_onUpdateCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx](float arg1) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -20766,7 +20766,7 @@ static int _cocos2d_Node_enumerateChildren(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "enumerateChildren";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](cocos2d::Node *arg1) {
         lua_State *L = olua_mainthread(NULL);
         bool ret = false;       
@@ -20913,10 +20913,10 @@ static int _cocos2d_Node_getBounds(lua_State *L)
     auto self = olua_checkobj<cocos2d::Node>(L, 1);
     auto target = olua_checkobj<cocos2d::Node>(L, 2);
 
-    float left = luaL_checknumber(L, 3);
-    float right = luaL_checknumber(L, 4);
-    float top = luaL_checknumber(L, 5);
-    float bottom = luaL_checknumber(L, 6);
+    float left = (float)luaL_checknumber(L, 3);
+    float right = (float)luaL_checknumber(L, 4);
+    float top = (float)luaL_checknumber(L, 5);
+    float bottom = (float)luaL_checknumber(L, 6);
 
     cocos2d::Vec3 p1(left, bottom, 0);
     cocos2d::Vec3 p2(right, top, 0);
@@ -22741,7 +22741,7 @@ static int _cocos2d_Node_schedule1(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = makeScheduleCallbackTag(arg2);
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](float arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -22779,7 +22779,7 @@ static int _cocos2d_Node_schedule2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = makeScheduleCallbackTag(arg3);
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](float arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -22821,7 +22821,7 @@ static int _cocos2d_Node_schedule3(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = makeScheduleCallbackTag(arg5);
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](float arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -22889,7 +22889,7 @@ static int _cocos2d_Node_scheduleOnce(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = makeScheduleCallbackTag(arg3);
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](float arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -23319,7 +23319,7 @@ static int _cocos2d_Node_setOnEnterCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx]() {
             lua_State *L = olua_mainthread(NULL);
 
@@ -23358,7 +23358,7 @@ static int _cocos2d_Node_setOnEnterTransitionDidFinishCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx]() {
             lua_State *L = olua_mainthread(NULL);
 
@@ -23397,7 +23397,7 @@ static int _cocos2d_Node_setOnExitCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx]() {
             lua_State *L = olua_mainthread(NULL);
 
@@ -23436,7 +23436,7 @@ static int _cocos2d_Node_setOnExitTransitionDidStartCallback(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 2)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg1 = [cb_store, cb_name, cb_ctx]() {
             lua_State *L = olua_mainthread(NULL);
 
@@ -24396,7 +24396,7 @@ static int _cocos2d_Node_set_alpha(lua_State *L)
     olua_startinvoke(L);
 
     auto self = olua_toobj<cocos2d::Node>(L, 1);
-    self->setOpacity(olua_checknumber(L, 2) * 255.0f);
+    self->setOpacity((uint8_t)olua_checknumber(L, 2) * 255.0f);
 
     olua_endinvoke(L);
 
@@ -24421,7 +24421,7 @@ static int _cocos2d_Node_set_anchorX(lua_State *L)
 
     auto self = olua_toobj<cocos2d::Node>(L, 1);
     cocos2d::Vec2 anchor = self->getAnchorPoint();
-    anchor.x = olua_checknumber(L, 2);
+    anchor.x = (float)olua_checknumber(L, 2);
     self->setAnchorPoint(anchor);
 
     olua_endinvoke(L);
@@ -24447,7 +24447,7 @@ static int _cocos2d_Node_set_anchorY(lua_State *L)
 
     auto self = olua_toobj<cocos2d::Node>(L, 1);
     cocos2d::Vec2 anchor = self->getAnchorPoint();
-    anchor.y = olua_checknumber(L, 2);
+    anchor.y = (float)olua_checknumber(L, 2);
     self->setAnchorPoint(anchor);
 
     olua_endinvoke(L);
@@ -24473,7 +24473,7 @@ static int _cocos2d_Node_set_height(lua_State *L)
 
     auto self = olua_toobj<cocos2d::Node>(L, 1);
     cocos2d::Size size = self->getContentSize();
-    size.height = olua_checknumber(L, 2);
+    size.height = (float)olua_checknumber(L, 2);
     self->setContentSize(size);
 
     olua_endinvoke(L);
@@ -24499,7 +24499,7 @@ static int _cocos2d_Node_set_width(lua_State *L)
 
     auto self = olua_toobj<cocos2d::Node>(L, 1);
     cocos2d::Size size = self->getContentSize();
-    size.width = olua_checknumber(L, 2);
+    size.width = (float)olua_checknumber(L, 2);
     self->setContentSize(size);
 
     olua_endinvoke(L);
@@ -24774,7 +24774,7 @@ static int _cocos2d_LuaTweenNode_create(lua_State *L)
     void *cb_store = (void *)olua_newobjstub(L, "cc.LuaTweenNode");
     std::string cb_tag = "ActionTween";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 1, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](float arg1, const std::string &arg2) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -31431,7 +31431,7 @@ static int _cocos2d_RenderTexture_newImage1(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "newImage";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Image *arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -31467,7 +31467,7 @@ static int _cocos2d_RenderTexture_newImage2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "newImage";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 2, OLUA_TAG_NEW);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](cocos2d::Image *arg1) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -31532,7 +31532,7 @@ static int _cocos2d_RenderTexture_saveToFile1(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 4)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 4, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg3 = [cb_store, cb_name, cb_ctx](cocos2d::RenderTexture *arg1, const std::string &arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -31582,7 +31582,7 @@ static int _cocos2d_RenderTexture_saveToFile2(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 5)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 5, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg4 = [cb_store, cb_name, cb_ctx](cocos2d::RenderTexture *arg1, const std::string &arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -31761,7 +31761,7 @@ static int _cocos2d_RenderTexture_saveToFileAsNonPMA1(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 4)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 4, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg3 = [cb_store, cb_name, cb_ctx](cocos2d::RenderTexture *arg1, const std::string &arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -31809,7 +31809,7 @@ static int _cocos2d_RenderTexture_saveToFileAsNonPMA2(lua_State *L)
     void *cb_store = (void *)self;
     std::string cb_tag = "saveToFile";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 5, OLUA_TAG_REPLACE);
-    lua_Unsigned cb_ctx = olua_context(L);
+    lua_Integer cb_ctx = olua_context(L);
     arg4 = [cb_store, cb_name, cb_ctx](cocos2d::RenderTexture *arg1, const std::string &arg2) {
         lua_State *L = olua_mainthread(NULL);
 
@@ -50853,7 +50853,7 @@ static int _cocos2d_NavMeshAgent_move1(lua_State *L)
     std::string cb_name;
     if (olua_is_std_function(L, 3)) {
         cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 3, OLUA_TAG_REPLACE);
-        lua_Unsigned cb_ctx = olua_context(L);
+        lua_Integer cb_ctx = olua_context(L);
         arg2 = [cb_store, cb_name, cb_ctx](cocos2d::NavMeshAgent *arg1, float arg2) {
             lua_State *L = olua_mainthread(NULL);
 
@@ -51608,8 +51608,8 @@ static int _cocos2d_NavMesh_findPath(lua_State *L)
     auto_olua_check_cocos2d_Vec3(L, 2, &arg1);
     auto_olua_check_cocos2d_Vec3(L, 3, &arg2);
     luaL_checktype(L, 4, LUA_TTABLE);
-    size_t arg3_total = lua_rawlen(L, 4);
-    arg3.reserve(arg3_total);
+    int arg3_total = (int)lua_rawlen(L, 4);
+    arg3.reserve((size_t)arg3_total);
     for (int i = 1; i <= arg3_total; i++) {
         cocos2d::Vec3 obj;
         lua_rawgeti(L, 4, i);
