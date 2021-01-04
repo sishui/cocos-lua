@@ -1,7 +1,7 @@
 #ifndef __XGAME_ROOTSCENE_H__
 #define __XGAME_ROOTSCENE_H__
 
-#include "xgame/config.h"
+#include "xgame/runtime.h"
 
 #include "2d/CCScene.h"
 #include "ui/UILayout.h"
@@ -47,7 +47,19 @@ class MaskLayout : public cocos2d::ui::Layout {
 public:
     CREATE_FUNC(MaskLayout);
     
+    MaskLayout() {};
+    virtual ~MaskLayout();
+    
     cocos2d::DrawNode *getClippingNode() { return _clippingStencil; }
+    
+    virtual void visit(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags) override;
+    virtual void onEnter() override;
+    virtual void onExit() override;
+    
+    void setFilter(cocos2d::Node *value);
+    cocos2d::Node *getFilter();
+private:
+    cocos2d::Node *_filter = nullptr;
 };
 
 

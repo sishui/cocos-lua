@@ -1,25 +1,14 @@
 #ifndef __XGAME_LUA_H__
 #define __XGAME_LUA_H__
 
-#include "xgame/config.h"
 #include "cocos2d.h"
-#include "lua.hpp"
+#include "xgame/runtime.h"
+#include "olua/olua.hpp"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 #define CCLUA_HAVE_WEBVIEW
 #define CCLUA_HAVE_VIDEOPLAYER
 #endif
-
-#define olua_mainthread(L)              xlua_mainthread(L)
-#define olua_startcmpdelref(L, i, n)    xlua_startcmpdelref(L, (i), (n))
-#define olua_endcmpdelref(L, i, n)      xlua_endcmpdelref(L, (i), (n))
-#define olua_postpush(L, v, s)          xlua_postpush(L, (v), (s))
-#define olua_postnew(L, obj)            xlua_postnew(L, (obj))
-#define olua_startinvoke(L)             (xlua_invokingstate = L)
-#define olua_endinvoke(L)               (xlua_invokingstate = nullptr)
-
-#define oluai_registerluatype(L, t, c)  (xlua_registerluatype(L, (t), (c)))
-#define oluai_getluatype(L, t)          (xlua_getluatype(L, (t)))
 
 extern lua_State *xlua_invokingstate;
 
@@ -28,20 +17,34 @@ int xlua_dofile(lua_State *L, const char *filename);
 int xlua_nonsupport(lua_State *L);
 int xlua_ccobjgc(lua_State *L);
 
-lua_State *xlua_mainthread(lua_State *L);
-void xlua_startcmpdelref(lua_State *L, int idx, const char *refname);
-void xlua_endcmpdelref(lua_State *L, int idx, const char *refname);
+//
+// implement olua api
+//
+#ifdef OLUA_HAVE_MAINTHREAD
+lua_State *olua_mainthread(lua_State *L);
+#endif
 
-template <typename T> void xlua_postpush(lua_State *L, T* obj, int status);
-template <typename T> void xlua_postnew(lua_State *L, T *obj);
+#ifdef OLUA_HAVE_CHECKHOSTTHREAD
+#define olua_checkhostthread()  assert(xgame::runtime::isCocosThread() && "callback should run on cocos thread")
+#endif
 
-void xlua_registerluatype(lua_State *L, const char *type, const char *cls);
-const char *xlua_getluatype(lua_State *L, const char *type);
+#ifdef OLUA_HAVE_TRACEINVOKING
+#define olua_startinvoke(L)     (xlua_invokingstate = L)
+#define olua_endinvoke(L)       (xlua_invokingstate = nullptr)
+#endif
 
+#ifdef OLUA_HAVE_CMPREF
+void olua_startcmpref(lua_State *L, int idx, const char *refname);
+void olua_endcmpref(lua_State *L, int idx, const char *refname);
+#endif
 
-#include "olua/olua.hpp"
+#ifdef OLUA_HAVE_LUATYPE
+void olua_registerluatype(lua_State *L, const char *type, const char *cls);
+const char *olua_getluatype(lua_State *L, const char *type);
+#endif
 
-template <typename T> void xlua_postpush(lua_State *L, T* obj, int status)
+#ifdef OLUA_HAVE_POSTPUSH
+template <typename T> void olua_postpush(lua_State *L, T* obj, int status)
 {
     if (std::is_base_of<cocos2d::Ref, T>::value &&
             (status == OLUA_OBJ_NEW || status == OLUA_OBJ_UPDATE)) {
@@ -51,20 +54,20 @@ template <typename T> void xlua_postpush(lua_State *L, T* obj, int status)
             luaL_error(L, "class '%s' not inherit from 'cc.Ref'", olua_getluatype(L, obj, ""));
         }
 #endif
-        olua_addobjcount(L);
     }
 }
+#endif
 
-template <typename T> void xlua_postnew(lua_State *L, T *obj)
+#ifdef OLUA_HAVE_POSTNEW
+template <typename T> void olua_postnew(lua_State *L, T *obj)
 {
     if (std::is_base_of<cocos2d::Ref, T>::value) {
         ((cocos2d::Ref *)obj)->autorelease();
     } else {
-        CCASSERT(obj == olua_toobj<T>(L, -1), "must be same object");
-        lua_pushstring(L, ".ownership");
-        lua_pushboolean(L, true);
-        olua_setvariable(L, -3);
+        olua_assert(obj == olua_toobj<T>(L, -1), "must be same object");
+        olua_setownership(L, -1, OLUA_OWNERSHIP_VM);
     }
 }
+#endif
 
 #endif

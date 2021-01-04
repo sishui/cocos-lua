@@ -36,6 +36,7 @@
 #define OLUA_CKEY_SET       ".set"
 #define OLUA_CKEY_CLSOBJ    ".classobj"
 #define OLUA_CKEY_CLSAGENT  ".classagent"
+#define OLUA_CKEY_OWNERSHIP ".ownership"
 
 #define OLUA_OBJTABLE       ((void *)(uintptr_t)aux_pushobjtable)
 #define OLUA_POOLTABLE      ((void *)(uintptr_t)aux_pushlocalobj)
@@ -99,9 +100,9 @@ static olua_vmstatus_t *aux_getvmstatus(lua_State *L)
     return vms;
 }
 
-OLUA_API size_t olua_modifyobjcount(lua_State *L, size_t n)
+OLUA_API size_t olua_objcount(lua_State *L)
 {
-    return aux_getvmstatus(L)->objcount += n;
+    return aux_getvmstatus(L)->objcount;
 }
 
 OLUA_API bool olua_isdebug(lua_State *L)
@@ -109,7 +110,7 @@ OLUA_API bool olua_isdebug(lua_State *L)
     return aux_getvmstatus(L)->debug;
 }
 
-#ifndef olua_mainthread
+#ifndef OLUA_HAVE_MAINTHREAD
 OLUA_API lua_State *olua_mainthread(lua_State *L)
 {
     lua_State *mt = NULL;
@@ -126,6 +127,20 @@ OLUA_API lua_State *olua_mainthread(lua_State *L)
 OLUA_API lua_Integer olua_context(lua_State *L)
 {
     return aux_getvmstatus(L)->ctxid;
+}
+
+bool olua_isinteger(lua_State *L, int idx)
+{
+#if LUA_VERSION_NUM >= 503
+    if (lua_isinteger(L, idx)) {
+        return true;
+    }
+#endif
+    if (olua_isnumber(L, idx)) {
+        lua_Number n = lua_tonumber(L, idx);
+        return n == (lua_Number)(floor(n));
+    }
+    return false;
 }
 
 OLUA_API lua_Integer olua_checkinteger(lua_State *L, int idx)
@@ -248,6 +263,7 @@ OLUA_API void *olua_newobjstub(lua_State *L, const char *cls)
     olua_rawsetp(L, -3, ptr);                   // L: objtable ud     objtable[ptr] = ud
     lua_replace(L, -2);                         // L: ud
     olua_setmetatable(L, cls);
+    aux_getvmstatus(L)->objcount++;
     return ptr;
 }
 
@@ -314,8 +330,9 @@ OLUA_API int olua_pushobj(lua_State *L, void *obj, const char *cls)
     aux_pushobjtable(L);                        // L: mt objtable
     
     if (olua_likely(olua_rawgetp(L, -1, obj) == LUA_TNIL)) {
+        olua_vmstatus_t *vms = aux_getvmstatus(L);
         lua_pop(L, 1);                          // L: mt objtable
-        if (olua_unlikely(aux_getvmstatus(L)->poolenabled)) {
+        if (olua_unlikely(vms->poolenabled)) {
             aux_pushlocalobj(L, obj);
             status = OLUA_OBJ_EXIST;
         } else {
@@ -323,6 +340,7 @@ OLUA_API int olua_pushobj(lua_State *L, void *obj, const char *cls)
             lua_pushvalue(L, -1);               // L: mt objtable ud ud
             olua_rawsetp(L, -3, obj);           // L: mt objtable ud     objtable[obj] = ud
             status = OLUA_OBJ_NEW;
+            vms->objcount++;
         }
         lua_pushvalue(L, -3);                   // L: mt objtable ud mt
         lua_setmetatable(L, -2);                // L: mt objtable ud     ud.metatable = mt
@@ -388,6 +406,26 @@ OLUA_API const char *olua_objstring(lua_State *L, int idx)
     const void *p = olua_isuserdata(L, idx) ?
         olua_torawobj(L, idx) : lua_topointer(L, idx);
     return lua_pushfstring(L, "%s: %p", olua_typename(L, idx), p);
+}
+
+OLUA_API void olua_setownership(lua_State *L, int idx, int owner)
+{
+    idx = lua_absindex(L, idx);
+    lua_pushstring(L, OLUA_CKEY_OWNERSHIP);
+    lua_pushinteger(L, owner);
+    olua_setvariable(L, idx);
+}
+
+OLUA_API int olua_getownership(lua_State *L, int idx)
+{
+    int owner = OLUA_OWNERSHIP_NONE;
+    idx = lua_absindex(L, idx);
+    lua_pushstring(L, OLUA_CKEY_OWNERSHIP);
+    if (olua_getvariable(L, idx) == LUA_TNUMBER) {
+        owner = (int)olua_tointeger(L, -1);
+    }
+    lua_pop(L, 1);
+    return owner;
 }
 
 OLUA_API void olua_enable_objpool(lua_State *L)
@@ -790,6 +828,9 @@ static int cls_metamethod(lua_State *L)
             lua_call(L, lua_gettop(L) - 1, LUA_MULTRET);
             return lua_gettop(L);
         } else if (olua_isuserdata(L, 2)) {
+            if (olua_isa(L, 2, OLUA_VOIDCLS)) {
+                aux_getvmstatus(L)->objcount--;
+            }
             olua_pusherrorfunc(L);
             lua_insert(L, 1);
             lua_pcall(L, lua_gettop(L) - 2, LUA_MULTRET, 1);
@@ -1057,7 +1098,7 @@ static void aux_checkfield(lua_State *L, int t, const char *field, int type, boo
             typearg = luaL_typename(L, idx);
         }
         msg = lua_pushfstring(L, "check '%s': %s expected, got %s", field, tname, typearg);
-        luaL_argerror(L, idx, msg);
+        luaL_argerror(L, t, msg);
     }
 }
 
@@ -1195,9 +1236,7 @@ static int l_isa(lua_State *L)
 static int l_take(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TUSERDATA);
-    lua_pushstring(L, ".ownership");
-    lua_pushnil(L);
-    olua_setvariable(L, 1);
+    olua_setownership(L, 1, OLUA_OWNERSHIP_NONE);
     return 0;
 }
 
@@ -1307,15 +1346,6 @@ OLUA_API int lua_absindex(lua_State *L, int idx)
 {
     return (idx > 0 || idx <= LUA_REGISTRYINDEX) ?
         idx : (idx + 1 + lua_gettop(L));
-}
-
-OLUA_API int lua_isinteger(lua_State *L, int idx)
-{
-    if (olua_isnumber(L, idx)) {
-        lua_Number n = lua_tonumber(L, idx);
-        return n == (lua_Number)(floor(n));
-    }
-    return false;
 }
 
 OLUA_API void luaL_setfuncs(lua_State *L, const luaL_Reg *l, int nup)

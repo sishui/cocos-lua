@@ -41,6 +41,10 @@ extern "C" {
 #include <assert.h>
 #include <math.h>
 
+#ifdef OLUA_USER_H
+#include OLUA_USER_H
+#endif
+
 #ifdef OLUA_DEBUG
 #define olua_assert(e, msg) assert((e) && (msg))
 #else
@@ -68,13 +72,10 @@ extern "C" {
 #endif
 
 // stat api
-OLUA_API size_t olua_modifyobjcount(lua_State *L, size_t n);
-#define olua_addobjcount(L) (olua_modifyobjcount(L, 1))
-#define olua_subobjcount(L) (olua_modifyobjcount(L, -1))
-#define olua_objcount(L) (olua_modifyobjcount(L, 0))
+OLUA_API size_t olua_objcount(lua_State *L);
 OLUA_API bool olua_isdebug(lua_State *L);
 
-#ifndef olua_mainthread
+#ifndef OLUA_HAVE_MAINTHREAD
 OLUA_API lua_State *olua_mainthread(lua_State *L);
 #endif
 
@@ -95,8 +96,8 @@ OLUA_API lua_Integer olua_context(lua_State *L);
 #define olua_isboolean(L,n)         (lua_type(L, (n)) == LUA_TBOOLEAN)
 #define olua_isstring(L,n)          (lua_type(L, (n)) == LUA_TSTRING)
 #define olua_isnumber(L,n)          (lua_type(L, (n)) == LUA_TNUMBER)
-#define olua_isinteger(L,n)         (lua_isinteger(L, (n)))
 #define olua_isthread(L,n)          (lua_type(L, (n)) == LUA_TTHREAD)
+bool olua_isinteger(lua_State *L, int idx);
     
 // check or get raw value
 #define olua_tonumber(L, i)         (lua_tonumber(L, (i)))
@@ -142,6 +143,12 @@ OLUA_API int olua_pushobj(lua_State *L, void *obj, const char *cls);
 OLUA_API void *olua_checkobj(lua_State *L, int idx, const char *cls);
 OLUA_API void *olua_toobj(lua_State *L, int idx, const char *cls);
 OLUA_API const char *olua_objstring(lua_State *L, int idx);
+
+// ownership
+#define OLUA_OWNERSHIP_NONE 0
+#define OLUA_OWNERSHIP_VM   1
+OLUA_API void olua_setownership(lua_State *L, int idx, int owner);
+OLUA_API int olua_getownership(lua_State *L, int idx);
     
 // optimize temporary userdata, used in push stack obj to lua inside the callback
 OLUA_API void olua_enable_objpool(lua_State *L);
@@ -273,7 +280,6 @@ typedef lua_Integer lua_Unsigned;
 OLUA_API void lua_setuservalue(lua_State *L, int idx);
 OLUA_API int lua_getuservalue(lua_State *L, int idx);
 OLUA_API int lua_absindex(lua_State *L, int idx);
-OLUA_API int lua_isinteger(lua_State *L, int idx);
 OLUA_API int luaL_getsubtable (lua_State *L, int idx, const char *fname);
 OLUA_API void luaL_setfuncs(lua_State *L, const luaL_Reg *l, int nup);
 OLUA_API void luaL_traceback(lua_State *L, lua_State *L1, const char *msg, int level);

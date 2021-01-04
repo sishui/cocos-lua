@@ -6,6 +6,7 @@
 #include "xgame/preferences.h"
 #include "xgame/RootScene.h"
 #include "xgame/timer.h"
+#include "xgame/xlua.h"
 #include "lua-bindings/lua_bindings.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
@@ -101,13 +102,19 @@ void runtime::init()
     AudioEngine::lazyInit();
     
     // cocos event
-    auto dispatcher = Director::getInstance()->getEventDispatcher();
-    dispatcher->addCustomEventListener(Director::EVENT_AFTER_UPDATE, [](EventCustom *e) {
+    runtime::on(Director::EVENT_BEFORE_UPDATE, []() {
         runtime::dispatchEvent("runtimeUpdate", "");
     });
-    dispatcher->addCustomEventListener(Director::EVENT_PROJECTION_CHANGED, [](EventCustom *e) {
+    runtime::on(Director::EVENT_PROJECTION_CHANGED, []() {
         runtime::dispatchEvent("runtimeResize", "");
     });
+}
+
+bool runtime::isCocosThread()
+{
+    static std::thread::id unknow;
+    const std::thread::id &current = Director::getInstance()->getCocos2dThreadId();
+    return current == unknow || current == std::this_thread::get_id();
 }
 
 float runtime::getTime()
@@ -237,7 +244,7 @@ void runtime::luaOpen(lua_CFunction libfunc)
 //
 const std::string runtime::getVersion()
 {
-    return "1.16.1";
+    return "2.0.3";
 }
 
 const std::string runtime::getPackageName()
@@ -310,11 +317,7 @@ RenderTexture *runtime::capture(Node *node, float width, float height, backend::
     image->retain();
     node->retain();
     
-    EventListenerCustom *listener = new EventListenerCustom();
-    listener->init(Director::EVENT_BEFORE_DRAW, [=](EventCustom *) {
-        director->getEventDispatcher()->removeEventListener(listener);
-        director->setNextDeltaTimeZero(true);
-
+    runtime::once(Director::EVENT_AFTER_VISIT, [=]() {
         bool savedVisible = node->isVisible();
         Point savedPos = node->getPosition();
         Point anchor;
@@ -328,13 +331,12 @@ RenderTexture *runtime::capture(Node *node, float width, float height, backend::
         image->end();
         node->setPosition(savedPos);
         node->setVisible(savedVisible);
-        
-        listener->release();
-        image->release();
-        node->release();
-    });
     
-    director->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 1);
+        runtime::once(Director::EVENT_AFTER_DRAW, [=]() {
+            image->release();
+            node->release();
+        });
+    });
     
     return image;
 }
@@ -417,7 +419,7 @@ void runtime::setDispatcher(const EventDispatcher &dispatcher)
 
 void runtime::dispatchEvent(const std::string &event, const std::string &args)
 {
-    if (Director::getInstance()->getCocos2dThreadId() == std::this_thread::get_id()) {
+    if (runtime::isCocosThread()) {
         if (_dispatcher) {
             _dispatcher(event, args);
         } else {
@@ -471,6 +473,26 @@ void runtime::callref(int func, const std::string &args, bool once)
             lua_settop(L, top);
         });
     }
+}
+
+void runtime::once(const std::string &event, const std::function<void()> callback)
+{
+    auto director = Director::getInstance();
+    EventListenerCustom *listener = new EventListenerCustom();
+    listener->init(event, [=](EventCustom *) {
+        callback();
+        director->getEventDispatcher()->removeEventListener(listener);
+        listener->release();
+    });
+    director->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 1);
+}
+
+void runtime::on(const std::string &event, const std::function<void()> callback)
+{
+    auto director = Director::getInstance();
+    director->getEventDispatcher()->addCustomEventListener(event, [=](EventCustom *) {
+        callback();
+    });
 }
 
 //
@@ -550,9 +572,7 @@ void runtime::log(const char *fmt, ...)
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     if (_reportError) {
-        static std::thread::id unknow;
-        const std::thread::id &current = Director::getInstance()->getCocos2dThreadId();
-        if (current == unknow || current == std::this_thread::get_id()) {
+        if (runtime::isCocosThread()) {
             CrashReport::log(CrashReport::Verbose, _logBuf);
         } else {
             std::string msg = _logBuf;

@@ -283,6 +283,7 @@ static int _xgame_runtime_alert(lua_State *L)
     lua_Integer cb_ctx = olua_context(L);
     arg5 = [cb_store, cb_name, cb_ctx](bool arg1) {
         lua_State *L = olua_mainthread(NULL);
+        olua_checkhostthread();
 
         if (L != NULL && olua_context(L) == cb_ctx) {
             int top = lua_gettop(L);
@@ -741,6 +742,7 @@ static int _xgame_runtime_openURL1(lua_State *L)
         lua_Integer cb_ctx = olua_context(L);
         arg2 = [cb_store, cb_name, cb_ctx](bool arg1) {
             lua_State *L = olua_mainthread(NULL);
+            olua_checkhostthread();
 
             if (L != NULL && olua_context(L) == cb_ctx) {
                 int top = lua_gettop(L);
@@ -831,6 +833,7 @@ static int _xgame_runtime_requestPermission(lua_State *L)
     lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx](xgame::PermissionStatus arg1) {
         lua_State *L = olua_mainthread(NULL);
+        olua_checkhostthread();
 
         if (L != NULL && olua_context(L) == cb_ctx) {
             int top = lua_gettop(L);
@@ -893,6 +896,7 @@ static int _xgame_runtime_setDispatcher(lua_State *L)
     lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](const std::string &arg1, const std::string &arg2) {
         lua_State *L = olua_mainthread(NULL);
+        olua_checkhostthread();
 
         if (L != NULL && olua_context(L) == cb_ctx) {
             int top = lua_gettop(L);
@@ -2067,6 +2071,7 @@ static int _xgame_timer_delay(lua_State *L)
     lua_Integer cb_ctx = olua_context(L);
     arg2 = [cb_store, cb_name, cb_ctx]() {
         lua_State *L = olua_mainthread(NULL);
+        olua_checkhostthread();
 
         if (L != NULL && olua_context(L) == cb_ctx) {
             int top = lua_gettop(L);
@@ -2104,6 +2109,7 @@ static int _xgame_timer_delayWithTag(lua_State *L)
     lua_Integer cb_ctx = olua_context(L);
     arg3 = [cb_store, cb_name, cb_ctx]() {
         lua_State *L = olua_mainthread(NULL);
+        olua_checkhostthread();
 
         if (L != NULL && olua_context(L) == cb_ctx) {
             int top = lua_gettop(L);
@@ -2534,6 +2540,7 @@ static int _xgame_downloader_setDispatcher(lua_State *L)
     lua_Integer cb_ctx = olua_context(L);
     arg1 = [cb_store, cb_name, cb_ctx](const xgame::downloader::FileTask &arg1) {
         lua_State *L = olua_mainthread(NULL);
+        olua_checkhostthread();
 
         if (L != NULL && olua_context(L) == cb_ctx) {
             int top = lua_gettop(L);
@@ -2614,13 +2621,74 @@ static int _xgame_MaskLayout_getClippingNode(lua_State *L)
     return num_ret;
 }
 
+static int _xgame_MaskLayout_getFilter(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    xgame::MaskLayout *self = nullptr;
+
+    olua_to_cppobj(L, 1, (void **)&self, "kernel.MaskLayout");
+
+    // @addref(filter ^) cocos2d::Node *getFilter()
+    cocos2d::Node *ret = self->getFilter();
+    int num_ret = olua_push_cppobj(L, ret, "cc.Node");
+
+    // insert code after call
+    olua_addref(L, 1, "filter", -1, OLUA_MODE_SINGLE);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _xgame_MaskLayout_new(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    // MaskLayout()
+    xgame::MaskLayout *ret = new xgame::MaskLayout();
+    int num_ret = olua_push_cppobj(L, ret, "kernel.MaskLayout");
+    olua_postnew(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _xgame_MaskLayout_setFilter(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    xgame::MaskLayout *self = nullptr;
+    cocos2d::Node *arg1 = nullptr;       /** value */
+
+    olua_to_cppobj(L, 1, (void **)&self, "kernel.MaskLayout");
+    if (!olua_isnoneornil(L, 2)) {
+        olua_check_cppobj(L, 2, (void **)&arg1, "cc.Node");
+    }
+
+    // void setFilter(@nullable@addref(filter ^) cocos2d::Node *value)
+    self->setFilter(arg1);
+
+    // insert code after call
+    olua_addref(L, 1, "filter", 2, OLUA_MODE_SINGLE);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
 static int luaopen_xgame_MaskLayout(lua_State *L)
 {
     oluacls_class(L, "kernel.MaskLayout", "ccui.Layout");
     oluacls_func(L, "__move", _xgame_MaskLayout___move);
     oluacls_func(L, "create", _xgame_MaskLayout_create);
     oluacls_func(L, "getClippingNode", _xgame_MaskLayout_getClippingNode);
+    oluacls_func(L, "getFilter", _xgame_MaskLayout_getFilter);
+    oluacls_func(L, "new", _xgame_MaskLayout_new);
+    oluacls_func(L, "setFilter", _xgame_MaskLayout_setFilter);
     oluacls_prop(L, "clippingNode", _xgame_MaskLayout_getClippingNode, nullptr);
+    oluacls_prop(L, "filter", _xgame_MaskLayout_getFilter, _xgame_MaskLayout_setFilter);
 
     olua_registerluatype<xgame::MaskLayout>(L, "kernel.MaskLayout");
 

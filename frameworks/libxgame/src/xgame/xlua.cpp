@@ -1,7 +1,5 @@
 #include "xgame/xlua.h"
-#include "xgame/runtime.h"
 #include "xgame/filesystem.h"
-#include "olua/olua.hpp"
 
 #include "cocos2d.h"
 
@@ -366,7 +364,7 @@ int xlua_ccobjgc(lua_State *L)
         const char *str = olua_objstring(L, 1);
         xgame::runtime::log("lua gc: %s(NAME=%s, RC=%d, TC=%d)", str,
             name && strlen(name) > 0 ? name : "''",
-            obj->getReferenceCount() - 1, olua_objcount(L) - 1);
+            obj->getReferenceCount() - 1, olua_objcount(L));
         lua_settop(L, top);
     }
     
@@ -374,16 +372,18 @@ int xlua_ccobjgc(lua_State *L)
     olua_setrawobj(L, 1, nullptr);
     lua_pushnil(L);
     lua_setuservalue(L, 1);
-    olua_subobjcount(L);
     return 0;
 }
 
-lua_State *xlua_mainthread(lua_State *L)
+#ifdef OLUA_HAVE_MAINTHREAD
+lua_State *olua_mainthread(lua_State *L)
 {
     return runtime::luaVM();
 }
+#endif
 
-void xlua_startcmpdelref(lua_State *L, int idx, const char *refname)
+#ifdef OLUA_HAVE_CMPREF
+void olua_startcmpref(lua_State *L, int idx, const char *refname)
 {
     olua_getreftable(L, idx, refname);                      // L: t
     lua_pushnil(L);                                         // L: t k
@@ -421,18 +421,21 @@ static bool should_delref(lua_State *L, int idx)
     return false;
 }
 
-void xlua_endcmpdelref(lua_State *L, int idx, const char *refname)
+void olua_endcmpref(lua_State *L, int idx, const char *refname)
 {
     olua_visitrefs(L, idx, refname, should_delref);
 }
+#endif
 
-void xlua_registerluatype(lua_State *L, const char *type, const char *cls)
+#ifdef OLUA_HAVE_LUATYPE
+void olua_registerluatype(lua_State *L, const char *type, const char *cls)
 {
     xlua_typemap[type] = cls;
 }
 
-const char *xlua_getluatype(lua_State *L, const char *type)
+const char *olua_getluatype(lua_State *L, const char *type)
 {
     auto cls = xlua_typemap.find(type);
     return cls != xlua_typemap.end() ? cls->second.c_str() : nullptr;
 }
+#endif
