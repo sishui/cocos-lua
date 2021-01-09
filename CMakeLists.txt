@@ -40,16 +40,12 @@ option(CCLUA_BUILD_QRCODE "Build with qrcode support" ON)
 option(CCLUA_BUILD_FAIRYGUI "Build with fairygui support" ON)
 option(CCLUA_BUILD_DRAGONBONES "Build with dragonbones support" ON)
 option(CCLUA_BUILD_SWF "Build with swf support" OFF)
+option(CCLUA_BUILD_JPUSH "Build with jpush support" OFF)
+option(CCLUA_BUILD_JANALYTICS "Build with janalytics support" OFF)
 option(CCLUA_FEATURE_MSAA "Support MSAA" OFF)
 option(CCLUA_FEATURE_IDFA "Support IDFA" OFF)
 
 include(config.cmake)
-
-if(XCODE)
-    if(NOT DEFINED CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET)
-        SET (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 9.0)
-    endif()
-endif()
 
 add_definitions(-DCC_FILEUTILS_APPLE_ENABLE_OBJC=0)
 add_definitions(-DCC_ENABLE_SCRIPT_BINDING=0)
@@ -187,6 +183,11 @@ if(CCLUA_BUILD_SWF)
     target_compile_definitions(${APP_NAME} PUBLIC CCLUA_BUILD_SWF)
 endif()
 
+if(CCLUA_BUILD_JPUSH OR CCLUA_BUILD_JANALYTICS)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/frameworks/plugins/jiguang)
+    target_link_libraries(${APP_NAME} jiguang)
+endif()
+
 target_link_libraries(${APP_NAME} cocos2d)
 target_include_directories(${APP_NAME}
     PRIVATE ${RUNTIME_SRC_ROOT}/Classes
@@ -235,7 +236,10 @@ if(APPLE)
     set_xcode_property(${APP_NAME} CURRENT_PROJECT_VERSION "${APP_BUILD}")
     set_xcode_property(${APP_NAME} MARKETING_VERSION "${APP_VERSION}")
     set_xcode_property(${APP_NAME} TARGETED_DEVICE_FAMILY "1,2")
-    set_xcode_property(${APP_NAME} IPHONEOS_DEPLOYMENT_TARGET "9.0")
+
+    if(NOT DEFINED CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET)
+        SET (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 10.0)
+    endif()
 
     # warnings
     set(CMAKE_XCODE_ATTRIBUTE_CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING "YES")

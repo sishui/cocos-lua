@@ -8,6 +8,7 @@
 #include "lua_cocos2d_backend.h"
 #include "lua_cocos2d_physics.h"
 #include "lua_cocos2d_ui.h"
+#include "lua_manual.h"
 #include "lua_xml_http_request.h"
 #include "lua_photo.h"
 #include "lua_iap.h"
@@ -58,6 +59,7 @@ int luaopen_bindings(lua_State *L)
     olua_callfunc(L, luaopen_cocos2d_ui);
     olua_callfunc(L, luaopen_xgame);
     olua_callfunc(L, luaopen_xml_http_request);
+    olua_callfunc(L, luaopen_manual);
     
     olua_require(L, "olua", luaopen_olua);
 
@@ -96,16 +98,16 @@ int luaopen_bindings(lua_State *L)
 #endif //CCLUA_BUILD_LAME
 
 #ifdef CCLUA_BUILD_BUGLY
-    olua_require(L, "kernel.bugly", luaopen_bugly);
+    olua_callfunc(L, luaopen_bugly);
 #endif // CCLUA_BUILD_BUGLY
 
     olua_require(L, "kernel.Socket", luaopen_socket);
     olua_require(L, "kernel.luaoc", luaopen_ocbridge);
     olua_require(L, "kernel.luaj", luaopen_javabridge);
     olua_require(L, "kernel.keychain", luaopen_keychain);
-    olua_require(L, "kernel.plugins.photo", luaopen_photo);
-    olua_require(L, "kernel.plugins.recorder", luaopen_recorder);
-    olua_require(L, "kernel.plugins.iap", luaopen_iap);
+    olua_require(L, "kernel.plugin.photo", luaopen_photo);
+    olua_require(L, "kernel.plugin.recorder", luaopen_recorder);
+    olua_require(L, "kernel.plugin.iap", luaopen_iap);
 
     return 0;
 }
