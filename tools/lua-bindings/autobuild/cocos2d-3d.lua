@@ -13,12 +13,11 @@ M.PATH = "../../frameworks/libxgame/src/lua-bindings"
 M.INCLUDES = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
-    #include "xgame/xlua.h"
+    #include "cclua/xlua.h"
     #include "cocos2d.h"
     #include "3d/CC3DProgramInfo.h"
 ]]
 M.CHUNK = ''
-M.DEFIF = nil
 
 M.CONVS = {
     typeconv {
@@ -35,8 +34,8 @@ M.CLASSES = {}
 cls = typecls 'cocos2d::NTextureData::Usage'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('Unknown', 'cocos2d::NTextureData::Usage::Unknown')
 cls.enum('None', 'cocos2d::NTextureData::Usage::None')
 cls.enum('Diffuse', 'cocos2d::NTextureData::Usage::Diffuse')
@@ -53,8 +52,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::shaderinfos::VertexKey'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('VERTEX_ATTRIB_POSITION', 'cocos2d::shaderinfos::VertexKey::VERTEX_ATTRIB_POSITION')
 cls.enum('VERTEX_ATTRIB_COLOR', 'cocos2d::shaderinfos::VertexKey::VERTEX_ATTRIB_COLOR')
 cls.enum('VERTEX_ATTRIB_TEX_COORD', 'cocos2d::shaderinfos::VertexKey::VERTEX_ATTRIB_TEX_COORD')
@@ -74,8 +73,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::shaderinfos::Uniformkey'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('UNIFORM_AMBIENT_COLOR', 'cocos2d::shaderinfos::Uniformkey::UNIFORM_AMBIENT_COLOR')
 cls.enum('UNIFORM_P_MATRIX', 'cocos2d::shaderinfos::Uniformkey::UNIFORM_P_MATRIX')
 cls.enum('UNIFORM_MULTIVIEW_P_MATRIX', 'cocos2d::shaderinfos::Uniformkey::UNIFORM_MULTIVIEW_P_MATRIX')
@@ -97,8 +96,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::NTextureData'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.var('id', 'std::string id')
 cls.var('filename', 'std::string filename')
 cls.var('type', 'cocos2d::NTextureData::Usage type')
@@ -109,8 +108,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::Mesh'
 cls.SUPERCLS = 'cocos2d::Ref'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Mesh *create(const std::vector<float> &positions, const std::vector<float> &normals, const std::vector<float> &texs, const std::vector<unsigned short> &indices)', 'static cocos2d::Mesh *create(const std::vector<float> &vertices, int perVertexSizeInFloat, const std::vector<unsigned short> &indices, const std::vector<MeshVertexAttrib> &attribs)')
 cls.func(nil, 'cocos2d::backend::Buffer *getVertexBuffer()')
 cls.func(nil, 'bool hasVertexAttrib(cocos2d::shaderinfos::VertexKey attrib)')
@@ -156,8 +155,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::MeshSkin'
 cls.SUPERCLS = 'cocos2d::Ref'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'ssize_t getBoneCount()')
 cls.func(nil, 'cocos2d::Bone3D *getBoneByIndex(unsigned int index)')
 cls.func(nil, 'cocos2d::Bone3D *getBoneByName(const std::string &id)')
@@ -178,8 +177,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::BillBoard::Mode'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('VIEW_POINT_ORIENTED', 'cocos2d::BillBoard::Mode::VIEW_POINT_ORIENTED')
 cls.enum('VIEW_PLANE_ORIENTED', 'cocos2d::BillBoard::Mode::VIEW_PLANE_ORIENTED')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -187,8 +186,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::BillBoard'
 cls.SUPERCLS = 'cocos2d::Sprite'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::BillBoard *create(@optional cocos2d::BillBoard::Mode mode)', 'static cocos2d::BillBoard *create(const std::string &filename, @optional cocos2d::BillBoard::Mode mode)', 'static cocos2d::BillBoard *create(const std::string &filename, const cocos2d::Rect &rect, @optional cocos2d::BillBoard::Mode mode)')
 cls.func(nil, 'static cocos2d::BillBoard *createWithTexture(cocos2d::Texture2D *texture, @optional cocos2d::BillBoard::Mode mode)')
 cls.func(nil, 'void setMode(cocos2d::BillBoard::Mode mode)')
@@ -200,8 +199,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::Sprite3DMaterial::MaterialType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('UNLIT', 'cocos2d::Sprite3DMaterial::MaterialType::UNLIT')
 cls.enum('UNLIT_NOTEX', 'cocos2d::Sprite3DMaterial::MaterialType::UNLIT_NOTEX')
 cls.enum('VERTEX_LIT', 'cocos2d::Sprite3DMaterial::MaterialType::VERTEX_LIT')
@@ -214,8 +213,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::Sprite3DMaterial'
 cls.SUPERCLS = 'cocos2d::Material'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'cocos2d::Sprite3DMaterial::MaterialType getMaterialType()')
 cls.func(nil, 'static cocos2d::Sprite3DMaterial *createBuiltInMaterial(cocos2d::Sprite3DMaterial::MaterialType type, bool skinned)', 'static void createBuiltInMaterial()')
 cls.func(nil, 'static cocos2d::Sprite3DMaterial *createWithFilename(const std::string &path)')
@@ -229,8 +228,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::Sprite3D'
 cls.SUPERCLS = 'cocos2d::Node'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Sprite3D *create()', 'static cocos2d::Sprite3D *create(const std::string &modelPath)', 'static cocos2d::Sprite3D *create(const std::string &modelPath, const std::string &texturePath)')
 cls.func(nil, 'void setTexture(const std::string &texFile)', 'void setTexture(cocos2d::Texture2D *texture)')
 cls.func(nil, 'cocos2d::Mesh *getMeshByIndex(int index)')
@@ -281,8 +280,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::AttachNode'
 cls.SUPERCLS = 'cocos2d::Node'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::AttachNode *create(cocos2d::Bone3D *attachBone)')
 cls.func(nil, 'AttachNode()')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -290,8 +289,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::Bone3D'
 cls.SUPERCLS = 'cocos2d::Ref'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'const cocos2d::Mat4 &getInverseBindPose()')
 cls.func(nil, 'void updateWorldMat()')
 cls.func(nil, 'const cocos2d::Mat4 &getWorldMat()')
@@ -318,8 +317,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::Skeleton3D'
 cls.SUPERCLS = 'cocos2d::Ref'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'ssize_t getBoneCount()')
 cls.func(nil, 'cocos2d::Bone3D *getBoneByIndex(unsigned int index)')
 cls.func(nil, 'cocos2d::Bone3D *getBoneByName(const std::string &id)')

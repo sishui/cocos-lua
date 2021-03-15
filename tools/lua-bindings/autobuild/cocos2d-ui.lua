@@ -14,13 +14,12 @@ M.INCLUDES = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "lua-bindings/LuaCocosAdapter.h"
-    #include "xgame/xlua.h"
+    #include "cclua/xlua.h"
     #include "cocos2d.h"
     #include "ui/CocosGUI.h"
     #include "ui/UIScrollViewBar.h"
 ]]
 M.CHUNK = ''
-M.DEFIF = nil
 
 M.CONVS = {
 }
@@ -30,8 +29,8 @@ M.CLASSES = {}
 cls = typecls 'cocos2d::ui::Widget::FocusDirection'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('LEFT', 'cocos2d::ui::Widget::FocusDirection::LEFT')
 cls.enum('RIGHT', 'cocos2d::ui::Widget::FocusDirection::RIGHT')
 cls.enum('UP', 'cocos2d::ui::Widget::FocusDirection::UP')
@@ -41,8 +40,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Widget::PositionType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('ABSOLUTE', 'cocos2d::ui::Widget::PositionType::ABSOLUTE')
 cls.enum('PERCENT', 'cocos2d::ui::Widget::PositionType::PERCENT')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -50,8 +49,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Widget::SizeType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('ABSOLUTE', 'cocos2d::ui::Widget::SizeType::ABSOLUTE')
 cls.enum('PERCENT', 'cocos2d::ui::Widget::SizeType::PERCENT')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -59,8 +58,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Widget::TouchEventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('BEGAN', 'cocos2d::ui::Widget::TouchEventType::BEGAN')
 cls.enum('MOVED', 'cocos2d::ui::Widget::TouchEventType::MOVED')
 cls.enum('ENDED', 'cocos2d::ui::Widget::TouchEventType::ENDED')
@@ -70,8 +69,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Widget::TextureResType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('LOCAL', 'cocos2d::ui::Widget::TextureResType::LOCAL')
 cls.enum('PLIST', 'cocos2d::ui::Widget::TextureResType::PLIST')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -79,8 +78,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Widget::BrightStyle'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('NONE', 'cocos2d::ui::Widget::BrightStyle::NONE')
 cls.enum('NORMAL', 'cocos2d::ui::Widget::BrightStyle::NORMAL')
 cls.enum('HIGHLIGHT', 'cocos2d::ui::Widget::BrightStyle::HIGHLIGHT')
@@ -89,8 +88,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Widget'
 cls.SUPERCLS = 'cocos2d::ProtectedNode'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'Widget()')
 cls.func(nil, 'static cocos2d::ui::Widget *create()')
 cls.func(nil, 'void setEnabled(bool enabled)')
@@ -231,8 +230,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Helper'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::ui::Widget *seekWidgetByTag(cocos2d::ui::Widget *root, int tag)')
 cls.func(nil, 'static cocos2d::ui::Widget *seekWidgetByName(cocos2d::ui::Widget *root, const std::string &name)')
 cls.func(nil, 'static cocos2d::ui::Widget *seekActionWidgetByActionTag(cocos2d::ui::Widget *root, int tag)')
@@ -246,8 +245,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Scale9Sprite::State'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('NORMAL', 'cocos2d::ui::Scale9Sprite::State::NORMAL')
 cls.enum('GRAY', 'cocos2d::ui::Scale9Sprite::State::GRAY')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -255,8 +254,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Scale9Sprite::RenderingType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('SIMPLE', 'cocos2d::ui::Scale9Sprite::RenderingType::SIMPLE')
 cls.enum('SLICE', 'cocos2d::ui::Scale9Sprite::RenderingType::SLICE')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -264,8 +263,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Scale9Sprite'
 cls.SUPERCLS = 'cocos2d::Sprite'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'Scale9Sprite()')
 cls.func(nil, 'static cocos2d::ui::Scale9Sprite *create()', 'static cocos2d::ui::Scale9Sprite *create(const std::string &file, const cocos2d::Rect &rect, const cocos2d::Rect &capInsets)', 'static cocos2d::ui::Scale9Sprite *create(const cocos2d::Rect &capInsets, const std::string &file)', 'static cocos2d::ui::Scale9Sprite *create(const std::string &file, const cocos2d::Rect &rect)', 'static cocos2d::ui::Scale9Sprite *create(const std::string &file)')
 cls.func(nil, 'static cocos2d::ui::Scale9Sprite *createWithSpriteFrame(cocos2d::SpriteFrame *spriteFrame)', 'static cocos2d::ui::Scale9Sprite *createWithSpriteFrame(cocos2d::SpriteFrame *spriteFrame, const cocos2d::Rect &capInsets)')
@@ -315,8 +314,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::LayoutComponent::HorizontalEdge'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('None', 'cocos2d::ui::LayoutComponent::HorizontalEdge::None')
 cls.enum('Left', 'cocos2d::ui::LayoutComponent::HorizontalEdge::Left')
 cls.enum('Right', 'cocos2d::ui::LayoutComponent::HorizontalEdge::Right')
@@ -326,8 +325,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::LayoutComponent::VerticalEdge'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('None', 'cocos2d::ui::LayoutComponent::VerticalEdge::None')
 cls.enum('Bottom', 'cocos2d::ui::LayoutComponent::VerticalEdge::Bottom')
 cls.enum('Top', 'cocos2d::ui::LayoutComponent::VerticalEdge::Top')
@@ -337,8 +336,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::LayoutComponent'
 cls.SUPERCLS = 'cocos2d::Component'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'LayoutComponent()')
 cls.func(nil, 'static cocos2d::ui::LayoutComponent *create()')
 cls.func(nil, 'static cocos2d::ui::LayoutComponent *bindLayoutComponent(cocos2d::Node *node)')
@@ -419,8 +418,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::LayoutParameter::Type'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('NONE', 'cocos2d::ui::LayoutParameter::Type::NONE')
 cls.enum('LINEAR', 'cocos2d::ui::LayoutParameter::Type::LINEAR')
 cls.enum('RELATIVE', 'cocos2d::ui::LayoutParameter::Type::RELATIVE')
@@ -429,8 +428,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::LayoutParameter'
 cls.SUPERCLS = 'cocos2d::Ref'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'LayoutParameter()')
 cls.func(nil, 'static cocos2d::ui::LayoutParameter *create()')
 cls.func(nil, 'void setMargin(const cocos2d::ui::Margin &margin)')
@@ -446,8 +445,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::LinearLayoutParameter::LinearGravity'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('NONE', 'cocos2d::ui::LinearLayoutParameter::LinearGravity::NONE')
 cls.enum('LEFT', 'cocos2d::ui::LinearLayoutParameter::LinearGravity::LEFT')
 cls.enum('TOP', 'cocos2d::ui::LinearLayoutParameter::LinearGravity::TOP')
@@ -460,8 +459,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::LinearLayoutParameter'
 cls.SUPERCLS = 'cocos2d::ui::LayoutParameter'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'LinearLayoutParameter()')
 cls.func(nil, 'static cocos2d::ui::LinearLayoutParameter *create()')
 cls.func(nil, 'void setGravity(cocos2d::ui::LinearLayoutParameter::LinearGravity gravity)')
@@ -472,8 +471,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RelativeLayoutParameter::RelativeAlign'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('NONE', 'cocos2d::ui::RelativeLayoutParameter::RelativeAlign::NONE')
 cls.enum('PARENT_TOP_LEFT', 'cocos2d::ui::RelativeLayoutParameter::RelativeAlign::PARENT_TOP_LEFT')
 cls.enum('PARENT_TOP_CENTER_HORIZONTAL', 'cocos2d::ui::RelativeLayoutParameter::RelativeAlign::PARENT_TOP_CENTER_HORIZONTAL')
@@ -501,8 +500,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RelativeLayoutParameter'
 cls.SUPERCLS = 'cocos2d::ui::LayoutParameter'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'RelativeLayoutParameter()')
 cls.func(nil, 'static cocos2d::ui::RelativeLayoutParameter *create()')
 cls.func(nil, 'void setAlign(cocos2d::ui::RelativeLayoutParameter::RelativeAlign align)')
@@ -519,8 +518,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Layout::Type'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('ABSOLUTE', 'cocos2d::ui::Layout::Type::ABSOLUTE')
 cls.enum('VERTICAL', 'cocos2d::ui::Layout::Type::VERTICAL')
 cls.enum('HORIZONTAL', 'cocos2d::ui::Layout::Type::HORIZONTAL')
@@ -530,8 +529,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Layout::ClippingType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('STENCIL', 'cocos2d::ui::Layout::ClippingType::STENCIL')
 cls.enum('SCISSOR', 'cocos2d::ui::Layout::ClippingType::SCISSOR')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -539,8 +538,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Layout::BackGroundColorType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('NONE', 'cocos2d::ui::Layout::BackGroundColorType::NONE')
 cls.enum('SOLID', 'cocos2d::ui::Layout::BackGroundColorType::SOLID')
 cls.enum('GRADIENT', 'cocos2d::ui::Layout::BackGroundColorType::GRADIENT')
@@ -549,8 +548,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Layout'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'Layout()')
 cls.func(nil, 'static cocos2d::ui::Layout *create()')
@@ -611,8 +610,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::HBox'
 cls.SUPERCLS = 'cocos2d::ui::Layout'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'HBox()')
 cls.func(nil, 'static cocos2d::ui::HBox *create()', 'static cocos2d::ui::HBox *create(const cocos2d::Size &size)')
 cls.func(nil, 'bool initWithSize(const cocos2d::Size &size)')
@@ -621,8 +620,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::VBox'
 cls.SUPERCLS = 'cocos2d::ui::Layout'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'VBox()')
 cls.func(nil, 'static cocos2d::ui::VBox *create()', 'static cocos2d::ui::VBox *create(const cocos2d::Size &size)')
 cls.func(nil, 'bool initWithSize(const cocos2d::Size &size)')
@@ -631,8 +630,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RelativeBox'
 cls.SUPERCLS = 'cocos2d::ui::Layout'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'RelativeBox()')
 cls.func(nil, 'static cocos2d::ui::RelativeBox *create()', 'static cocos2d::ui::RelativeBox *create(const cocos2d::Size &size)')
 cls.func(nil, 'bool initWithSize(const cocos2d::Size &size)')
@@ -641,8 +640,9 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::WebView'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = '#ifdef CCLUA_HAVE_WEBVIEW'
 cls.CHUNK = nil
+cls.REQUIRE = nil
+cls.ifdef('*', '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)')
 cls.func(nil, 'static cocos2d::ui::WebView *create()')
 cls.func(nil, 'void setJavascriptInterfaceScheme(const std::string &scheme)')
 cls.func(nil, 'void loadData(const cocos2d::Data &data, const std::string &MIMEType, const std::string &encoding, const std::string &baseURL)')
@@ -744,8 +744,9 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::VideoPlayer::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = '#ifdef CCLUA_HAVE_VIDEOPLAYER'
 cls.CHUNK = nil
+cls.REQUIRE = nil
+cls.ifdef('*', '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)')
 cls.enum('PLAYING', 'cocos2d::ui::VideoPlayer::EventType::PLAYING')
 cls.enum('PAUSED', 'cocos2d::ui::VideoPlayer::EventType::PAUSED')
 cls.enum('STOPPED', 'cocos2d::ui::VideoPlayer::EventType::STOPPED')
@@ -756,8 +757,9 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::VideoPlayer::StyleType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = '#ifdef CCLUA_HAVE_VIDEOPLAYER'
 cls.CHUNK = nil
+cls.REQUIRE = nil
+cls.ifdef('*', '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)')
 cls.enum('DEFAULT', 'cocos2d::ui::VideoPlayer::StyleType::DEFAULT')
 cls.enum('NONE', 'cocos2d::ui::VideoPlayer::StyleType::NONE')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -765,8 +767,9 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::VideoPlayer'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = '#ifdef CCLUA_HAVE_VIDEOPLAYER'
 cls.CHUNK = nil
+cls.REQUIRE = nil
+cls.ifdef('*', '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)')
 cls.func(nil, 'static cocos2d::ui::VideoPlayer *create()')
 cls.func(nil, 'void setFileName(const std::string &videoPath)')
 cls.func(nil, 'const std::string &getFileName()')
@@ -808,8 +811,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::AbstractCheckButton'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'void loadTextures(const std::string &background, const std::string &backgroundSelected, const std::string &cross, const std::string &backgroundDisabled, const std::string &frontCrossDisabled, @optional cocos2d::ui::Widget::TextureResType texType)')
 cls.func(nil, 'void loadTextureBackGround(const std::string &backGround, @optional cocos2d::ui::Widget::TextureResType type)')
 cls.func(nil, 'void loadTextureBackGroundSelected(const std::string &backGroundSelected, @optional cocos2d::ui::Widget::TextureResType texType)')
@@ -848,8 +851,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::TabHeader::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('SELECTED', 'cocos2d::ui::TabHeader::EventType::SELECTED')
 cls.enum('UNSELECTED', 'cocos2d::ui::TabHeader::EventType::UNSELECTED')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -857,8 +860,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::TabHeader'
 cls.SUPERCLS = 'cocos2d::ui::AbstractCheckButton'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::ui::TabHeader *create()', 'static cocos2d::ui::TabHeader *create(const std::string &titleStr, const std::string &backGround, const std::string &cross, @optional cocos2d::ui::Widget::TextureResType texType)', 'static cocos2d::ui::TabHeader *create(const std::string &titleStr, const std::string &backGround, const std::string &backGroundSelected, const std::string &cross, const std::string &backGroundDisabled, const std::string &frontCrossDisabled, @optional cocos2d::ui::Widget::TextureResType texType)')
 cls.func(nil, '@addref(protectedChildren |) cocos2d::Label *getTitleRenderer()')
 cls.func(nil, 'void setTitleText(const std::string &text)')
@@ -881,8 +884,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::TabControl::Dock'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('TOP', 'cocos2d::ui::TabControl::Dock::TOP')
 cls.enum('LEFT', 'cocos2d::ui::TabControl::Dock::LEFT')
 cls.enum('BOTTOM', 'cocos2d::ui::TabControl::Dock::BOTTOM')
@@ -892,16 +895,16 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::TabControl::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('SELECT_CHANGED', 'cocos2d::ui::TabControl::EventType::SELECT_CHANGED')
 M.CLASSES[#M.CLASSES + 1] = cls
 
 cls = typecls 'cocos2d::ui::TabControl'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::ui::TabControl *create()')
 cls.func(nil, '@delref(protectedChildren ~) void removeTab(int index)')
 cls.func(nil, 'void setSelectTab(int index)', 'void setSelectTab(cocos2d::ui::TabHeader *tabHeader)')
@@ -942,8 +945,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::ScrollView::Direction'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('NONE', 'cocos2d::ui::ScrollView::Direction::NONE')
 cls.enum('VERTICAL', 'cocos2d::ui::ScrollView::Direction::VERTICAL')
 cls.enum('HORIZONTAL', 'cocos2d::ui::ScrollView::Direction::HORIZONTAL')
@@ -953,8 +956,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::ScrollView::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('SCROLL_TO_TOP', 'cocos2d::ui::ScrollView::EventType::SCROLL_TO_TOP')
 cls.enum('SCROLL_TO_BOTTOM', 'cocos2d::ui::ScrollView::EventType::SCROLL_TO_BOTTOM')
 cls.enum('SCROLL_TO_LEFT', 'cocos2d::ui::ScrollView::EventType::SCROLL_TO_LEFT')
@@ -973,8 +976,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::ScrollView'
 cls.SUPERCLS = 'cocos2d::ui::Layout'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'ScrollView()')
 cls.func(nil, 'static cocos2d::ui::ScrollView *create()')
@@ -1072,8 +1075,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::ListView::Gravity'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('LEFT', 'cocos2d::ui::ListView::Gravity::LEFT')
 cls.enum('RIGHT', 'cocos2d::ui::ListView::Gravity::RIGHT')
 cls.enum('CENTER_HORIZONTAL', 'cocos2d::ui::ListView::Gravity::CENTER_HORIZONTAL')
@@ -1085,8 +1088,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::ListView::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('ON_SELECTED_ITEM_START', 'cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_START')
 cls.enum('ON_SELECTED_ITEM_END', 'cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_END')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -1094,8 +1097,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::ListView::MagneticType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('NONE', 'cocos2d::ui::ListView::MagneticType::NONE')
 cls.enum('CENTER', 'cocos2d::ui::ListView::MagneticType::CENTER')
 cls.enum('BOTH_END', 'cocos2d::ui::ListView::MagneticType::BOTH_END')
@@ -1108,8 +1111,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::ListView'
 cls.SUPERCLS = 'cocos2d::ui::ScrollView'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'ListView()')
 cls.func(nil, 'static cocos2d::ui::ListView *create()')
@@ -1183,8 +1186,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::LoadingBar::Direction'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('LEFT', 'cocos2d::ui::LoadingBar::Direction::LEFT')
 cls.enum('RIGHT', 'cocos2d::ui::LoadingBar::Direction::RIGHT')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -1192,8 +1195,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::LoadingBar'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'LoadingBar()')
 cls.func(nil, 'static cocos2d::ui::LoadingBar *create()', 'static cocos2d::ui::LoadingBar *create(const std::string &textureName, @optional float percentage)', 'static cocos2d::ui::LoadingBar *create(const std::string &textureName, cocos2d::ui::Widget::TextureResType texType, @optional float percentage)')
@@ -1217,16 +1220,16 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::PageView::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('TURNING', 'cocos2d::ui::PageView::EventType::TURNING')
 M.CLASSES[#M.CLASSES + 1] = cls
 
 cls = typecls 'cocos2d::ui::PageView::TouchDirection'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('LEFT', 'cocos2d::ui::PageView::TouchDirection::LEFT')
 cls.enum('RIGHT', 'cocos2d::ui::PageView::TouchDirection::RIGHT')
 cls.enum('UP', 'cocos2d::ui::PageView::TouchDirection::UP')
@@ -1236,8 +1239,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::PageView'
 cls.SUPERCLS = 'cocos2d::ui::ListView'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'PageView()')
 cls.func(nil, 'static cocos2d::ui::PageView *create()')
@@ -1294,8 +1297,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RichElement::Type'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('TEXT', 'cocos2d::ui::RichElement::Type::TEXT')
 cls.enum('IMAGE', 'cocos2d::ui::RichElement::Type::IMAGE')
 cls.enum('CUSTOM', 'cocos2d::ui::RichElement::Type::CUSTOM')
@@ -1305,8 +1308,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RichElement'
 cls.SUPERCLS = 'cocos2d::Ref'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'RichElement()')
 cls.func(nil, 'bool init(int tag, const cocos2d::Color3B &color, uint8_t opacity)')
 cls.func(nil, 'bool equalType(cocos2d::ui::RichElement::Type type)')
@@ -1316,8 +1319,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RichElementText'
 cls.SUPERCLS = 'cocos2d::ui::RichElement'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'RichElementText()')
 cls.func(nil, 'bool init(int tag, const cocos2d::Color3B &color, uint8_t opacity, const std::string &text, const std::string &fontName, float fontSize, uint32_t flags, const std::string &url, @optional const cocos2d::Color3B &outlineColor, @optional int outlineSize, @optional const cocos2d::Color3B &shadowColor, @optional const cocos2d::Size &shadowOffset, @optional int shadowBlurRadius, @optional const cocos2d::Color3B &glowColor)')
 cls.func(nil, 'static cocos2d::ui::RichElementText *create(int tag, const cocos2d::Color3B &color, uint8_t opacity, const std::string &text, const std::string &fontName, float fontSize, @optional uint32_t flags, @optional const std::string &url, @optional const cocos2d::Color3B &outlineColor, @optional int outlineSize, @optional const cocos2d::Color3B &shadowColor, @optional const cocos2d::Size &shadowOffset, @optional int shadowBlurRadius, @optional const cocos2d::Color3B &glowColor)')
@@ -1326,8 +1329,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RichElementImage'
 cls.SUPERCLS = 'cocos2d::ui::RichElement'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'RichElementImage()')
 cls.func(nil, 'bool init(int tag, const cocos2d::Color3B &color, uint8_t opacity, const std::string &filePath, @optional const std::string &url, @optional cocos2d::ui::Widget::TextureResType texType)')
 cls.func(nil, 'static cocos2d::ui::RichElementImage *create(int tag, const cocos2d::Color3B &color, uint8_t opacity, const std::string &filePath, @optional const std::string &url, @optional cocos2d::ui::Widget::TextureResType texType)')
@@ -1339,8 +1342,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RichElementCustomNode'
 cls.SUPERCLS = 'cocos2d::ui::RichElement'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'RichElementCustomNode()')
 cls.func(nil, 'bool init(int tag, const cocos2d::Color3B &color, uint8_t opacity, cocos2d::Node *customNode)')
 cls.func(nil, 'static cocos2d::ui::RichElementCustomNode *create(int tag, const cocos2d::Color3B &color, uint8_t opacity, cocos2d::Node *customNode)')
@@ -1349,8 +1352,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RichElementNewLine'
 cls.SUPERCLS = 'cocos2d::ui::RichElement'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'RichElementNewLine()')
 cls.func(nil, 'static cocos2d::ui::RichElementNewLine *create(int tag, const cocos2d::Color3B &color, uint8_t opacity)')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -1358,8 +1361,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RichText::WrapMode'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('WRAP_PER_WORD', 'cocos2d::ui::RichText::WrapMode::WRAP_PER_WORD')
 cls.enum('WRAP_PER_CHAR', 'cocos2d::ui::RichText::WrapMode::WRAP_PER_CHAR')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -1367,8 +1370,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RichText::HorizontalAlignment'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('LEFT', 'cocos2d::ui::RichText::HorizontalAlignment::LEFT')
 cls.enum('CENTER', 'cocos2d::ui::RichText::HorizontalAlignment::CENTER')
 cls.enum('RIGHT', 'cocos2d::ui::RichText::HorizontalAlignment::RIGHT')
@@ -1377,8 +1380,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RichText'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.const('KEY_VERTICAL_SPACE', 'cocos2d::ui::RichText::KEY_VERTICAL_SPACE', 'const std::string')
 cls.const('KEY_WRAP_MODE', 'cocos2d::ui::RichText::KEY_WRAP_MODE', 'const std::string')
 cls.const('KEY_HORIZONTAL_ALIGNMENT', 'cocos2d::ui::RichText::KEY_HORIZONTAL_ALIGNMENT', 'const std::string')
@@ -1511,8 +1514,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::ScrollViewBar'
 cls.SUPERCLS = 'cocos2d::ProtectedNode'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'ScrollViewBar(cocos2d::ui::ScrollView *parent, cocos2d::ui::ScrollView::Direction direction)')
 cls.func(nil, 'static cocos2d::ui::ScrollViewBar *create(cocos2d::ui::ScrollView *parent, cocos2d::ui::ScrollView::Direction direction)')
 cls.func(nil, 'void setPositionFromCorner(const cocos2d::Vec2 &positionFromCorner)')
@@ -1535,8 +1538,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Slider::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('ON_PERCENTAGE_CHANGED', 'cocos2d::ui::Slider::EventType::ON_PERCENTAGE_CHANGED')
 cls.enum('ON_SLIDEBALL_DOWN', 'cocos2d::ui::Slider::EventType::ON_SLIDEBALL_DOWN')
 cls.enum('ON_SLIDEBALL_UP', 'cocos2d::ui::Slider::EventType::ON_SLIDEBALL_UP')
@@ -1546,8 +1549,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Slider'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'Slider()')
 cls.func(nil, 'static cocos2d::ui::Slider *create()', 'static cocos2d::ui::Slider *create(const std::string &barTextureName, const std::string &normalBallTextureName, @optional cocos2d::ui::Widget::TextureResType resType)')
@@ -1609,8 +1612,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Text::Type'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('SYSTEM', 'cocos2d::ui::Text::Type::SYSTEM')
 cls.enum('TTF', 'cocos2d::ui::Text::Type::TTF')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -1618,8 +1621,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Text'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'Text()')
 cls.func(nil, 'static cocos2d::ui::Text *create()', 'static cocos2d::ui::Text *create(const std::string &textContent, const std::string &fontName, float fontSize)')
@@ -1681,8 +1684,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::TextAtlas'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'TextAtlas()')
 cls.func(nil, 'static cocos2d::ui::TextAtlas *create()', 'static cocos2d::ui::TextAtlas *create(const std::string &stringValue, const std::string &charMapFile, int itemWidth, int itemHeight, const std::string &startCharMap)')
@@ -1700,8 +1703,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::TextBMFont'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'TextBMFont()')
 cls.func(nil, 'static cocos2d::ui::TextBMFont *create()', 'static cocos2d::ui::TextBMFont *create(const std::string &text, const std::string &filename)')
@@ -1719,8 +1722,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::UICCTextField'
 cls.SUPERCLS = 'cocos2d::TextFieldTTF'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::ui::UICCTextField *create()', 'static cocos2d::ui::UICCTextField *create(const std::string &placeholder, const std::string &fontName, float fontSize)')
 cls.func(nil, 'UICCTextField()')
 cls.func(nil, 'bool onTextFieldAttachWithIME(cocos2d::TextFieldTTF *pSender)')
@@ -1758,8 +1761,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::TextField::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('ATTACH_WITH_IME', 'cocos2d::ui::TextField::EventType::ATTACH_WITH_IME')
 cls.enum('DETACH_WITH_IME', 'cocos2d::ui::TextField::EventType::DETACH_WITH_IME')
 cls.enum('INSERT_TEXT', 'cocos2d::ui::TextField::EventType::INSERT_TEXT')
@@ -1769,8 +1772,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::TextField'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'TextField()')
 cls.func(nil, 'static cocos2d::ui::TextField *create()', 'static cocos2d::ui::TextField *create(const std::string &placeholder, const std::string &fontName, int fontSize)')
@@ -1851,8 +1854,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::Button'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'Button()')
 cls.func(nil, 'static cocos2d::ui::Button *create()', 'static cocos2d::ui::Button *create(const std::string &normalImage, @optional const std::string &selectedImage, @optional const std::string &disableImage, @optional cocos2d::ui::Widget::TextureResType texType)')
@@ -1918,8 +1921,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::CheckBox::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('SELECTED', 'cocos2d::ui::CheckBox::EventType::SELECTED')
 cls.enum('UNSELECTED', 'cocos2d::ui::CheckBox::EventType::UNSELECTED')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -1927,8 +1930,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::CheckBox'
 cls.SUPERCLS = 'cocos2d::ui::AbstractCheckButton'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'CheckBox()')
 cls.func(nil, 'static cocos2d::ui::CheckBox *create()', 'static cocos2d::ui::CheckBox *create(const std::string &backGround, const std::string &backGroundSelected, const std::string &cross, const std::string &backGroundDisabled, const std::string &frontCrossDisabled, @optional cocos2d::ui::Widget::TextureResType texType)', 'static cocos2d::ui::CheckBox *create(const std::string &backGround, const std::string &cross, @optional cocos2d::ui::Widget::TextureResType texType)')
@@ -1946,8 +1949,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RadioButton::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('SELECTED', 'cocos2d::ui::RadioButton::EventType::SELECTED')
 cls.enum('UNSELECTED', 'cocos2d::ui::RadioButton::EventType::UNSELECTED')
 M.CLASSES[#M.CLASSES + 1] = cls
@@ -1955,8 +1958,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RadioButton'
 cls.SUPERCLS = 'cocos2d::ui::AbstractCheckButton'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'RadioButton()')
 cls.func(nil, 'static cocos2d::ui::RadioButton *create()', 'static cocos2d::ui::RadioButton *create(const std::string &backGround, const std::string &backGroundSelected, const std::string &cross, const std::string &backGroundDisabled, const std::string &frontCrossDisabled, @optional cocos2d::ui::Widget::TextureResType texType)', 'static cocos2d::ui::RadioButton *create(const std::string &backGround, const std::string &cross, @optional cocos2d::ui::Widget::TextureResType texType)')
@@ -1974,16 +1977,16 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::RadioButtonGroup::EventType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('SELECT_CHANGED', 'cocos2d::ui::RadioButtonGroup::EventType::SELECT_CHANGED')
 M.CLASSES[#M.CLASSES + 1] = cls
 
 cls = typecls 'cocos2d::ui::RadioButtonGroup'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'RadioButtonGroup()')
 cls.func(nil, 'static cocos2d::ui::RadioButtonGroup *create()')
 cls.func(nil, 'int getSelectedButtonIndex()')
@@ -2013,8 +2016,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::ImageView'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::Ref *createInstance()')
 cls.func(nil, 'ImageView()')
 cls.func(nil, 'static cocos2d::ui::ImageView *create()', 'static cocos2d::ui::ImageView *create(const std::string &imageFileName, @optional cocos2d::ui::Widget::TextureResType texType)')
@@ -2037,8 +2040,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::EditBoxDelegate::EditBoxEndAction'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('UNKNOWN', 'cocos2d::ui::EditBoxDelegate::EditBoxEndAction::UNKNOWN')
 cls.enum('TAB_TO_NEXT', 'cocos2d::ui::EditBoxDelegate::EditBoxEndAction::TAB_TO_NEXT')
 cls.enum('TAB_TO_PREVIOUS', 'cocos2d::ui::EditBoxDelegate::EditBoxEndAction::TAB_TO_PREVIOUS')
@@ -2048,8 +2051,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::EditBoxDelegate'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'void editBoxEditingDidBegin(cocos2d::ui::EditBox *)')
 cls.func(nil, 'void editBoxTextChanged(cocos2d::ui::EditBox *, const std::string &)')
 cls.func(nil, 'void editBoxReturn(cocos2d::ui::EditBox *editBox)')
@@ -2059,8 +2062,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::LuaEditBoxDelegate'
 cls.SUPERCLS = 'cocos2d::ui::EditBoxDelegate'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'LuaEditBoxDelegate()')
 cls.var('onEditingDidBegin', '@nullable @local std::function<void (EditBox *)> onEditingDidBegin')
 cls.var('onTextChanged', '@nullable @local std::function<void (EditBox *, const std::string &)> onTextChanged')
@@ -2071,8 +2074,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::EditBox::KeyboardReturnType'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('DEFAULT', 'cocos2d::ui::EditBox::KeyboardReturnType::DEFAULT')
 cls.enum('DONE', 'cocos2d::ui::EditBox::KeyboardReturnType::DONE')
 cls.enum('SEND', 'cocos2d::ui::EditBox::KeyboardReturnType::SEND')
@@ -2084,8 +2087,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::EditBox::InputMode'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('ANY', 'cocos2d::ui::EditBox::InputMode::ANY')
 cls.enum('EMAIL_ADDRESS', 'cocos2d::ui::EditBox::InputMode::EMAIL_ADDRESS')
 cls.enum('NUMERIC', 'cocos2d::ui::EditBox::InputMode::NUMERIC')
@@ -2098,8 +2101,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::EditBox::InputFlag'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.enum('PASSWORD', 'cocos2d::ui::EditBox::InputFlag::PASSWORD')
 cls.enum('SENSITIVE', 'cocos2d::ui::EditBox::InputFlag::SENSITIVE')
 cls.enum('INITIAL_CAPS_WORD', 'cocos2d::ui::EditBox::InputFlag::INITIAL_CAPS_WORD')
@@ -2111,8 +2114,8 @@ M.CLASSES[#M.CLASSES + 1] = cls
 cls = typecls 'cocos2d::ui::EditBox'
 cls.SUPERCLS = 'cocos2d::ui::Widget'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static cocos2d::ui::EditBox *create(const cocos2d::Size &size, cocos2d::ui::Scale9Sprite *normalSprite, @optional cocos2d::ui::Scale9Sprite *pressedSprite, @optional cocos2d::ui::Scale9Sprite *disabledSprite)', 'static cocos2d::ui::EditBox *create(const cocos2d::Size &size, const std::string &normalImage, cocos2d::ui::Widget::TextureResType texType)', 'static cocos2d::ui::EditBox *create(const cocos2d::Size &size, const std::string &normalImage, @optional const std::string &pressedImage, @optional const std::string &disabledImage, @optional cocos2d::ui::Widget::TextureResType texType)')
 cls.func(nil, 'EditBox()')
 cls.func(nil, 'bool initWithSizeAndBackgroundSprite(const cocos2d::Size &size, const std::string &normal9SpriteBg, @optional cocos2d::ui::Widget::TextureResType texType)', 'bool initWithSizeAndBackgroundSprite(const cocos2d::Size &size, cocos2d::ui::Scale9Sprite *normal9SpriteBg)', 'bool initWithSizeAndBackgroundSprite(const cocos2d::Size &size, cocos2d::ui::Scale9Sprite *normalSprite, cocos2d::ui::Scale9Sprite *pressedSprite, cocos2d::ui::Scale9Sprite *disabledSprite)')

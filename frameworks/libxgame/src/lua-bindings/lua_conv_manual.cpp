@@ -1,6 +1,6 @@
 #include "lua_conv_manual.h"
 #include "lua_conv.h"
-#include "xgame/xlua.h"
+#include "cclua/xlua.h"
 #include "olua/olua.hpp"
 
 int manual_olua_push_cocos2d_Data(lua_State *L, const cocos2d::Data *value)
@@ -296,6 +296,9 @@ int manual_olua_push_cocos2d_Value(lua_State *L, const cocos2d::Value *value)
             break;
         case cocos2d::Value::Type::INT_KEY_MAP:
             manual_olua_push_cocos2d_ValueMapIntKey(L, &value->asIntKeyMap());
+            break;
+        case cocos2d::Value::Type::NONE:
+            olua_pushobj<cocos2d::Value>(L, &cocos2d::Value::Null);
             break;
         default:
             ret = 0;

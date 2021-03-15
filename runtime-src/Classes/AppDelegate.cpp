@@ -24,9 +24,9 @@
 
 #include "AppDelegate.h"
 
-#include "xgame/xlua.h"
-#include "xgame/preferences.h"
-#include "xgame/FileFinder.h"
+#include "cclua/xlua.h"
+#include "cclua/preferences.h"
+#include "cclua/FileFinder.h"
 //#include "wechat/lua_wechat.h"
 
 #include "lua-bindings/lua_cocos2d_3d.h"
@@ -56,14 +56,19 @@
 #define BUGLY_APPID "<no appid>"
 #endif
 
-#if defined(CCLUA_BUILD_JPUSH) || defined(CCLUA_BUILD_JANALYTICS)
+#if defined(CCLUA_BUILD_JPUSH) || defined(CCLUA_BUILD_JANALYTICS) || defined(CCLUA_BUILD_JAUTH)
 #include "jiguang/lua_jiguang.h"
 #include "jiguang/JiGuang.h"
 #define JPUSH_KEY "JPUSH_KEY"
 #endif
 
+#ifdef CCLUA_BUILD_WECHAT
+#include "wechat/WeChat.h"
+#include "wechat/lua_wechat.h"
+#endif
+
 USING_NS_CC;
-USING_NS_XGAME;
+USING_NS_CCLUA;
 
 static int _open_plugins(lua_State *L)
 {
@@ -85,20 +90,24 @@ static int _open_plugins(lua_State *L)
     olua_callfunc(L, luaopen_swf);
 #endif
     
-#if defined(CCLUA_BUILD_JPUSH) || defined(CCLUA_BUILD_JANALYTICS)
+#if defined(CCLUA_BUILD_JPUSH) || defined(CCLUA_BUILD_JANALYTICS) || defined(CCLUA_BUILD_JAUTH)
     olua_callfunc(L, luaopen_jiguang);
 #endif
     
-//    olua_require(L, "kernel.plugin.wechat", luaopen_wechat);
+#ifdef CCLUA_BUILD_WECHAT
+    olua_callfunc(L, luaopen_wechat);
+#endif
     return 0;
 }
 
 void AppDelegate::initGLContextAttrs()
 {
 #ifdef CCLUA_FEATURE_MSAA
-    xgame::runtime::setSampleCount(4);
+#if CC_TARGET_PLATFORM != CC_PLATFORM_MAC
+    runtime::setSampleCount(4);
+#endif
 #else
-    xgame::runtime::setSampleCount(1);
+    runtime::setSampleCount(1);
 #endif
     RuntimeContext::initGLContextAttrs();
 }
@@ -106,7 +115,7 @@ void AppDelegate::initGLContextAttrs()
 bool AppDelegate::applicationDidFinishLaunching()
 {
     /**
-     *  xgame::FileFinder::setProivder([]() {
+     *  FileFinder::setProivder([]() {
      *      return MyFileFinder::create();
      *  });
      */
@@ -115,12 +124,16 @@ bool AppDelegate::applicationDidFinishLaunching()
     plugin::JPush::init(JPUSH_KEY, runtime::getChannel());
 #endif
     
+#if defined(CCLUA_BUILD_JAUTH)
+    plugin::JAuth::init(JPUSH_KEY, runtime::getChannel());
+#endif
+    
 #if defined(CCLUA_BUILD_JANALYTICS)
     plugin::JAnalytics::init(JPUSH_KEY, runtime::getChannel());
 #endif
     initGLView("cocos-lua");
-    xgame::runtime::initBugly(BUGLY_APPID);
-    xgame::runtime::luaOpen(_open_plugins);
+    runtime::initBugly(BUGLY_APPID);
+    runtime::luaOpen(_open_plugins);
     
     return RuntimeContext::applicationDidFinishLaunching();
 }

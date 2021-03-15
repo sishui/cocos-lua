@@ -7,22 +7,22 @@ include(src/cjson/CMakeLists.txt)
 include(src/lua-bindings/CMakeLists.txt)
 include(src/lua/CMakeLists.txt)
 include(src/olua/CMakeLists.txt)
-include(src/xgame/CMakeLists.txt)
+include(src/cclua/CMakeLists.txt)
 
 target_sources(xgame PRIVATE
-    ${CRYPTO_SRC}
+    ${CCLUA_SRC}
     ${CJSON_SRC}
+    ${CRYPTO_SRC}
     ${LUA_BINDINGS_SRC}
     ${LUA_SRC}
     ${OLUA_SRC}
-    ${XGAME_SRC}
 
-    ${CRYPTO_HEADER}
+    ${CCLUA_HEADER}
     ${CJSON_HEADER}
+    ${CRYPTO_HEADER}
     ${LUA_BINDINGS_HEADER}
     ${LUA_HEADER}
     ${OLUA_HEADER}
-    ${XGAME_HEADER}
 )
 
 if(CCLUA_BUILD_BUGLY)
@@ -33,7 +33,7 @@ if(CCLUA_BUILD_BUGLY)
     else()
         set(CCLUA_BUILD_BUGLY OFF)
     endif()
-    if (IOS)
+    if(IOS)
         set(BUGLY_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/src/bugly/Bugly.framework")
         target_link_libraries(xgame ${BUGLY_LIBRARY})
     endif()
@@ -90,7 +90,7 @@ target_link_libraries(xgame cocos2d)
 
 target_compile_definitions(xgame PUBLIC STDC_HEADERS)
 target_compile_definitions(xgame PUBLIC $<$<CONFIG:Debug>:OLUA_DEBUG>)
-target_compile_definitions(xgame PUBLIC OLUA_USER_H="xgame/luauser.h")
+target_compile_definitions(xgame PUBLIC OLUA_USER_H="cclua/luauser.h")
 
 if(CCLUA_BUILD_SPINE)
     target_compile_definitions(xgame PUBLIC CCLUA_BUILD_SPINE)
@@ -102,12 +102,14 @@ if(CCLUA_FEATURE_MSAA)
 endif()
 
 if(CCLUA_FEATURE_IDFA)
-    find_library(ADSUPPORT_LIBRARY AdSupport)
-    target_link_libraries(xgame ${ADSUPPORT_LIBRARY})
+    find_library(APP_TRACKING_TRANSPARENCY_LIBRARY AppTrackingTransparency)
+    target_link_libraries(xgame ${APP_TRACKING_TRANSPARENCY_LIBRARY})
+    find_library(AD_SUPPORT_LIBRARY AdSupport)
+    target_link_libraries(xgame ${AD_SUPPORT_LIBRARY})
     target_compile_definitions(xgame PUBLIC CCLUA_FEATURE_IDFA)
 endif()
 
-if (APPLE)
+if(APPLE)
     set_xcode_property(xgame CLANG_ENABLE_OBJC_ARC "YES")
 endif()
 

@@ -1,7 +1,7 @@
-#ifndef __JIGUANG_H__
-#define __JIGUANG_H__
+#ifndef __CCLUA_PLUGIN_JIGUANG_H__
+#define __CCLUA_PLUGIN_JIGUANG_H__
 
-#include "xgame/plugin.h"
+#include "cclua/plugin.h"
 
 #include <string>
 #include <set>
@@ -10,7 +10,7 @@
 
 #if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)
 
-NS_XPLUGIN_BEGIN
+NS_CCLUA_PLUGIN_BEGIN
 
 #ifdef CCLUA_BUILD_JPUSH
 class JPush {
@@ -28,6 +28,24 @@ public:
     static bool isEnabled();
     static void requestPermission();
     static std::string getRegistrationID();
+};
+#endif
+
+#ifdef CCLUA_BUILD_JAUTH
+class JAuth {
+public:
+    static void init(const std::string &appKey, const std::string &channel);
+    static bool isInitSuccess();
+    static void setDebug(bool enabled);
+    static bool checkVerifyEnable();
+    static void getToken(int timeout, const Callback callback);
+    static void preLogin(int timeout, const Callback callback);
+    static void clearPreLoginCache();
+    static void loginAuth(int timeout, const Callback callback);
+    static void dismissLoginAuth(bool needCloseAnim = true);
+    static void getSmsCode(const std::string &phonenum, const std::string &signid, const std::string &tempid, const Callback callback);
+    static void setSmsIntervalTime(long intervalTime);
+    static void configUI(cocos2d::ValueMap &value);
 };
 #endif
 
@@ -49,7 +67,7 @@ public:
 };
 #endif
 
-NS_XPLUGIN_END
+NS_CCLUA_PLUGIN_END
 
 #endif
 

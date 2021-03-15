@@ -2,10 +2,6 @@ require "olua.tools.olua"
 
 local autoconf = require "autoconf"
 
--- container std::function
-autoconf.addref 'cocos2d::Action'
-autoconf.addref 'cocos2d::EventListener'
-
 autoconf.init 'conf/clang-args.lua'
 
 autoconf 'conf/lua-conv.lua'
@@ -19,3 +15,6 @@ autoconf 'conf/lua-fairygui.lua'
 autoconf 'conf/lua-dragonbones.lua'
 autoconf 'conf/lua-spine.lua'
 autoconf 'conf/lua-xgame.lua'
+autoconf 'conf/plugin-bugly.lua'
+autoconf 'conf/plugin-jiguang.lua'
+autoconf 'conf/plugin-wechat.lua'

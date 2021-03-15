@@ -41,7 +41,9 @@ option(CCLUA_BUILD_FAIRYGUI "Build with fairygui support" ON)
 option(CCLUA_BUILD_DRAGONBONES "Build with dragonbones support" ON)
 option(CCLUA_BUILD_SWF "Build with swf support" OFF)
 option(CCLUA_BUILD_JPUSH "Build with jpush support" OFF)
+option(CCLUA_BUILD_JAUTH "Build with jauth support" OFF)
 option(CCLUA_BUILD_JANALYTICS "Build with janalytics support" OFF)
+option(CCLUA_BUILD_WECHAT "Build with wechat support" OFF)
 option(CCLUA_FEATURE_MSAA "Support MSAA" OFF)
 option(CCLUA_FEATURE_IDFA "Support IDFA" OFF)
 
@@ -58,7 +60,7 @@ else()
     set(BUILD_EDITOR_SPINE OFF)
 endif()
 
-if(NOT DEFINED BUILD_ENGINE_DONE) # to test cocos-lua into root project
+if(NOT DEFINED BUILD_ENGINE_DONE)
     set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/frameworks/cocos2d-x)
     set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
 
@@ -183,9 +185,14 @@ if(CCLUA_BUILD_SWF)
     target_compile_definitions(${APP_NAME} PUBLIC CCLUA_BUILD_SWF)
 endif()
 
-if(CCLUA_BUILD_JPUSH OR CCLUA_BUILD_JANALYTICS)
+if(CCLUA_BUILD_JPUSH OR CCLUA_BUILD_JANALYTICS OR CCLUA_BUILD_JAUTH)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/frameworks/plugins/jiguang)
-    target_link_libraries(${APP_NAME} jiguang)
+    target_link_libraries(${APP_NAME} plugin_jiguang)
+endif()
+
+if(CCLUA_BUILD_WECHAT)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/frameworks/plugins/wechat)
+    target_link_libraries(${APP_NAME} plugin_wechat)
 endif()
 
 target_link_libraries(${APP_NAME} cocos2d)

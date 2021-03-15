@@ -9,7 +9,7 @@ M.INCLUDES = [[
 #include "lua-bindings/lua_conv.h"
 #include "lua-bindings/lua_conv_manual.h"
 #include "lua-bindings/LuaCocosAdapter.h"
-#include "xgame/xlua.h"
+#include "cclua/xlua.h"
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include "ui/UIScrollViewBar.h"
@@ -64,21 +64,23 @@ typeconf 'cocos2d::ui::HBox'
 typeconf 'cocos2d::ui::VBox'
 typeconf 'cocos2d::ui::RelativeBox'
 
+local IFDEF_IOS_OR_ANDROID = '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)'
+
 local WebView = typeconf 'cocos2d::ui::WebView'
-WebView.DEFIF = '#ifdef CCLUA_HAVE_WEBVIEW'
+WebView.IFDEF('*', IFDEF_IOS_OR_ANDROID)
 WebView.CALLBACK {NAME = 'setOnShouldStartLoading', NULLABLE = true, LOCAL = false}
 WebView.CALLBACK {NAME = 'setOnDidFinishLoading', NULLABLE = true, LOCAL = false}
 WebView.CALLBACK {NAME = 'setOnDidFailLoading', NULLABLE = true, LOCAL = false}
 WebView.CALLBACK {NAME = 'setOnJSCallback', NULLABLE = true, LOCAL = false}
 
 local EventType = typeconf 'cocos2d::ui::VideoPlayer::EventType'
-EventType.DEFIF = '#ifdef CCLUA_HAVE_VIDEOPLAYER'
+EventType.IFDEF('*', IFDEF_IOS_OR_ANDROID)
 
 local StyleType = typeconf 'cocos2d::ui::VideoPlayer::StyleType'
-StyleType.DEFIF = '#ifdef CCLUA_HAVE_VIDEOPLAYER'
+StyleType.IFDEF('*', IFDEF_IOS_OR_ANDROID)
 
 local VideoPlayer = typeconf 'cocos2d::ui::VideoPlayer'
-VideoPlayer.DEFIF = '#ifdef CCLUA_HAVE_VIDEOPLAYER'
+VideoPlayer.IFDEF('*', IFDEF_IOS_OR_ANDROID)
 VideoPlayer.CALLBACK {
     NAME = 'addEventListener',
     TAG_MAKER = 'videoPlayerCallback',

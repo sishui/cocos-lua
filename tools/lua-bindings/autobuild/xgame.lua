@@ -13,18 +13,18 @@ M.PATH = "../../frameworks/libxgame/src/lua-bindings"
 M.INCLUDES = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
-    #include "xgame/filesystem.h"
-    #include "xgame/xlua.h"
-    #include "xgame/preferences.h"
-    #include "xgame/downloader.h"
-    #include "xgame/runtime.h"
-    #include "xgame/RootScene.h"
-    #include "xgame/timer.h"
-    #include "xgame/window.h"
+    #include "cclua/filesystem.h"
+    #include "cclua/xlua.h"
+    #include "cclua/preferences.h"
+    #include "cclua/downloader.h"
+    #include "cclua/runtime.h"
+    #include "cclua/RootScene.h"
+    #include "cclua/timer.h"
+    #include "cclua/window.h"
     #include "olua/olua.hpp"
 ]]
 M.CHUNK = [[
-    int manual_olua_unpack_xgame_window_Bounds(lua_State *L, const xgame::window::Bounds *value)
+    int manual_olua_unpack_xgame_window_Bounds(lua_State *L, const cclua::window::Bounds *value)
     {
         if (value) {
             lua_pushnumber(L, (lua_Number)value->getMinX());
@@ -40,63 +40,62 @@ M.CHUNK = [[
         return 4;
     }
 ]]
-M.DEFIF = nil
 
 M.CONVS = {
     typeconv {
-        CPPCLS = 'xgame::downloader::FileTask',
+        CPPCLS = 'cclua::downloader::FileTask',
         DEF = [[
             std::string url;
             std::string path;
             @optional std::string md5;
-            @optional xgame::downloader::FileState state;
+            @optional cclua::downloader::FileState state;
         ]],
     },
 }
 
 M.CLASSES = {}
 
-cls = typecls 'xgame::SceneNoCamera'
+cls = typecls 'cclua::SceneNoCamera'
 cls.SUPERCLS = 'cocos2d::Scene'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
-cls.func(nil, 'static xgame::SceneNoCamera *create()')
-cls.func(nil, 'static xgame::SceneNoCamera *createWithSize(const cocos2d::Size &size)')
-cls.func(nil, 'static xgame::SceneNoCamera *createWithPhysics()')
+cls.REQUIRE = nil
+cls.func(nil, 'static cclua::SceneNoCamera *create()')
+cls.func(nil, 'static cclua::SceneNoCamera *createWithSize(const cocos2d::Size &size)')
+cls.func(nil, 'static cclua::SceneNoCamera *createWithPhysics()')
 cls.func(nil, 'SceneNoCamera()')
 M.CLASSES[#M.CLASSES + 1] = cls
 
-cls = typecls 'xgame::Permission'
+cls = typecls 'cclua::Permission'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
-cls.enum('AUDIO', 'xgame::Permission::AUDIO')
-cls.enum('CAMERA', 'xgame::Permission::CAMERA')
-cls.enum('PHOTO', 'xgame::Permission::PHOTO')
-cls.enum('IDFA', 'xgame::Permission::IDFA')
+cls.REQUIRE = nil
+cls.enum('AUDIO', 'cclua::Permission::AUDIO')
+cls.enum('CAMERA', 'cclua::Permission::CAMERA')
+cls.enum('PHOTO', 'cclua::Permission::PHOTO')
+cls.enum('IDFA', 'cclua::Permission::IDFA')
 M.CLASSES[#M.CLASSES + 1] = cls
 
-cls = typecls 'xgame::PermissionStatus'
+cls = typecls 'cclua::PermissionStatus'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
-cls.enum('NOT_DETERMINED', 'xgame::PermissionStatus::NOT_DETERMINED')
-cls.enum('RESTRICTED', 'xgame::PermissionStatus::RESTRICTED')
-cls.enum('DENIED', 'xgame::PermissionStatus::DENIED')
-cls.enum('AUTHORIZED', 'xgame::PermissionStatus::AUTHORIZED')
+cls.REQUIRE = nil
+cls.enum('NOT_DETERMINED', 'cclua::PermissionStatus::NOT_DETERMINED')
+cls.enum('RESTRICTED', 'cclua::PermissionStatus::RESTRICTED')
+cls.enum('DENIED', 'cclua::PermissionStatus::DENIED')
+cls.enum('AUTHORIZED', 'cclua::PermissionStatus::AUTHORIZED')
 M.CLASSES[#M.CLASSES + 1] = cls
 
-cls = typecls 'xgame::runtime'
+cls = typecls 'cclua::runtime'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func('testCrash', [[
     {
-        xgame::runtime::log("test native crash!!!!");
+        cclua::runtime::log("test native crash!!!!");
         char *prt = NULL;
         *prt = 0;
         return 0;
@@ -123,10 +122,9 @@ cls.func(nil, 'static const std::string getManifestVersion()')
 cls.func(nil, 'static void setManifestVersion(const std::string &version)')
 cls.func(nil, 'static const std::string getNetworkStatus()')
 cls.func(nil, 'static cocos2d::RenderTexture *capture(cocos2d::Node *node, float width, float height, @optional cocos2d::backend::PixelFormat format, @optional cocos2d::backend::PixelFormat depthStencilFormat)')
-cls.func(nil, 'static const xgame::PermissionStatus getPermissionStatus(xgame::Permission permission)')
+cls.func(nil, 'static const cclua::PermissionStatus getPermissionStatus(cclua::Permission permission)')
 cls.func(nil, 'static void setAudioSessionCatalog(const std::string &catalog)')
 cls.func(nil, 'static const std::string getAudioSessionCatalog()')
-cls.func(nil, 'static std::string getIDFA()')
 cls.func(nil, 'static bool canOpenURL(const std::string &uri)')
 cls.func(nil, 'static void setLogPath(const std::string &path)')
 cls.func(nil, 'static const std::string getLogPath()')
@@ -155,7 +153,7 @@ cls.callback {
 }
 cls.callback {
     FUNCS =  {
-        'static void requestPermission(xgame::Permission permission, @local const std::function<void (PermissionStatus)> callback)'
+        'static void requestPermission(cclua::Permission permission, @local const std::function<void (PermissionStatus)> callback)'
     },
     TAG_MAKER = 'requestPermission',
     TAG_MODE = 'OLUA_TAG_NEW',
@@ -187,16 +185,15 @@ cls.prop('language', nil, nil)
 cls.prop('manifestVersion', nil, nil)
 cls.prop('networkStatus', nil, nil)
 cls.prop('audioSessionCatalog', nil, nil)
-cls.prop('idfa', nil, nil)
 cls.prop('logPath', nil, nil)
 cls.prop('sampleCount', nil, nil)
 M.CLASSES[#M.CLASSES + 1] = cls
 
-cls = typecls 'xgame::filesystem'
+cls = typecls 'cclua::filesystem'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static const std::string getWritablePath()')
 cls.func(nil, 'static const std::string getCacheDirectory()')
 cls.func(nil, 'static const std::string getDocumentDirectory()')
@@ -224,11 +221,11 @@ cls.prop('builtinCacheDirectory', nil, nil)
 cls.prop('sdCardDirectory', nil, nil)
 M.CLASSES[#M.CLASSES + 1] = cls
 
-cls = typecls 'xgame::preferences'
+cls = typecls 'cclua::preferences'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
+cls.REQUIRE = nil
 cls.func(nil, 'static bool getBoolean(const char *key, @optional bool defaultValue)')
 cls.func(nil, 'static void setBoolean(const char *key, bool value)')
 cls.func(nil, 'static float getFloat(const char *key, @optional float defaultValue)')
@@ -243,16 +240,16 @@ cls.func(nil, 'static void deleteKey(const char *key)')
 cls.func(nil, 'static void flush()')
 M.CLASSES[#M.CLASSES + 1] = cls
 
-cls = typecls 'xgame::timer'
+cls = typecls 'cclua::timer'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = [[#define makeTimerDelayTag(tag) ("delayTag." + tag)]]
+cls.REQUIRE = nil
 cls.func('schedule', [[
     {
         float interval = (float)olua_checknumber(L, 1);
         uint32_t callback = olua_funcref(L, 2);
-        uint32_t id = xgame::timer::schedule(interval, [callback](float dt) {
+        uint32_t id = cclua::timer::schedule(interval, [callback](float dt) {
             lua_State *L = olua_mainthread(NULL);
             if (L != NULL) {
                 int top = lua_gettop(L);
@@ -275,7 +272,7 @@ cls.func('unschedule', [[
         uint32_t callback = value >> 32;
         uint32_t id = value & 0xFFFFFFFF;
         olua_unref(L, callback);
-        xgame::timer::unschedule(id);
+        cclua::timer::unschedule(id);
         return 0;
     }
 ]])
@@ -309,12 +306,12 @@ cls.callback {
 }
 M.CLASSES[#M.CLASSES + 1] = cls
 
-cls = typecls 'xgame::window'
+cls = typecls 'cclua::window'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
-cls.func(nil, '@unpack static xgame::window::Bounds getVisibleBounds()')
+cls.REQUIRE = nil
+cls.func(nil, '@unpack static cclua::window::Bounds getVisibleBounds()')
 cls.func(nil, '@unpack static cocos2d::Size getVisibleSize()')
 cls.func(nil, '@unpack static cocos2d::Size getFrameSize()')
 cls.func(nil, 'static void setFrameSize(@pack const cocos2d::Size &size)')
@@ -327,23 +324,23 @@ cls.prop('frameSize', nil, nil)
 cls.prop('designSize', nil, nil)
 M.CLASSES[#M.CLASSES + 1] = cls
 
-cls = typecls 'xgame::downloader::FileState'
+cls = typecls 'cclua::downloader::FileState'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
-cls.enum('IOERROR', 'xgame::downloader::FileState::IOERROR')
-cls.enum('LOADED', 'xgame::downloader::FileState::LOADED')
-cls.enum('PENDING', 'xgame::downloader::FileState::PENDING')
-cls.enum('INVALID', 'xgame::downloader::FileState::INVALID')
+cls.REQUIRE = nil
+cls.enum('IOERROR', 'cclua::downloader::FileState::IOERROR')
+cls.enum('LOADED', 'cclua::downloader::FileState::LOADED')
+cls.enum('PENDING', 'cclua::downloader::FileState::PENDING')
+cls.enum('INVALID', 'cclua::downloader::FileState::INVALID')
 M.CLASSES[#M.CLASSES + 1] = cls
 
-cls = typecls 'xgame::downloader'
+cls = typecls 'cclua::downloader'
 cls.SUPERCLS = nil
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
-cls.func(nil, 'static void load(const xgame::downloader::FileTask &task)')
+cls.REQUIRE = nil
+cls.func(nil, 'static void load(const cclua::downloader::FileTask &task)')
 cls.func(nil, 'static void init()')
 cls.func(nil, 'static void end()')
 cls.callback {
@@ -357,12 +354,12 @@ cls.callback {
 }
 M.CLASSES[#M.CLASSES + 1] = cls
 
-cls = typecls 'xgame::MaskLayout'
+cls = typecls 'cclua::MaskLayout'
 cls.SUPERCLS = 'cocos2d::ui::Layout'
 cls.REG_LUATYPE = true
-cls.DEFIF = nil
 cls.CHUNK = nil
-cls.func(nil, 'static xgame::MaskLayout *create()')
+cls.REQUIRE = nil
+cls.func(nil, 'static cclua::MaskLayout *create()')
 cls.func(nil, 'MaskLayout()')
 cls.func(nil, 'cocos2d::DrawNode *getClippingNode()')
 cls.func(nil, 'void setFilter(@nullable@addref(filter ^) cocos2d::Node *value)')

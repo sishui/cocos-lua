@@ -1,15 +1,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="kernel.android">
+    package="cclua.android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <application>
+    <application android:networkSecurityConfig="@xml/network_security_config">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${CCLUA_PACKAGENAME}.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
         <!-- cameraroll -->
         <activity
-            android:name="kernel.plugin.photo.Photo"
+            android:name="cclua.plugin.photo.Photo"
             android:exported="true"
             android:launchMode="singleTask"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
-
+            android:configChanges="orientation|keyboardHidden|screenSize" />
     </application>
 </manifest>
