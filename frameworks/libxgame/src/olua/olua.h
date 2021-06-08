@@ -26,6 +26,12 @@
 #ifndef __OLUA_H__
 #define __OLUA_H__
 
+// if define template function in the user header file, it should
+// wrapped with 'ifndef OLUA_CORE'.
+#ifdef OLUA_USER_H
+#include OLUA_USER_H
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -40,10 +46,6 @@ extern "C" {
 #include <stdint.h>
 #include <assert.h>
 #include <math.h>
-
-#ifdef OLUA_USER_H
-#include OLUA_USER_H
-#endif
 
 #ifdef OLUA_DEBUG
 #define olua_assert(e, msg) assert((e) && (msg))
@@ -74,10 +76,6 @@ extern "C" {
 // stat api
 OLUA_API size_t olua_objcount(lua_State *L);
 OLUA_API bool olua_isdebug(lua_State *L);
-
-#ifndef OLUA_HAVE_MAINTHREAD
-OLUA_API lua_State *olua_mainthread(lua_State *L);
-#endif
 
 /**
  * New and close lua_State for several times, sometimes may got same
@@ -158,11 +156,11 @@ OLUA_API void olua_pop_objpool(lua_State *L, size_t position);
 
 // callback functions
 //  obj.uservalue {
-//      |----id----|--class--|--tag--|
-//      .callback#1$classname@onClick = lua_func
-//      .callback#2$classname@onClick = lua_func
-//      .callback#3$classname@update = lua_func
-//      .callback#4$classname@onRemoved = lua_func
+//      |---id---|--class--|--tag--|
+//      .olua.cb#1$classname@onClick = lua_func
+//      .olua.cb#2$classname@onClick = lua_func
+//      .olua.cb#3$classname@update = lua_func
+//      .olua.cb#4$classname@onRemoved = lua_func
 //      ...
 //  }
 // for olua_setcallback
@@ -193,8 +191,8 @@ OLUA_API void olua_getref(lua_State *L, int ref);
 // for ref chain, callback store in the uservalue
 // ref layout:
 //  obj.uservalue {
-//      .ref.component = obj_component  -- OLUA_MODE_SINGLE
-//      .ref.children = {               -- OLUA_MODE_MULTIPLE
+//      .olua.ref.component = obj_component  -- OLUA_MODE_SINGLE
+//      .olua.ref.children = {               -- OLUA_MODE_MULTIPLE
 //          obj_child1 = true
 //          obj_child2 = true
 //          ...
@@ -202,7 +200,7 @@ OLUA_API void olua_getref(lua_State *L, int ref);
 //  }
 #define OLUA_MODE_SINGLE    (1 << 1) // add & remove: only ref one
 #define OLUA_MODE_MULTIPLE  (1 << 2) // add & remove: can ref one or more
-#define OLUA_FLAG_ARRAY     (1 << 3) // obj is table
+#define OLUA_FLAG_TABLE     (1 << 3) // obj is table
 #define OLUA_FLAG_REMOVE    (1 << 4) // internal use
 typedef bool (*olua_DelRefVisitor)(lua_State *L, int idx);
 OLUA_API void olua_getreftable(lua_State *L, int idx, const char *name);
@@ -277,6 +275,7 @@ typedef lua_Integer lua_Unsigned;
     lua_createtable(L, 0, sizeof(l)/sizeof((l)[0]) - 1);\
     luaL_setfuncs(L,(l),0);                             \
 }
+OLUA_API void lua_copy(lua_State *L, int fromidx, int toidx);
 OLUA_API void lua_setuservalue(lua_State *L, int idx);
 OLUA_API int lua_getuservalue(lua_State *L, int idx);
 OLUA_API int lua_absindex(lua_State *L, int idx);
@@ -287,7 +286,6 @@ OLUA_API void luaL_requiref(lua_State *L, const char *modname, lua_CFunction ope
 OLUA_API void *luaL_testudata(lua_State *L, int ud, const char *tname);
 
 OLUA_API void olua_initcompat(lua_State *L);
-OLUA_API void olua_checkcompat(lua_State *L);
 OLUA_API void olua_rawsetp(lua_State *L, int idx, const void *p);
 OLUA_API int olua_rawgetp(lua_State *L, int idx, const void *p);
 #define olua_getglobal(L, k)        (lua_getglobal(L, (k)), lua_type(L, -1))

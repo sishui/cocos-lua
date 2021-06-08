@@ -1,8 +1,8 @@
 local class         = require "xgame.class"
 local util          = require "xgame.util"
 local http          = require "xgame.http"
-local Event         = require "xgame.event.Event"
-local PluginEvent   = require "xgame.event.PluginEvent"
+local Event         = require "xgame.Event"
+local PluginEvent   = require "xgame.PluginEvent"
 local timer         = require "xgame.timer"
 local runtime       = require "xgame.runtime"
 local Dispatcher    = require "xgame.Dispatcher"
@@ -59,7 +59,7 @@ function WeChat:ctor()
     end)
 end
 
-function WeChat:init(appid, appsecret, universalLink)
+function WeChat:init(appid, universalLink, appsecret)
     self._appid = assert(appid, 'no app id')
     self._appsecret = appsecret
     self._scheme = string.format("%s://", appid)
@@ -93,12 +93,12 @@ function WeChat:auth(ticket)
     self.userInfo = false
     self.deferredEvent = self.deferredEvent or PluginEvent.AUTH_CANCEL
 
-    if self.installed then
+    if ticket then
+        self:_doAuthQRCode(ticket)
+    elseif self.installed then
         assert(self.authScope, "no auth scope")
         assert(self.authState, "no auth state")
         Impl.auth(self.authScope, self.authState)
-    elseif ticket then
-        self:_doAuthQRCode(ticket)
     else
         assert(self._appsecret, "no app secret")
         self:_requestTicket()
@@ -107,6 +107,10 @@ function WeChat:auth(ticket)
     if runtime.os == 'ios' then
         runtime.on(Event.RUNTIME_RESUME, self._onResume, self)
     end
+end
+
+function WeChat:stopAuth()
+    Impl.stopAuth()
 end
 
 function WeChat:open(id, path, type)
@@ -164,7 +168,7 @@ function WeChat:_didResponse(action, data)
     self.deferredEvent = false
     timer.killDelay(TAG_DEFERRED)
 
-    trace("%s response: %s", action, cjson.encode(data))
+    trace("%s response: %s", action, util.dump(data))
     if action == "auth" then
         if data.errcode == WXSUCCESS then
             self:_requestToken(data)
@@ -173,7 +177,7 @@ function WeChat:_didResponse(action, data)
         else
             self:dispatch(PluginEvent.AUTH_FAILURE)
         end
-    elseif action == "authQrcode" then
+    elseif action == "authQRCode" then
         if data.path then
             local textureCache = Director.instance.textureCache
             textureCache:reloadTexture(data.path)

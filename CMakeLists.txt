@@ -23,13 +23,14 @@
 # THE SOFTWARE.
 # ****************************************************************************/
 
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.10)
 
 set(APP_NAME cocos-lua)
 
 project(${APP_NAME})
 
 option(CCLUA_BUILD_SPINE "Build with spine support" ON)
+option(CCLUA_BUILD_COCOSSTUDIO "Build with cocos studio support" ON)
 option(CCLUA_BUILD_PBC "Build with pbc support" ON)
 option(CCLUA_BUILD_SPROTO "Build with sproto support" ON)
 option(CCLUA_BUILD_LPEG "Build with lpeg support" ON) # if CCLUA_BUILD_SPROTO ON then lpeg auto set ON end
@@ -212,6 +213,11 @@ if(APPLE)
     if(CCLUA_BUILD_DRAGONBONES)
         target_compile_options(dragonbones PRIVATE -Wno-shorten-64-to-32)
     endif()
+endif()
+
+# link other flags
+if(IOS)
+    SET_TARGET_PROPERTIES(${APP_NAME} PROPERTIES LINK_FLAGS -ObjC)
 endif()
 
 # mark app resources

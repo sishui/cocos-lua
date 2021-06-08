@@ -5,6 +5,7 @@ require 'autobuild.alias-types'
 require 'autobuild.conv-types'
 require 'autobuild.cocos2d-types'
 require 'autobuild.cocos2d-action-types'
+require 'autobuild.cocos2d-studio-types'
 require 'autobuild.cocos2d-backend-types'
 require 'autobuild.cocos2d-physics-types'
 require 'autobuild.cocos2d-ui-types'
@@ -12,6 +13,7 @@ require 'autobuild.cocos2d-ui-types'
 export 'autobuild/conv.lua'
 export 'autobuild/cocos2d.lua'
 export 'autobuild/cocos2d-action.lua'
+export 'autobuild/cocos2d-studio.lua'
 export 'autobuild/cocos2d-3d.lua'
 export 'autobuild/cocos2d-backend.lua'
 export 'autobuild/cocos2d-physics.lua'
@@ -25,8 +27,3 @@ export 'autobuild/jiguang.lua'
 export 'autobuild/wechat.lua'
 
 -- require "autobuild.make"
-
--- local checkref = olua.checkref
--- checkref {
---     REF = {'cocos2d::Node *', 'cocos2d::Action *'}
--- }

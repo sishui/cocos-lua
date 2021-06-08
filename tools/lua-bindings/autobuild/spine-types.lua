@@ -4,31 +4,23 @@ local olua = require "olua"
 local typedef = olua.typedef
 
 typedef {
-    CONV = 'manual_olua_$$_spine_String',
+    CONV = 'olua_$$_spine_String',
     CPPCLS = 'spine::String',
 }
 
 typedef {
-    CONV = 'manual_olua_$$_spine_EventData',
+    CONV = 'olua_$$_spine_EventData',
     CPPCLS = 'spine::EventData',
 }
 
 typedef {
-    CONV = 'manual_olua_$$_spine_Color',
+    CONV = 'olua_$$_spine_Color',
     CPPCLS = 'spine::Color',
 }
 
 typedef {
-    CONV = 'manual_olua_$$_spine_Vector',
+    CONV = 'olua_$$_spine_Vector',
     CPPCLS = 'spine::Vector',
-    PUSH_VALUE = [[
-        int ${ARG_NAME}_size = (int)${ARG_NAME}.size();
-        lua_createtable(L, ${ARG_NAME}_size, 0);
-        for (int i = 0; i < ${ARG_NAME}_size; i++) {
-            ${SUBTYPE_PUSH_FUNC}(L, ${SUBTYPE_CAST}${ARG_NAME}[i]);
-            lua_rawseti(L, -2, i + 1);
-        }
-    ]],
 }
 
 typedef {
@@ -124,6 +116,14 @@ typedef {
     LUACLS = 'sp.Updatable',
     DECLTYPE = nil,
     CONV = 'olua_$$_cppobj',
+    NUM_VARS = nil,
+}
+
+typedef {
+    CPPCLS = 'spine::AnimationStateListener',
+    LUACLS = 'sp.AnimationStateListener',
+    DECLTYPE = 'std::function<void (spine::AnimationState *, spine::EventType, spine::TrackEntry *, spine::Event *)>',
+    CONV = 'olua_$$_spine_AnimationStateListener',
     NUM_VARS = nil,
 }
 
@@ -532,6 +532,62 @@ typedef {
     LUACLS = 'sp.SkeletonRenderer',
     DECLTYPE = nil,
     CONV = 'olua_$$_cppobj',
+    NUM_VARS = nil,
+}
+
+typedef {
+    CPPCLS = 'spine::StartListener',
+    LUACLS = 'sp.StartListener',
+    DECLTYPE = 'std::function<void (spine::TrackEntry *)>',
+    CONV = 'olua_$$_spine_StartListener',
+    NUM_VARS = nil,
+}
+
+typedef {
+    CPPCLS = 'spine::InterruptListener',
+    LUACLS = 'sp.InterruptListener',
+    DECLTYPE = 'std::function<void (spine::TrackEntry *)>',
+    CONV = 'olua_$$_spine_InterruptListener',
+    NUM_VARS = nil,
+}
+
+typedef {
+    CPPCLS = 'spine::EndListener',
+    LUACLS = 'sp.EndListener',
+    DECLTYPE = 'std::function<void (spine::TrackEntry *)>',
+    CONV = 'olua_$$_spine_EndListener',
+    NUM_VARS = nil,
+}
+
+typedef {
+    CPPCLS = 'spine::DisposeListener',
+    LUACLS = 'sp.DisposeListener',
+    DECLTYPE = 'std::function<void (spine::TrackEntry *)>',
+    CONV = 'olua_$$_spine_DisposeListener',
+    NUM_VARS = nil,
+}
+
+typedef {
+    CPPCLS = 'spine::CompleteListener',
+    LUACLS = 'sp.CompleteListener',
+    DECLTYPE = 'std::function<void (spine::TrackEntry *)>',
+    CONV = 'olua_$$_spine_CompleteListener',
+    NUM_VARS = nil,
+}
+
+typedef {
+    CPPCLS = 'spine::EventListener',
+    LUACLS = 'sp.EventListener',
+    DECLTYPE = 'std::function<void (spine::TrackEntry *, spine::Event *)>',
+    CONV = 'olua_$$_spine_EventListener',
+    NUM_VARS = nil,
+}
+
+typedef {
+    CPPCLS = 'spine::UpdateWorldTransformsListener',
+    LUACLS = 'sp.UpdateWorldTransformsListener',
+    DECLTYPE = 'std::function<void (spine::SkeletonAnimation *)>',
+    CONV = 'olua_$$_spine_UpdateWorldTransformsListener',
     NUM_VARS = nil,
 }
 

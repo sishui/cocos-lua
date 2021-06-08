@@ -2,10 +2,6 @@
 // AUTO BUILD, DON'T MODIFY!
 //
 #include "lua_wechat.h"
-#include "lua-bindings/lua_conv.h"
-#include "lua-bindings/lua_conv_manual.h"
-#include "cclua/xlua.h"
-#include "WeChat.h"
 
 #ifdef CCLUA_BUILD_WECHAT
 static int luaopen_cclua_plugin_WeChat_ShareType(lua_State *L)
@@ -242,6 +238,8 @@ static int _cclua_plugin_WeChat_setDispatcher(lua_State *L)
 
     std::function<void(const std::string &, const cocos2d::ValueMap &)> arg1;       /** dispatcher */
 
+    olua_check_std_function(L, 1, &arg1);
+
     void *cb_store = (void *)olua_pushclassobj(L, "cclua.plugin.WeChat");
     std::string cb_tag = "Dispatcher";
     std::string cb_name = olua_setcallback(L, cb_store, cb_tag.c_str(), 1, OLUA_TAG_REPLACE);
@@ -255,7 +253,7 @@ static int _cclua_plugin_WeChat_setDispatcher(lua_State *L)
             size_t last = olua_push_objpool(L);
             olua_enable_objpool(L);
             olua_push_std_string(L, arg1);
-            manual_olua_push_cocos2d_ValueMap(L, &arg2);
+            olua_push_cocos2d_ValueMap(L, &arg2);
             olua_disable_objpool(L);
 
             olua_callback(L, cb_store, cb_name.c_str(), 2);
@@ -282,10 +280,22 @@ static int _cclua_plugin_WeChat_share(lua_State *L)
     cocos2d::ValueMap arg2;       /** value */
 
     olua_check_uint(L, 1, &arg1);
-    manual_olua_check_cocos2d_ValueMap(L, 2, &arg2);
+    olua_check_cocos2d_ValueMap(L, 2, &arg2);
 
     // static void share(cclua::plugin::WeChat::ShareType type, cocos2d::ValueMap &value)
     cclua::plugin::WeChat::share((cclua::plugin::WeChat::ShareType)arg1, arg2);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_WeChat_stopAuth(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    // static void stopAuth()
+    cclua::plugin::WeChat::stopAuth();
 
     olua_endinvoke(L);
 
@@ -306,6 +316,7 @@ static int luaopen_cclua_plugin_WeChat(lua_State *L)
 #endif
     oluacls_func(L, "setDispatcher", _cclua_plugin_WeChat_setDispatcher);
     oluacls_func(L, "share", _cclua_plugin_WeChat_share);
+    oluacls_func(L, "stopAuth", _cclua_plugin_WeChat_stopAuth);
     oluacls_prop(L, "installed", _cclua_plugin_WeChat_isInstalled, nullptr);
 
     olua_registerluatype<cclua::plugin::WeChat>(L, "cclua.plugin.WeChat");

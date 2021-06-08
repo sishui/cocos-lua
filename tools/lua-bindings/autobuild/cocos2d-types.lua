@@ -4,65 +4,70 @@ local olua = require "olua"
 local typedef = olua.typedef
 
 typedef {
-    CONV = 'manual_olua_$$_cocos2d_Data',
+    CONV = 'olua_$$_cocos2d_Data',
     CPPCLS = 'cocos2d::Data',
 }
 
 typedef {
-    CONV = 'manual_olua_$$_cocos2d_Rect',
-    CPPCLS = 'cocos2d::Rect',
-    NUM_VARS = 4,
-}
-
-typedef {
-    CONV = 'manual_olua_$$_cocos2d_Mat4',
+    CONV = 'olua_$$_cocos2d_Mat4',
     CPPCLS = 'cocos2d::Mat4',
 }
 
 typedef {
-    CONV = 'manual_olua_$$_cocos2d_Vector',
+    CONV = 'olua_$$_cocos2d_Vector',
     CPPCLS = 'cocos2d::Vector',
+}
+
+typedef {
+    CONV = 'olua_$$_cocos2d_Color3B',
+    CPPCLS = 'cocos2d::Color3B',
+}
+
+typedef {
+    CONV = 'olua_$$_cocos2d_Color4B',
+    CPPCLS = 'cocos2d::Color4B',
+}
+
+typedef {
+    CONV = 'olua_$$_cocos2d_Color4F',
+    CPPCLS = 'cocos2d::Color4F',
+}
+
+typedef {
+    CONV = 'olua_$$_cocos2d_Value',
+    CPPCLS = 'cocos2d::Value',
+}
+
+typedef {
+    CONV = 'olua_$$_cocos2d_ValueMap',
+    CPPCLS = 'cocos2d::ValueMap',
+}
+
+typedef {
+    CONV = 'olua_$$_cocos2d_ValueMapIntKey',
+    CPPCLS = 'cocos2d::ValueMapIntKey',
+}
+
+typedef {
+    CONV = 'olua_$$_cocos2d_ValueVector',
+    CPPCLS = 'cocos2d::ValueVector',
+}
+
+typedef {
+    CONV = 'olua_$$_cocos2d_Map',
+    CPPCLS = 'cocos2d::Map',
+}
+
+typedef {
+    CONV = 'olua_$$_cocos2d_Rect',
+    CPPCLS = 'cocos2d::Rect',
+    NUM_VARS = 4,
 }
 
 typedef {
     CONV = 'olua_$$_std_string',
     CPPCLS = 'cocos2d::EventListener::ListenerID',
     DECLTYPE = 'std::string',
-}
-
-typedef {
-    CONV = 'manual_olua_$$_cocos2d_Color3B',
-    CPPCLS = 'cocos2d::Color3B',
-}
-
-typedef {
-    CONV = 'manual_olua_$$_cocos2d_Color4B',
-    CPPCLS = 'cocos2d::Color4B',
-}
-
-typedef {
-    CONV = 'manual_olua_$$_cocos2d_Color4F',
-    CPPCLS = 'cocos2d::Color4F',
-}
-
-typedef {
-    CONV = 'manual_olua_$$_cocos2d_Value',
-    CPPCLS = 'cocos2d::Value',
-}
-
-typedef {
-    CONV = 'manual_olua_$$_cocos2d_ValueMap',
-    CPPCLS = 'cocos2d::ValueMap',
-}
-
-typedef {
-    CONV = 'manual_olua_$$_cocos2d_ValueMapIntKey',
-    CPPCLS = 'cocos2d::ValueMapIntKey',
-}
-
-typedef {
-    CONV = 'manual_olua_$$_cocos2d_ValueVector',
-    CPPCLS = 'cocos2d::ValueVector',
 }
 
 typedef {
@@ -138,6 +143,14 @@ typedef {
 }
 
 typedef {
+    CPPCLS = 'cocos2d::ccSchedulerFunc',
+    LUACLS = 'cc.ccSchedulerFunc',
+    DECLTYPE = 'std::function<void (float)>',
+    CONV = 'olua_$$_cocos2d_ccSchedulerFunc',
+    NUM_VARS = nil,
+}
+
+typedef {
     CPPCLS = 'cocos2d::Scheduler *',
     LUACLS = 'cc.Scheduler',
     DECLTYPE = nil,
@@ -170,10 +183,34 @@ typedef {
 }
 
 typedef {
+    CPPCLS = 'cocos2d::EventListenerTouchOneByOne::ccTouchBeganCallback',
+    LUACLS = 'cc.EventListenerTouchOneByOne.ccTouchBeganCallback',
+    DECLTYPE = 'std::function<bool (cocos2d::Touch *, cocos2d::Event *)>',
+    CONV = 'olua_$$_cocos2d_EventListenerTouchOneByOne_ccTouchBeganCallback',
+    NUM_VARS = nil,
+}
+
+typedef {
+    CPPCLS = 'cocos2d::EventListenerTouchOneByOne::ccTouchCallback',
+    LUACLS = 'cc.EventListenerTouchOneByOne.ccTouchCallback',
+    DECLTYPE = 'std::function<void (cocos2d::Touch *, cocos2d::Event *)>',
+    CONV = 'olua_$$_cocos2d_EventListenerTouchOneByOne_ccTouchCallback',
+    NUM_VARS = nil,
+}
+
+typedef {
     CPPCLS = 'cocos2d::EventListenerTouchOneByOne *',
     LUACLS = 'cc.EventListenerTouchOneByOne',
     DECLTYPE = nil,
     CONV = 'olua_$$_cppobj',
+    NUM_VARS = nil,
+}
+
+typedef {
+    CPPCLS = 'cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback',
+    LUACLS = 'cc.EventListenerTouchAllAtOnce.ccTouchesCallback',
+    DECLTYPE = 'std::function<void (const std::vector<Touch *> &, cocos2d::Event *)>',
+    CONV = 'olua_$$_cocos2d_EventListenerTouchAllAtOnce_ccTouchesCallback',
     NUM_VARS = nil,
 }
 

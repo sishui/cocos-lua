@@ -2,11 +2,63 @@
 // AUTO BUILD, DON'T MODIFY!
 //
 #include "lua_cocos2d_action.h"
-#include "lua-bindings/lua_conv.h"
-#include "lua-bindings/lua_conv_manual.h"
-#include "lua-bindings/LuaCocosAdapter.h"
-#include "cocos2d.h"
-#include "cclua/xlua.h"
+
+bool olua_is_cocos2d_ActionFloat_ActionFloatCallback(lua_State *L, int idx)
+{
+    return olua_is_callback<cocos2d::ActionFloat::ActionFloatCallback>(L, idx);
+}
+
+int olua_push_cocos2d_ActionFloat_ActionFloatCallback(lua_State *L, const cocos2d::ActionFloat::ActionFloatCallback *value)
+{
+    return olua_push_callback<cocos2d::ActionFloat::ActionFloatCallback>(L, value);
+}
+
+void olua_check_cocos2d_ActionFloat_ActionFloatCallback(lua_State *L, int idx, cocos2d::ActionFloat::ActionFloatCallback *value)
+{
+    olua_check_callback<cocos2d::ActionFloat::ActionFloatCallback>(L, idx, value);
+}
+
+static int luaopen_cocos2d_tweenfunc_TweenType(lua_State *L)
+{
+    oluacls_class(L, "cc.tweenfunc.TweenType", nullptr);
+    oluacls_const_integer(L, "Back_EaseIn", (lua_Integer)cocos2d::tweenfunc::TweenType::Back_EaseIn);
+    oluacls_const_integer(L, "Back_EaseInOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Back_EaseInOut);
+    oluacls_const_integer(L, "Back_EaseOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Back_EaseOut);
+    oluacls_const_integer(L, "Bounce_EaseIn", (lua_Integer)cocos2d::tweenfunc::TweenType::Bounce_EaseIn);
+    oluacls_const_integer(L, "Bounce_EaseInOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Bounce_EaseInOut);
+    oluacls_const_integer(L, "Bounce_EaseOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Bounce_EaseOut);
+    oluacls_const_integer(L, "CUSTOM_EASING", (lua_Integer)cocos2d::tweenfunc::TweenType::CUSTOM_EASING);
+    oluacls_const_integer(L, "Circ_EaseIn", (lua_Integer)cocos2d::tweenfunc::TweenType::Circ_EaseIn);
+    oluacls_const_integer(L, "Circ_EaseInOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Circ_EaseInOut);
+    oluacls_const_integer(L, "Circ_EaseOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Circ_EaseOut);
+    oluacls_const_integer(L, "Cubic_EaseIn", (lua_Integer)cocos2d::tweenfunc::TweenType::Cubic_EaseIn);
+    oluacls_const_integer(L, "Cubic_EaseInOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Cubic_EaseInOut);
+    oluacls_const_integer(L, "Cubic_EaseOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Cubic_EaseOut);
+    oluacls_const_integer(L, "Elastic_EaseIn", (lua_Integer)cocos2d::tweenfunc::TweenType::Elastic_EaseIn);
+    oluacls_const_integer(L, "Elastic_EaseInOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Elastic_EaseInOut);
+    oluacls_const_integer(L, "Elastic_EaseOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Elastic_EaseOut);
+    oluacls_const_integer(L, "Expo_EaseIn", (lua_Integer)cocos2d::tweenfunc::TweenType::Expo_EaseIn);
+    oluacls_const_integer(L, "Expo_EaseInOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Expo_EaseInOut);
+    oluacls_const_integer(L, "Expo_EaseOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Expo_EaseOut);
+    oluacls_const_integer(L, "Linear", (lua_Integer)cocos2d::tweenfunc::TweenType::Linear);
+    oluacls_const_integer(L, "Quad_EaseIn", (lua_Integer)cocos2d::tweenfunc::TweenType::Quad_EaseIn);
+    oluacls_const_integer(L, "Quad_EaseInOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Quad_EaseInOut);
+    oluacls_const_integer(L, "Quad_EaseOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Quad_EaseOut);
+    oluacls_const_integer(L, "Quart_EaseIn", (lua_Integer)cocos2d::tweenfunc::TweenType::Quart_EaseIn);
+    oluacls_const_integer(L, "Quart_EaseInOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Quart_EaseInOut);
+    oluacls_const_integer(L, "Quart_EaseOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Quart_EaseOut);
+    oluacls_const_integer(L, "Quint_EaseIn", (lua_Integer)cocos2d::tweenfunc::TweenType::Quint_EaseIn);
+    oluacls_const_integer(L, "Quint_EaseInOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Quint_EaseInOut);
+    oluacls_const_integer(L, "Quint_EaseOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Quint_EaseOut);
+    oluacls_const_integer(L, "Sine_EaseIn", (lua_Integer)cocos2d::tweenfunc::TweenType::Sine_EaseIn);
+    oluacls_const_integer(L, "Sine_EaseInOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Sine_EaseInOut);
+    oluacls_const_integer(L, "Sine_EaseOut", (lua_Integer)cocos2d::tweenfunc::TweenType::Sine_EaseOut);
+    oluacls_const_integer(L, "TWEEN_EASING_MAX", (lua_Integer)cocos2d::tweenfunc::TweenType::TWEEN_EASING_MAX);
+
+    olua_registerluatype<cocos2d::tweenfunc::TweenType>(L, "cc.tweenfunc.TweenType");
+
+    return 1;
+}
 
 static int _cocos2d_Action___move(lua_State *L)
 {
@@ -537,7 +589,7 @@ static int _cocos2d_Follow_create1(lua_State *L)
     cocos2d::Rect arg2;       /** rect */
 
     olua_check_cppobj(L, 1, (void **)&arg1, "cc.Node");
-    manual_olua_check_cocos2d_Rect(L, 2, &arg2);
+    olua_check_cocos2d_Rect(L, 2, &arg2);
 
     // static cocos2d::Follow *create(cocos2d::Node *followedNode, @optional const cocos2d::Rect &rect)
     cocos2d::Follow *ret = cocos2d::Follow::create(arg1, arg2);
@@ -577,7 +629,7 @@ static int _cocos2d_Follow_create(lua_State *L)
     }
 
     if (num_args == 2) {
-        // if ((olua_is_cppobj(L, 1, "cc.Node")) && (manual_olua_is_cocos2d_Rect(L, 2))) {
+        // if ((olua_is_cppobj(L, 1, "cc.Node")) && (olua_is_cocos2d_Rect(L, 2))) {
             // static cocos2d::Follow *create(cocos2d::Node *followedNode, @optional const cocos2d::Rect &rect)
             return _cocos2d_Follow_create1(L);
         // }
@@ -600,7 +652,7 @@ static int _cocos2d_Follow_createWithOffset1(lua_State *L)
     olua_check_cppobj(L, 1, (void **)&arg1, "cc.Node");
     olua_check_number(L, 2, &arg2);
     olua_check_number(L, 3, &arg3);
-    manual_olua_check_cocos2d_Rect(L, 4, &arg4);
+    olua_check_cocos2d_Rect(L, 4, &arg4);
 
     // static cocos2d::Follow *createWithOffset(cocos2d::Node *followedNode, float xOffset, float yOffset, @optional const cocos2d::Rect &rect)
     cocos2d::Follow *ret = cocos2d::Follow::createWithOffset(arg1, (float)arg2, (float)arg3, arg4);
@@ -644,7 +696,7 @@ static int _cocos2d_Follow_createWithOffset(lua_State *L)
     }
 
     if (num_args == 4) {
-        // if ((olua_is_cppobj(L, 1, "cc.Node")) && (olua_is_number(L, 2)) && (olua_is_number(L, 3)) && (manual_olua_is_cocos2d_Rect(L, 4))) {
+        // if ((olua_is_cppobj(L, 1, "cc.Node")) && (olua_is_number(L, 2)) && (olua_is_number(L, 3)) && (olua_is_cocos2d_Rect(L, 4))) {
             // static cocos2d::Follow *createWithOffset(cocos2d::Node *followedNode, float xOffset, float yOffset, @optional const cocos2d::Rect &rect)
             return _cocos2d_Follow_createWithOffset1(L);
         // }
@@ -665,7 +717,7 @@ static int _cocos2d_Follow_initWithTarget1(lua_State *L)
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.Follow");
     olua_check_cppobj(L, 2, (void **)&arg1, "cc.Node");
-    manual_olua_check_cocos2d_Rect(L, 3, &arg2);
+    olua_check_cocos2d_Rect(L, 3, &arg2);
 
     // bool initWithTarget(cocos2d::Node *followedNode, @optional const cocos2d::Rect &rect)
     bool ret = self->initWithTarget(arg1, arg2);
@@ -707,7 +759,7 @@ static int _cocos2d_Follow_initWithTarget(lua_State *L)
     }
 
     if (num_args == 2) {
-        // if ((olua_is_cppobj(L, 2, "cc.Node")) && (manual_olua_is_cocos2d_Rect(L, 3))) {
+        // if ((olua_is_cppobj(L, 2, "cc.Node")) && (olua_is_cocos2d_Rect(L, 3))) {
             // bool initWithTarget(cocos2d::Node *followedNode, @optional const cocos2d::Rect &rect)
             return _cocos2d_Follow_initWithTarget1(L);
         // }
@@ -732,7 +784,7 @@ static int _cocos2d_Follow_initWithTargetAndOffset1(lua_State *L)
     olua_check_cppobj(L, 2, (void **)&arg1, "cc.Node");
     olua_check_number(L, 3, &arg2);
     olua_check_number(L, 4, &arg3);
-    manual_olua_check_cocos2d_Rect(L, 5, &arg4);
+    olua_check_cocos2d_Rect(L, 5, &arg4);
 
     // bool initWithTargetAndOffset(cocos2d::Node *followedNode, float xOffset, float yOffset, @optional const cocos2d::Rect &rect)
     bool ret = self->initWithTargetAndOffset(arg1, (float)arg2, (float)arg3, arg4);
@@ -778,7 +830,7 @@ static int _cocos2d_Follow_initWithTargetAndOffset(lua_State *L)
     }
 
     if (num_args == 4) {
-        // if ((olua_is_cppobj(L, 2, "cc.Node")) && (olua_is_number(L, 3)) && (olua_is_number(L, 4)) && (manual_olua_is_cocos2d_Rect(L, 5))) {
+        // if ((olua_is_cppobj(L, 2, "cc.Node")) && (olua_is_number(L, 3)) && (olua_is_number(L, 4)) && (olua_is_cocos2d_Rect(L, 5))) {
             // bool initWithTargetAndOffset(cocos2d::Node *followedNode, float xOffset, float yOffset, @optional const cocos2d::Rect &rect)
             return _cocos2d_Follow_initWithTargetAndOffset1(L);
         // }
@@ -1695,14 +1747,16 @@ static int _cocos2d_Sequence_create1(lua_State *L)
 
     cocos2d::Vector<cocos2d::FiniteTimeAction *> arg1;       /** arrayOfActions */
 
-    manual_olua_check_cocos2d_Vector(L, 1, arg1, "cc.FiniteTimeAction");
+    olua_check_cocos2d_Vector<cocos2d::FiniteTimeAction *>(L, 1, &arg1, [L](cocos2d::FiniteTimeAction **value) {
+        olua_check_cppobj(L, -1, (void **)value, "cc.FiniteTimeAction");
+    });
 
     // static cocos2d::Sequence *create(@addref(actions |) const Vector<cocos2d::FiniteTimeAction *> &arrayOfActions)
     cocos2d::Sequence *ret = cocos2d::Sequence::create(arg1);
     int num_ret = olua_push_cppobj(L, ret, "cc.Sequence");
 
     // insert code after call
-    olua_addref(L, -1, "actions", 1, OLUA_MODE_MULTIPLE | OLUA_FLAG_ARRAY);
+    olua_addref(L, -1, "actions", 1, OLUA_MODE_MULTIPLE | OLUA_FLAG_TABLE);
 
     olua_endinvoke(L);
 
@@ -1715,7 +1769,9 @@ static int _cocos2d_Sequence_create2(lua_State *L)
 
     cocos2d::Vector<cocos2d::FiniteTimeAction *> arg1;       /** arrayOfActions */
 
-    manual_olua_pack_cocos2d_Vector(L, 1, arg1, "cc.FiniteTimeAction");
+    olua_pack_cocos2d_Vector<cocos2d::FiniteTimeAction *>(L, 1, &arg1, [L](cocos2d::FiniteTimeAction **value) {
+        olua_check_cppobj(L, -1, (void **)value, "cc.FiniteTimeAction");
+    });
 
     // static cocos2d::Sequence *create(@pack@addref(actions |) const Vector<cocos2d::FiniteTimeAction *> &arrayOfActions)
     cocos2d::Sequence *ret = cocos2d::Sequence::create(arg1);
@@ -1723,8 +1779,10 @@ static int _cocos2d_Sequence_create2(lua_State *L)
 
     // insert code after call
     int ref_store = lua_absindex(L, -1);
-    manual_olua_push_cocos2d_Vector(L, arg1, "cc.FiniteTimeAction");
-    olua_addref(L, ref_store, "actions", -1, OLUA_MODE_MULTIPLE | OLUA_FLAG_ARRAY);
+    olua_push_cocos2d_Vector<cocos2d::FiniteTimeAction *>(L, &arg1, [L](cocos2d::FiniteTimeAction *value) {
+        olua_push_cppobj(L, value, "cc.FiniteTimeAction");
+    });
+    olua_addref(L, ref_store, "actions", -1, OLUA_MODE_MULTIPLE | OLUA_FLAG_TABLE);
     lua_pop(L, 1);
 
     olua_endinvoke(L);
@@ -1737,12 +1795,12 @@ static int _cocos2d_Sequence_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 1) {
-        if ((manual_olua_is_cocos2d_Vector(L, 1))) {
+        if ((olua_is_cocos2d_Vector(L, 1))) {
             // static cocos2d::Sequence *create(@addref(actions |) const Vector<cocos2d::FiniteTimeAction *> &arrayOfActions)
             return _cocos2d_Sequence_create1(L);
         }
 
-        // if ((manual_olua_ispack_cocos2d_Vector(L, 1))) {
+        // if ((olua_ispack_cocos2d_Vector(L, 1))) {
             // static cocos2d::Sequence *create(@pack@addref(actions |) const Vector<cocos2d::FiniteTimeAction *> &arrayOfActions)
             return _cocos2d_Sequence_create2(L);
         // }
@@ -1987,14 +2045,16 @@ static int _cocos2d_Spawn_create1(lua_State *L)
 
     cocos2d::Vector<cocos2d::FiniteTimeAction *> arg1;       /** arrayOfActions */
 
-    manual_olua_check_cocos2d_Vector(L, 1, arg1, "cc.FiniteTimeAction");
+    olua_check_cocos2d_Vector<cocos2d::FiniteTimeAction *>(L, 1, &arg1, [L](cocos2d::FiniteTimeAction **value) {
+        olua_check_cppobj(L, -1, (void **)value, "cc.FiniteTimeAction");
+    });
 
     // static cocos2d::Spawn *create(@addref(actions |) const Vector<cocos2d::FiniteTimeAction *> &arrayOfActions)
     cocos2d::Spawn *ret = cocos2d::Spawn::create(arg1);
     int num_ret = olua_push_cppobj(L, ret, "cc.Spawn");
 
     // insert code after call
-    olua_addref(L, -1, "actions", 1, OLUA_MODE_MULTIPLE | OLUA_FLAG_ARRAY);
+    olua_addref(L, -1, "actions", 1, OLUA_MODE_MULTIPLE | OLUA_FLAG_TABLE);
 
     olua_endinvoke(L);
 
@@ -2007,7 +2067,9 @@ static int _cocos2d_Spawn_create2(lua_State *L)
 
     cocos2d::Vector<cocos2d::FiniteTimeAction *> arg1;       /** arrayOfActions */
 
-    manual_olua_pack_cocos2d_Vector(L, 1, arg1, "cc.FiniteTimeAction");
+    olua_pack_cocos2d_Vector<cocos2d::FiniteTimeAction *>(L, 1, &arg1, [L](cocos2d::FiniteTimeAction **value) {
+        olua_check_cppobj(L, -1, (void **)value, "cc.FiniteTimeAction");
+    });
 
     // static cocos2d::Spawn *create(@pack@addref(actions |) const Vector<cocos2d::FiniteTimeAction *> &arrayOfActions)
     cocos2d::Spawn *ret = cocos2d::Spawn::create(arg1);
@@ -2015,8 +2077,10 @@ static int _cocos2d_Spawn_create2(lua_State *L)
 
     // insert code after call
     int ref_store = lua_absindex(L, -1);
-    manual_olua_push_cocos2d_Vector(L, arg1, "cc.FiniteTimeAction");
-    olua_addref(L, ref_store, "actions", -1, OLUA_MODE_MULTIPLE | OLUA_FLAG_ARRAY);
+    olua_push_cocos2d_Vector<cocos2d::FiniteTimeAction *>(L, &arg1, [L](cocos2d::FiniteTimeAction *value) {
+        olua_push_cppobj(L, value, "cc.FiniteTimeAction");
+    });
+    olua_addref(L, ref_store, "actions", -1, OLUA_MODE_MULTIPLE | OLUA_FLAG_TABLE);
     lua_pop(L, 1);
 
     olua_endinvoke(L);
@@ -2029,12 +2093,12 @@ static int _cocos2d_Spawn_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 1) {
-        if ((manual_olua_is_cocos2d_Vector(L, 1))) {
+        if ((olua_is_cocos2d_Vector(L, 1))) {
             // static cocos2d::Spawn *create(@addref(actions |) const Vector<cocos2d::FiniteTimeAction *> &arrayOfActions)
             return _cocos2d_Spawn_create1(L);
         }
 
-        // if ((manual_olua_ispack_cocos2d_Vector(L, 1))) {
+        // if ((olua_ispack_cocos2d_Vector(L, 1))) {
             // static cocos2d::Spawn *create(@pack@addref(actions |) const Vector<cocos2d::FiniteTimeAction *> &arrayOfActions)
             return _cocos2d_Spawn_create2(L);
         // }
@@ -2145,7 +2209,7 @@ static int _cocos2d_RotateTo_create3(lua_State *L)
     cocos2d::Vec3 arg2;       /** dstAngle3D */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec3(L, 2, &arg2);
+    olua_check_cocos2d_Vec3(L, 2, &arg2);
 
     // static cocos2d::RotateTo *create(float duration, const cocos2d::Vec3 &dstAngle3D)
     cocos2d::RotateTo *ret = cocos2d::RotateTo::create((float)arg1, arg2);
@@ -2161,7 +2225,7 @@ static int _cocos2d_RotateTo_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec3(L, 2))) {
+        if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec3(L, 2))) {
             // static cocos2d::RotateTo *create(float duration, const cocos2d::Vec3 &dstAngle3D)
             return _cocos2d_RotateTo_create3(L);
         }
@@ -2255,7 +2319,7 @@ static int _cocos2d_RotateFrom_create3(lua_State *L)
     cocos2d::Vec3 arg2;       /** fromAngle3D */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec3(L, 2, &arg2);
+    olua_check_cocos2d_Vec3(L, 2, &arg2);
 
     // static cocos2d::RotateFrom *create(float duration, const cocos2d::Vec3 &fromAngle3D)
     cocos2d::RotateFrom *ret = cocos2d::RotateFrom::create((float)arg1, arg2);
@@ -2271,7 +2335,7 @@ static int _cocos2d_RotateFrom_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec3(L, 2))) {
+        if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec3(L, 2))) {
             // static cocos2d::RotateFrom *create(float duration, const cocos2d::Vec3 &fromAngle3D)
             return _cocos2d_RotateFrom_create3(L);
         }
@@ -2365,7 +2429,7 @@ static int _cocos2d_RotateBy_create3(lua_State *L)
     cocos2d::Vec3 arg2;       /** deltaAngle3D */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec3(L, 2, &arg2);
+    olua_check_cocos2d_Vec3(L, 2, &arg2);
 
     // static cocos2d::RotateBy *create(float duration, const cocos2d::Vec3 &deltaAngle3D)
     cocos2d::RotateBy *ret = cocos2d::RotateBy::create((float)arg1, arg2);
@@ -2381,7 +2445,7 @@ static int _cocos2d_RotateBy_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec3(L, 2))) {
+        if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec3(L, 2))) {
             // static cocos2d::RotateBy *create(float duration, const cocos2d::Vec3 &deltaAngle3D)
             return _cocos2d_RotateBy_create3(L);
         }
@@ -2435,7 +2499,7 @@ static int _cocos2d_MoveBy_create1(lua_State *L)
     cocos2d::Vec2 arg2;       /** deltaPosition */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg2);
+    olua_check_cocos2d_Vec2(L, 2, &arg2);
 
     // static cocos2d::MoveBy *create(float duration, const cocos2d::Vec2 &deltaPosition)
     cocos2d::MoveBy *ret = cocos2d::MoveBy::create((float)arg1, arg2);
@@ -2454,7 +2518,7 @@ static int _cocos2d_MoveBy_create2(lua_State *L)
     cocos2d::Vec2 arg2;       /** deltaPosition */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_pack_cocos2d_Vec2(L, 2, &arg2);
+    olua_pack_cocos2d_Vec2(L, 2, &arg2);
 
     // static cocos2d::MoveBy *create(float duration, @pack const cocos2d::Vec2 &deltaPosition)
     cocos2d::MoveBy *ret = cocos2d::MoveBy::create((float)arg1, arg2);
@@ -2473,7 +2537,7 @@ static int _cocos2d_MoveBy_create3(lua_State *L)
     cocos2d::Vec3 arg2;       /** deltaPosition */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec3(L, 2, &arg2);
+    olua_check_cocos2d_Vec3(L, 2, &arg2);
 
     // static cocos2d::MoveBy *create(float duration, const cocos2d::Vec3 &deltaPosition)
     cocos2d::MoveBy *ret = cocos2d::MoveBy::create((float)arg1, arg2);
@@ -2492,7 +2556,7 @@ static int _cocos2d_MoveBy_create4(lua_State *L)
     cocos2d::Vec3 arg2;       /** deltaPosition */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_pack_cocos2d_Vec3(L, 2, &arg2);
+    olua_pack_cocos2d_Vec3(L, 2, &arg2);
 
     // static cocos2d::MoveBy *create(float duration, @pack const cocos2d::Vec3 &deltaPosition)
     cocos2d::MoveBy *ret = cocos2d::MoveBy::create((float)arg1, arg2);
@@ -2508,26 +2572,26 @@ static int _cocos2d_MoveBy_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec3(L, 2))) {
+        if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec3(L, 2))) {
             // static cocos2d::MoveBy *create(float duration, const cocos2d::Vec3 &deltaPosition)
             return _cocos2d_MoveBy_create3(L);
         }
 
-        // if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec2(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec2(L, 2))) {
             // static cocos2d::MoveBy *create(float duration, const cocos2d::Vec2 &deltaPosition)
             return _cocos2d_MoveBy_create1(L);
         // }
     }
 
     if (num_args == 3) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_ispack_cocos2d_Vec2(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_ispack_cocos2d_Vec2(L, 2))) {
             // static cocos2d::MoveBy *create(float duration, @pack const cocos2d::Vec2 &deltaPosition)
             return _cocos2d_MoveBy_create2(L);
         // }
     }
 
     if (num_args == 4) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_ispack_cocos2d_Vec3(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_ispack_cocos2d_Vec3(L, 2))) {
             // static cocos2d::MoveBy *create(float duration, @pack const cocos2d::Vec3 &deltaPosition)
             return _cocos2d_MoveBy_create4(L);
         // }
@@ -2569,7 +2633,7 @@ static int _cocos2d_MoveTo_create1(lua_State *L)
     cocos2d::Vec2 arg2;       /** position */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg2);
+    olua_check_cocos2d_Vec2(L, 2, &arg2);
 
     // static cocos2d::MoveTo *create(float duration, const cocos2d::Vec2 &position)
     cocos2d::MoveTo *ret = cocos2d::MoveTo::create((float)arg1, arg2);
@@ -2588,7 +2652,7 @@ static int _cocos2d_MoveTo_create2(lua_State *L)
     cocos2d::Vec2 arg2;       /** position */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_pack_cocos2d_Vec2(L, 2, &arg2);
+    olua_pack_cocos2d_Vec2(L, 2, &arg2);
 
     // static cocos2d::MoveTo *create(float duration, @pack const cocos2d::Vec2 &position)
     cocos2d::MoveTo *ret = cocos2d::MoveTo::create((float)arg1, arg2);
@@ -2607,7 +2671,7 @@ static int _cocos2d_MoveTo_create3(lua_State *L)
     cocos2d::Vec3 arg2;       /** position */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec3(L, 2, &arg2);
+    olua_check_cocos2d_Vec3(L, 2, &arg2);
 
     // static cocos2d::MoveTo *create(float duration, const cocos2d::Vec3 &position)
     cocos2d::MoveTo *ret = cocos2d::MoveTo::create((float)arg1, arg2);
@@ -2626,7 +2690,7 @@ static int _cocos2d_MoveTo_create4(lua_State *L)
     cocos2d::Vec3 arg2;       /** position */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_pack_cocos2d_Vec3(L, 2, &arg2);
+    olua_pack_cocos2d_Vec3(L, 2, &arg2);
 
     // static cocos2d::MoveTo *create(float duration, @pack const cocos2d::Vec3 &position)
     cocos2d::MoveTo *ret = cocos2d::MoveTo::create((float)arg1, arg2);
@@ -2642,26 +2706,26 @@ static int _cocos2d_MoveTo_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec3(L, 2))) {
+        if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec3(L, 2))) {
             // static cocos2d::MoveTo *create(float duration, const cocos2d::Vec3 &position)
             return _cocos2d_MoveTo_create3(L);
         }
 
-        // if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec2(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec2(L, 2))) {
             // static cocos2d::MoveTo *create(float duration, const cocos2d::Vec2 &position)
             return _cocos2d_MoveTo_create1(L);
         // }
     }
 
     if (num_args == 3) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_ispack_cocos2d_Vec2(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_ispack_cocos2d_Vec2(L, 2))) {
             // static cocos2d::MoveTo *create(float duration, @pack const cocos2d::Vec2 &position)
             return _cocos2d_MoveTo_create2(L);
         // }
     }
 
     if (num_args == 4) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_ispack_cocos2d_Vec3(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_ispack_cocos2d_Vec3(L, 2))) {
             // static cocos2d::MoveTo *create(float duration, @pack const cocos2d::Vec3 &position)
             return _cocos2d_MoveTo_create4(L);
         // }
@@ -2703,7 +2767,7 @@ static int _cocos2d_MoveFrom_create1(lua_State *L)
     cocos2d::Vec2 arg2;       /** position */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg2);
+    olua_check_cocos2d_Vec2(L, 2, &arg2);
 
     // static cocos2d::MoveFrom *create(float duration, const cocos2d::Vec2 &position)
     cocos2d::MoveFrom *ret = cocos2d::MoveFrom::create((float)arg1, arg2);
@@ -2722,7 +2786,7 @@ static int _cocos2d_MoveFrom_create2(lua_State *L)
     cocos2d::Vec2 arg2;       /** position */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_pack_cocos2d_Vec2(L, 2, &arg2);
+    olua_pack_cocos2d_Vec2(L, 2, &arg2);
 
     // static cocos2d::MoveFrom *create(float duration, @pack const cocos2d::Vec2 &position)
     cocos2d::MoveFrom *ret = cocos2d::MoveFrom::create((float)arg1, arg2);
@@ -2741,7 +2805,7 @@ static int _cocos2d_MoveFrom_create3(lua_State *L)
     cocos2d::Vec3 arg2;       /** position */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec3(L, 2, &arg2);
+    olua_check_cocos2d_Vec3(L, 2, &arg2);
 
     // static cocos2d::MoveFrom *create(float duration, const cocos2d::Vec3 &position)
     cocos2d::MoveFrom *ret = cocos2d::MoveFrom::create((float)arg1, arg2);
@@ -2760,7 +2824,7 @@ static int _cocos2d_MoveFrom_create4(lua_State *L)
     cocos2d::Vec3 arg2;       /** position */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_pack_cocos2d_Vec3(L, 2, &arg2);
+    olua_pack_cocos2d_Vec3(L, 2, &arg2);
 
     // static cocos2d::MoveFrom *create(float duration, @pack const cocos2d::Vec3 &position)
     cocos2d::MoveFrom *ret = cocos2d::MoveFrom::create((float)arg1, arg2);
@@ -2776,26 +2840,26 @@ static int _cocos2d_MoveFrom_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec3(L, 2))) {
+        if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec3(L, 2))) {
             // static cocos2d::MoveFrom *create(float duration, const cocos2d::Vec3 &position)
             return _cocos2d_MoveFrom_create3(L);
         }
 
-        // if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec2(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec2(L, 2))) {
             // static cocos2d::MoveFrom *create(float duration, const cocos2d::Vec2 &position)
             return _cocos2d_MoveFrom_create1(L);
         // }
     }
 
     if (num_args == 3) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_ispack_cocos2d_Vec2(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_ispack_cocos2d_Vec2(L, 2))) {
             // static cocos2d::MoveFrom *create(float duration, @pack const cocos2d::Vec2 &position)
             return _cocos2d_MoveFrom_create2(L);
         // }
     }
 
     if (num_args == 4) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_ispack_cocos2d_Vec3(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_ispack_cocos2d_Vec3(L, 2))) {
             // static cocos2d::MoveFrom *create(float duration, @pack const cocos2d::Vec3 &position)
             return _cocos2d_MoveFrom_create4(L);
         // }
@@ -2925,7 +2989,7 @@ static int _cocos2d_ResizeTo_create(lua_State *L)
     cocos2d::Size arg2;       /** final_size */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
 
     // static cocos2d::ResizeTo *create(float duration, const cocos2d::Size &final_size)
     cocos2d::ResizeTo *ret = cocos2d::ResizeTo::create((float)arg1, arg2);
@@ -2967,7 +3031,7 @@ static int _cocos2d_ResizeBy_create(lua_State *L)
     cocos2d::Size arg2;       /** deltaSize */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
 
     // static cocos2d::ResizeBy *create(float duration, const cocos2d::Size &deltaSize)
     cocos2d::ResizeBy *ret = cocos2d::ResizeBy::create((float)arg1, arg2);
@@ -3009,7 +3073,7 @@ static int _cocos2d_BezierBy_create1(lua_State *L)
     cocos2d::ccBezierConfig arg2;       /** c */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_ccBezierConfig(L, 2, &arg2);
+    olua_check_cocos2d_ccBezierConfig(L, 2, &arg2);
 
     // static cocos2d::BezierBy *create(float t, const cocos2d::ccBezierConfig &c)
     cocos2d::BezierBy *ret = cocos2d::BezierBy::create((float)arg1, arg2);
@@ -3028,7 +3092,7 @@ static int _cocos2d_BezierBy_create2(lua_State *L)
     cocos2d::ccBezierConfig arg2;       /** c */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_pack_cocos2d_ccBezierConfig(L, 2, &arg2);
+    olua_pack_cocos2d_ccBezierConfig(L, 2, &arg2);
 
     // static cocos2d::BezierBy *create(float t, @pack const cocos2d::ccBezierConfig &c)
     cocos2d::BezierBy *ret = cocos2d::BezierBy::create((float)arg1, arg2);
@@ -3044,14 +3108,14 @@ static int _cocos2d_BezierBy_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_ccBezierConfig(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_is_cocos2d_ccBezierConfig(L, 2))) {
             // static cocos2d::BezierBy *create(float t, const cocos2d::ccBezierConfig &c)
             return _cocos2d_BezierBy_create1(L);
         // }
     }
 
     if (num_args == 4) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_ispack_cocos2d_ccBezierConfig(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_ispack_cocos2d_ccBezierConfig(L, 2))) {
             // static cocos2d::BezierBy *create(float t, @pack const cocos2d::ccBezierConfig &c)
             return _cocos2d_BezierBy_create2(L);
         // }
@@ -3093,7 +3157,7 @@ static int _cocos2d_BezierTo_create1(lua_State *L)
     cocos2d::ccBezierConfig arg2;       /** c */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_ccBezierConfig(L, 2, &arg2);
+    olua_check_cocos2d_ccBezierConfig(L, 2, &arg2);
 
     // static cocos2d::BezierTo *create(float t, const cocos2d::ccBezierConfig &c)
     cocos2d::BezierTo *ret = cocos2d::BezierTo::create((float)arg1, arg2);
@@ -3112,7 +3176,7 @@ static int _cocos2d_BezierTo_create2(lua_State *L)
     cocos2d::ccBezierConfig arg2;       /** c */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_pack_cocos2d_ccBezierConfig(L, 2, &arg2);
+    olua_pack_cocos2d_ccBezierConfig(L, 2, &arg2);
 
     // static cocos2d::BezierTo *create(float t, @pack const cocos2d::ccBezierConfig &c)
     cocos2d::BezierTo *ret = cocos2d::BezierTo::create((float)arg1, arg2);
@@ -3128,14 +3192,14 @@ static int _cocos2d_BezierTo_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_ccBezierConfig(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_is_cocos2d_ccBezierConfig(L, 2))) {
             // static cocos2d::BezierTo *create(float t, const cocos2d::ccBezierConfig &c)
             return _cocos2d_BezierTo_create1(L);
         // }
     }
 
     if (num_args == 4) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_ispack_cocos2d_ccBezierConfig(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_ispack_cocos2d_ccBezierConfig(L, 2))) {
             // static cocos2d::BezierTo *create(float t, @pack const cocos2d::ccBezierConfig &c)
             return _cocos2d_BezierTo_create2(L);
         // }
@@ -3179,7 +3243,7 @@ static int _cocos2d_JumpBy_create1(lua_State *L)
     lua_Integer arg4 = 0;       /** jumps */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg2);
+    olua_check_cocos2d_Vec2(L, 2, &arg2);
     olua_check_number(L, 3, &arg3);
     olua_check_int(L, 4, &arg4);
 
@@ -3202,7 +3266,7 @@ static int _cocos2d_JumpBy_create2(lua_State *L)
     lua_Integer arg4 = 0;       /** jumps */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_pack_cocos2d_Vec2(L, 2, &arg2);
+    olua_pack_cocos2d_Vec2(L, 2, &arg2);
     olua_check_number(L, 4, &arg3);
     olua_check_int(L, 5, &arg4);
 
@@ -3220,14 +3284,14 @@ static int _cocos2d_JumpBy_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 4) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec2(L, 2)) && (olua_is_number(L, 3)) && (olua_is_int(L, 4))) {
+        // if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec2(L, 2)) && (olua_is_number(L, 3)) && (olua_is_int(L, 4))) {
             // static cocos2d::JumpBy *create(float duration, const cocos2d::Vec2 &position, float height, int jumps)
             return _cocos2d_JumpBy_create1(L);
         // }
     }
 
     if (num_args == 5) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_ispack_cocos2d_Vec2(L, 2)) && (olua_is_number(L, 4)) && (olua_is_int(L, 5))) {
+        // if ((olua_is_number(L, 1)) && (olua_ispack_cocos2d_Vec2(L, 2)) && (olua_is_number(L, 4)) && (olua_is_int(L, 5))) {
             // static cocos2d::JumpBy *create(float duration, @pack const cocos2d::Vec2 &position, float height, int jumps)
             return _cocos2d_JumpBy_create2(L);
         // }
@@ -3271,7 +3335,7 @@ static int _cocos2d_JumpTo_create1(lua_State *L)
     lua_Integer arg4 = 0;       /** jumps */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg2);
+    olua_check_cocos2d_Vec2(L, 2, &arg2);
     olua_check_number(L, 3, &arg3);
     olua_check_int(L, 4, &arg4);
 
@@ -3294,7 +3358,7 @@ static int _cocos2d_JumpTo_create2(lua_State *L)
     lua_Integer arg4 = 0;       /** jumps */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_pack_cocos2d_Vec2(L, 2, &arg2);
+    olua_pack_cocos2d_Vec2(L, 2, &arg2);
     olua_check_number(L, 4, &arg3);
     olua_check_int(L, 5, &arg4);
 
@@ -3312,14 +3376,14 @@ static int _cocos2d_JumpTo_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 4) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Vec2(L, 2)) && (olua_is_number(L, 3)) && (olua_is_int(L, 4))) {
+        // if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Vec2(L, 2)) && (olua_is_number(L, 3)) && (olua_is_int(L, 4))) {
             // static cocos2d::JumpTo *create(float duration, const cocos2d::Vec2 &position, float height, int jumps)
             return _cocos2d_JumpTo_create1(L);
         // }
     }
 
     if (num_args == 5) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_ispack_cocos2d_Vec2(L, 2)) && (olua_is_number(L, 4)) && (olua_is_int(L, 5))) {
+        // if ((olua_is_number(L, 1)) && (olua_ispack_cocos2d_Vec2(L, 2)) && (olua_is_number(L, 4)) && (olua_is_int(L, 5))) {
             // static cocos2d::JumpTo *create(float duration, @pack const cocos2d::Vec2 &position, float height, int jumps)
             return _cocos2d_JumpTo_create2(L);
         // }
@@ -3938,7 +4002,7 @@ static int _cocos2d_TintTo_create2(lua_State *L)
     cocos2d::Color3B arg2;       /** color */
 
     olua_check_number(L, 1, &arg1);
-    manual_olua_check_cocos2d_Color3B(L, 2, &arg2);
+    olua_check_cocos2d_Color3B(L, 2, &arg2);
 
     // static cocos2d::TintTo *create(float duration, const cocos2d::Color3B &color)
     cocos2d::TintTo *ret = cocos2d::TintTo::create((float)arg1, arg2);
@@ -3954,7 +4018,7 @@ static int _cocos2d_TintTo_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        // if ((olua_is_number(L, 1)) && (manual_olua_is_cocos2d_Color3B(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Color3B(L, 2))) {
             // static cocos2d::TintTo *create(float duration, const cocos2d::Color3B &color)
             return _cocos2d_TintTo_create2(L);
         // }
@@ -4314,6 +4378,28 @@ static int luaopen_cocos2d_TargetedAction(lua_State *L)
     return 1;
 }
 
+static int _cocos2d_ActionFloat_ActionFloatCallback___call(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    luaL_checktype(L, -1, LUA_TFUNCTION);
+    olua_push_callback<cocos2d::ActionFloat::ActionFloatCallback>(L, nullptr);
+
+    olua_endinvoke(L);
+
+    return 1;
+}
+
+static int luaopen_cocos2d_ActionFloat_ActionFloatCallback(lua_State *L)
+{
+    oluacls_class(L, "cc.ActionFloat.ActionFloatCallback", nullptr);
+    oluacls_func(L, "__call", _cocos2d_ActionFloat_ActionFloatCallback___call);
+
+    olua_registerluatype<cocos2d::ActionFloat::ActionFloatCallback>(L, "cc.ActionFloat.ActionFloatCallback");
+
+    return 1;
+}
+
 static int _cocos2d_ActionFloat___move(lua_State *L)
 {
     olua_startinvoke(L);
@@ -4333,11 +4419,12 @@ static int _cocos2d_ActionFloat_create(lua_State *L)
     lua_Number arg1 = 0;       /** duration */
     lua_Number arg2 = 0;       /** from */
     lua_Number arg3 = 0;       /** to */
-    std::function<void(float)> arg4;       /** callback */
+    cocos2d::ActionFloat::ActionFloatCallback arg4;       /** callback */
 
     olua_check_number(L, 1, &arg1);
     olua_check_number(L, 2, &arg2);
     olua_check_number(L, 3, &arg3);
+    olua_check_cocos2d_ActionFloat_ActionFloatCallback(L, 4, &arg4);
 
     void *cb_store = (void *)olua_newobjstub(L, "cc.ActionFloat");
     std::string cb_tag = "ActionFloat";
@@ -4357,7 +4444,7 @@ static int _cocos2d_ActionFloat_create(lua_State *L)
         }
     };
 
-    // static cocos2d::ActionFloat *create(float duration, float from, float to, @local std::function<void (float)> callback)
+    // static cocos2d::ActionFloat *create(float duration, float from, float to, @local cocos2d::ActionFloat::ActionFloatCallback callback)
     cocos2d::ActionFloat *ret = cocos2d::ActionFloat::create((float)arg1, (float)arg2, (float)arg3, arg4);
     const char *cls = olua_getluatype(L, ret, "cc.ActionFloat");
     if (olua_pushobjstub(L, ret, cb_store, cls) == OLUA_OBJ_EXIST) {
@@ -6305,7 +6392,7 @@ static int _cocos2d_PointArray_addControlPoint(lua_State *L)
     cocos2d::Vec2 arg1;       /** controlPoint */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.PointArray");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // void addControlPoint(const cocos2d::Vec2 &controlPoint)
     self->addControlPoint(arg1);
@@ -6378,7 +6465,7 @@ static int _cocos2d_PointArray_getControlPointAtIndex(lua_State *L)
 
     // const cocos2d::Vec2 &getControlPointAtIndex(ssize_t index)
     const cocos2d::Vec2 &ret = self->getControlPointAtIndex((ssize_t)arg1);
-    int num_ret = auto_olua_push_cocos2d_Vec2(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec2(L, &ret);
 
     olua_endinvoke(L);
 
@@ -6395,13 +6482,9 @@ static int _cocos2d_PointArray_getControlPoints(lua_State *L)
 
     // const std::vector<Vec2> &getControlPoints()
     const std::vector<cocos2d::Vec2> &ret = self->getControlPoints();
-    int num_ret = 1;
-    int ret_size = (int)ret.size();
-    lua_createtable(L, ret_size, 0);
-    for (int i = 0; i < ret_size; i++) {
-        auto_olua_push_cocos2d_Vec2(L, &ret[i]);
-        lua_rawseti(L, -2, i + 1);
-    }
+    int num_ret = olua_push_std_vector<cocos2d::Vec2>(L, &ret, [L](cocos2d::Vec2 value) {
+        olua_push_cocos2d_Vec2(L, &value);
+    });
 
     olua_endinvoke(L);
 
@@ -6436,7 +6519,7 @@ static int _cocos2d_PointArray_insertControlPoint(lua_State *L)
     lua_Integer arg2 = 0;       /** index */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.PointArray");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
     olua_check_int(L, 3, &arg2);
 
     // void insertControlPoint(const cocos2d::Vec2 &controlPoint, ssize_t index)
@@ -6474,7 +6557,7 @@ static int _cocos2d_PointArray_replaceControlPoint(lua_State *L)
     lua_Integer arg2 = 0;       /** index */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.PointArray");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
     olua_check_int(L, 3, &arg2);
 
     // void replaceControlPoint(const cocos2d::Vec2 &controlPoint, ssize_t index)
@@ -6526,16 +6609,9 @@ static int _cocos2d_PointArray_setControlPoints(lua_State *L)
     std::vector<cocos2d::Vec2> arg1;       /** controlPoints */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.PointArray");
-    luaL_checktype(L, 2, LUA_TTABLE);
-    int arg1_total = (int)lua_rawlen(L, 2);
-    arg1.reserve((size_t)arg1_total);
-    for (int i = 1; i <= arg1_total; i++) {
-        cocos2d::Vec2 obj;
-        lua_rawgeti(L, 2, i);
-        auto_olua_check_cocos2d_Vec2(L, -1, &obj);
-        arg1.push_back((cocos2d::Vec2)obj);
-        lua_pop(L, 1);
-    }
+    olua_check_std_vector<cocos2d::Vec2>(L, 2, &arg1, [L](cocos2d::Vec2 *value) {
+        olua_check_cocos2d_Vec2(L, -1, value);
+    });
 
     // void setControlPoints(std::vector<Vec2> controlPoints)
     self->setControlPoints(arg1);
@@ -6645,7 +6721,7 @@ static int _cocos2d_CardinalSplineTo_updatePosition(lua_State *L)
     cocos2d::Vec2 arg1;       /** newPos */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.CardinalSplineTo");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // void updatePosition(const cocos2d::Vec2 &newPos)
     self->updatePosition(arg1);
@@ -7100,7 +7176,7 @@ static int _cocos2d_Place_create(lua_State *L)
 
     cocos2d::Vec2 arg1;       /** pos */
 
-    auto_olua_check_cocos2d_Vec2(L, 1, &arg1);
+    olua_check_cocos2d_Vec2(L, 1, &arg1);
 
     // static cocos2d::Place *create(const cocos2d::Vec2 &pos)
     cocos2d::Place *ret = cocos2d::Place::create(arg1);
@@ -7139,6 +7215,8 @@ static int _cocos2d_CallFunc_create(lua_State *L)
     olua_startinvoke(L);
 
     std::function<void()> arg1;       /** func */
+
+    olua_check_std_function(L, 1, &arg1);
 
     void *cb_store = (void *)olua_newobjstub(L, "cc.CallFunc");
     std::string cb_tag = "CallFunc";
@@ -7223,7 +7301,7 @@ static int _cocos2d_ActionCamera_getCenter(lua_State *L)
 
     // const cocos2d::Vec3 &getCenter()
     const cocos2d::Vec3 &ret = self->getCenter();
-    int num_ret = auto_olua_push_cocos2d_Vec3(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -7240,7 +7318,7 @@ static int _cocos2d_ActionCamera_getEye(lua_State *L)
 
     // const cocos2d::Vec3 &getEye()
     const cocos2d::Vec3 &ret = self->getEye();
-    int num_ret = auto_olua_push_cocos2d_Vec3(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -7257,7 +7335,7 @@ static int _cocos2d_ActionCamera_getUp(lua_State *L)
 
     // const cocos2d::Vec3 &getUp()
     const cocos2d::Vec3 &ret = self->getUp();
-    int num_ret = auto_olua_push_cocos2d_Vec3(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -7272,7 +7350,7 @@ static int _cocos2d_ActionCamera_setCenter(lua_State *L)
     cocos2d::Vec3 arg1;       /** center */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.ActionCamera");
-    auto_olua_check_cocos2d_Vec3(L, 2, &arg1);
+    olua_check_cocos2d_Vec3(L, 2, &arg1);
 
     // void setCenter(const cocos2d::Vec3 &center)
     self->setCenter(arg1);
@@ -7290,7 +7368,7 @@ static int _cocos2d_ActionCamera_setEye1(lua_State *L)
     cocos2d::Vec3 arg1;       /** eye */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.ActionCamera");
-    auto_olua_check_cocos2d_Vec3(L, 2, &arg1);
+    olua_check_cocos2d_Vec3(L, 2, &arg1);
 
     // void setEye(const cocos2d::Vec3 &eye)
     self->setEye(arg1);
@@ -7327,7 +7405,7 @@ static int _cocos2d_ActionCamera_setEye(lua_State *L)
     int num_args = lua_gettop(L) - 1;
 
     if (num_args == 1) {
-        // if ((auto_olua_is_cocos2d_Vec3(L, 2))) {
+        // if ((olua_is_cocos2d_Vec3(L, 2))) {
             // void setEye(const cocos2d::Vec3 &eye)
             return _cocos2d_ActionCamera_setEye1(L);
         // }
@@ -7353,7 +7431,7 @@ static int _cocos2d_ActionCamera_setUp(lua_State *L)
     cocos2d::Vec3 arg1;       /** up */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.ActionCamera");
-    auto_olua_check_cocos2d_Vec3(L, 2, &arg1);
+    olua_check_cocos2d_Vec3(L, 2, &arg1);
 
     // void setUp(const cocos2d::Vec3 &up)
     self->setUp(arg1);
@@ -7554,7 +7632,7 @@ static int _cocos2d_GridBase_getGridRect(lua_State *L)
 
     // const cocos2d::Rect &getGridRect()
     const cocos2d::Rect &ret = self->getGridRect();
-    int num_ret = manual_olua_push_cocos2d_Rect(L, &ret);
+    int num_ret = olua_push_cocos2d_Rect(L, &ret);
 
     olua_endinvoke(L);
 
@@ -7571,7 +7649,7 @@ static int _cocos2d_GridBase_getGridSize(lua_State *L)
 
     // const cocos2d::Size &getGridSize()
     const cocos2d::Size &ret = self->getGridSize();
-    int num_ret = auto_olua_push_cocos2d_Size(L, &ret);
+    int num_ret = olua_push_cocos2d_Size(L, &ret);
 
     olua_endinvoke(L);
 
@@ -7605,7 +7683,7 @@ static int _cocos2d_GridBase_getStep(lua_State *L)
 
     // const cocos2d::Vec2 &getStep()
     const cocos2d::Vec2 &ret = self->getStep();
-    int num_ret = auto_olua_push_cocos2d_Vec2(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec2(L, &ret);
 
     olua_endinvoke(L);
 
@@ -7620,7 +7698,7 @@ static int _cocos2d_GridBase_initWithSize1(lua_State *L)
     cocos2d::Size arg1;       /** gridSize */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.GridBase");
-    auto_olua_check_cocos2d_Size(L, 2, &arg1);
+    olua_check_cocos2d_Size(L, 2, &arg1);
 
     // bool initWithSize(const cocos2d::Size &gridSize)
     bool ret = self->initWithSize(arg1);
@@ -7640,8 +7718,8 @@ static int _cocos2d_GridBase_initWithSize2(lua_State *L)
     cocos2d::Rect arg2;       /** rect */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.GridBase");
-    auto_olua_check_cocos2d_Size(L, 2, &arg1);
-    manual_olua_check_cocos2d_Rect(L, 3, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg1);
+    olua_check_cocos2d_Rect(L, 3, &arg2);
 
     // bool initWithSize(const cocos2d::Size &gridSize, const cocos2d::Rect &rect)
     bool ret = self->initWithSize(arg1, arg2);
@@ -7662,7 +7740,7 @@ static int _cocos2d_GridBase_initWithSize3(lua_State *L)
     bool arg3 = false;       /** flipped */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.GridBase");
-    auto_olua_check_cocos2d_Size(L, 2, &arg1);
+    olua_check_cocos2d_Size(L, 2, &arg1);
     olua_check_cppobj(L, 3, (void **)&arg2, "cc.Texture2D");
     olua_check_bool(L, 4, &arg3);
 
@@ -7686,10 +7764,10 @@ static int _cocos2d_GridBase_initWithSize4(lua_State *L)
     cocos2d::Rect arg4;       /** rect */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.GridBase");
-    auto_olua_check_cocos2d_Size(L, 2, &arg1);
+    olua_check_cocos2d_Size(L, 2, &arg1);
     olua_check_cppobj(L, 3, (void **)&arg2, "cc.Texture2D");
     olua_check_bool(L, 4, &arg3);
-    manual_olua_check_cocos2d_Rect(L, 5, &arg4);
+    olua_check_cocos2d_Rect(L, 5, &arg4);
 
     // bool initWithSize(const cocos2d::Size &gridSize, cocos2d::Texture2D *texture, bool flipped, const cocos2d::Rect &rect)
     bool ret = self->initWithSize(arg1, arg2, arg3, arg4);
@@ -7705,28 +7783,28 @@ static int _cocos2d_GridBase_initWithSize(lua_State *L)
     int num_args = lua_gettop(L) - 1;
 
     if (num_args == 1) {
-        // if ((auto_olua_is_cocos2d_Size(L, 2))) {
+        // if ((olua_is_cocos2d_Size(L, 2))) {
             // bool initWithSize(const cocos2d::Size &gridSize)
             return _cocos2d_GridBase_initWithSize1(L);
         // }
     }
 
     if (num_args == 2) {
-        // if ((auto_olua_is_cocos2d_Size(L, 2)) && (manual_olua_is_cocos2d_Rect(L, 3))) {
+        // if ((olua_is_cocos2d_Size(L, 2)) && (olua_is_cocos2d_Rect(L, 3))) {
             // bool initWithSize(const cocos2d::Size &gridSize, const cocos2d::Rect &rect)
             return _cocos2d_GridBase_initWithSize2(L);
         // }
     }
 
     if (num_args == 3) {
-        // if ((auto_olua_is_cocos2d_Size(L, 2)) && (olua_is_cppobj(L, 3, "cc.Texture2D")) && (olua_is_bool(L, 4))) {
+        // if ((olua_is_cocos2d_Size(L, 2)) && (olua_is_cppobj(L, 3, "cc.Texture2D")) && (olua_is_bool(L, 4))) {
             // bool initWithSize(const cocos2d::Size &gridSize, cocos2d::Texture2D *texture, bool flipped)
             return _cocos2d_GridBase_initWithSize3(L);
         // }
     }
 
     if (num_args == 4) {
-        // if ((auto_olua_is_cocos2d_Size(L, 2)) && (olua_is_cppobj(L, 3, "cc.Texture2D")) && (olua_is_bool(L, 4)) && (manual_olua_is_cocos2d_Rect(L, 5))) {
+        // if ((olua_is_cocos2d_Size(L, 2)) && (olua_is_cppobj(L, 3, "cc.Texture2D")) && (olua_is_bool(L, 4)) && (olua_is_cocos2d_Rect(L, 5))) {
             // bool initWithSize(const cocos2d::Size &gridSize, cocos2d::Texture2D *texture, bool flipped, const cocos2d::Rect &rect)
             return _cocos2d_GridBase_initWithSize4(L);
         // }
@@ -7829,7 +7907,7 @@ static int _cocos2d_GridBase_setGridRect(lua_State *L)
     cocos2d::Rect arg1;       /** rect */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.GridBase");
-    manual_olua_check_cocos2d_Rect(L, 2, &arg1);
+    olua_check_cocos2d_Rect(L, 2, &arg1);
 
     // void setGridRect(const cocos2d::Rect &rect)
     self->setGridRect(arg1);
@@ -7847,7 +7925,7 @@ static int _cocos2d_GridBase_setGridSize(lua_State *L)
     cocos2d::Size arg1;       /** gridSize */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.GridBase");
-    auto_olua_check_cocos2d_Size(L, 2, &arg1);
+    olua_check_cocos2d_Size(L, 2, &arg1);
 
     // void setGridSize(const cocos2d::Size &gridSize)
     self->setGridSize(arg1);
@@ -7883,7 +7961,7 @@ static int _cocos2d_GridBase_setStep(lua_State *L)
     cocos2d::Vec2 arg1;       /** step */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.GridBase");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // void setStep(const cocos2d::Vec2 &step)
     self->setStep(arg1);
@@ -7966,7 +8044,7 @@ static int _cocos2d_Grid3D_create1(lua_State *L)
 
     cocos2d::Size arg1;       /** gridSize */
 
-    auto_olua_check_cocos2d_Size(L, 1, &arg1);
+    olua_check_cocos2d_Size(L, 1, &arg1);
 
     // static cocos2d::Grid3D *create(const cocos2d::Size &gridSize)
     cocos2d::Grid3D *ret = cocos2d::Grid3D::create(arg1);
@@ -7984,8 +8062,8 @@ static int _cocos2d_Grid3D_create2(lua_State *L)
     cocos2d::Size arg1;       /** gridSize */
     cocos2d::Rect arg2;       /** rect */
 
-    auto_olua_check_cocos2d_Size(L, 1, &arg1);
-    manual_olua_check_cocos2d_Rect(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 1, &arg1);
+    olua_check_cocos2d_Rect(L, 2, &arg2);
 
     // static cocos2d::Grid3D *create(const cocos2d::Size &gridSize, const cocos2d::Rect &rect)
     cocos2d::Grid3D *ret = cocos2d::Grid3D::create(arg1, arg2);
@@ -8004,7 +8082,7 @@ static int _cocos2d_Grid3D_create3(lua_State *L)
     cocos2d::Texture2D *arg2 = nullptr;       /** texture */
     bool arg3 = false;       /** flipped */
 
-    auto_olua_check_cocos2d_Size(L, 1, &arg1);
+    olua_check_cocos2d_Size(L, 1, &arg1);
     olua_check_cppobj(L, 2, (void **)&arg2, "cc.Texture2D");
     olua_check_bool(L, 3, &arg3);
 
@@ -8026,10 +8104,10 @@ static int _cocos2d_Grid3D_create4(lua_State *L)
     bool arg3 = false;       /** flipped */
     cocos2d::Rect arg4;       /** rect */
 
-    auto_olua_check_cocos2d_Size(L, 1, &arg1);
+    olua_check_cocos2d_Size(L, 1, &arg1);
     olua_check_cppobj(L, 2, (void **)&arg2, "cc.Texture2D");
     olua_check_bool(L, 3, &arg3);
-    manual_olua_check_cocos2d_Rect(L, 4, &arg4);
+    olua_check_cocos2d_Rect(L, 4, &arg4);
 
     // static cocos2d::Grid3D *create(const cocos2d::Size &gridSize, cocos2d::Texture2D *texture, bool flipped, const cocos2d::Rect &rect)
     cocos2d::Grid3D *ret = cocos2d::Grid3D::create(arg1, arg2, arg3, arg4);
@@ -8045,28 +8123,28 @@ static int _cocos2d_Grid3D_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 1) {
-        // if ((auto_olua_is_cocos2d_Size(L, 1))) {
+        // if ((olua_is_cocos2d_Size(L, 1))) {
             // static cocos2d::Grid3D *create(const cocos2d::Size &gridSize)
             return _cocos2d_Grid3D_create1(L);
         // }
     }
 
     if (num_args == 2) {
-        // if ((auto_olua_is_cocos2d_Size(L, 1)) && (manual_olua_is_cocos2d_Rect(L, 2))) {
+        // if ((olua_is_cocos2d_Size(L, 1)) && (olua_is_cocos2d_Rect(L, 2))) {
             // static cocos2d::Grid3D *create(const cocos2d::Size &gridSize, const cocos2d::Rect &rect)
             return _cocos2d_Grid3D_create2(L);
         // }
     }
 
     if (num_args == 3) {
-        // if ((auto_olua_is_cocos2d_Size(L, 1)) && (olua_is_cppobj(L, 2, "cc.Texture2D")) && (olua_is_bool(L, 3))) {
+        // if ((olua_is_cocos2d_Size(L, 1)) && (olua_is_cppobj(L, 2, "cc.Texture2D")) && (olua_is_bool(L, 3))) {
             // static cocos2d::Grid3D *create(const cocos2d::Size &gridSize, cocos2d::Texture2D *texture, bool flipped)
             return _cocos2d_Grid3D_create3(L);
         // }
     }
 
     if (num_args == 4) {
-        // if ((auto_olua_is_cocos2d_Size(L, 1)) && (olua_is_cppobj(L, 2, "cc.Texture2D")) && (olua_is_bool(L, 3)) && (manual_olua_is_cocos2d_Rect(L, 4))) {
+        // if ((olua_is_cocos2d_Size(L, 1)) && (olua_is_cppobj(L, 2, "cc.Texture2D")) && (olua_is_bool(L, 3)) && (olua_is_cocos2d_Rect(L, 4))) {
             // static cocos2d::Grid3D *create(const cocos2d::Size &gridSize, cocos2d::Texture2D *texture, bool flipped, const cocos2d::Rect &rect)
             return _cocos2d_Grid3D_create4(L);
         // }
@@ -8102,11 +8180,11 @@ static int _cocos2d_Grid3D_getOriginalVertex(lua_State *L)
     cocos2d::Vec2 arg1;       /** pos */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.Grid3D");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // cocos2d::Vec3 getOriginalVertex(const cocos2d::Vec2 &pos)
     cocos2d::Vec3 ret = self->getOriginalVertex(arg1);
-    int num_ret = auto_olua_push_cocos2d_Vec3(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -8121,11 +8199,11 @@ static int _cocos2d_Grid3D_getVertex(lua_State *L)
     cocos2d::Vec2 arg1;       /** pos */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.Grid3D");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // cocos2d::Vec3 getVertex(const cocos2d::Vec2 &pos)
     cocos2d::Vec3 ret = self->getVertex(arg1);
-    int num_ret = auto_olua_push_cocos2d_Vec3(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -8159,8 +8237,8 @@ static int _cocos2d_Grid3D_setVertex(lua_State *L)
     cocos2d::Vec3 arg2;       /** vertex */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.Grid3D");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
-    auto_olua_check_cocos2d_Vec3(L, 3, &arg2);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec3(L, 3, &arg2);
 
     // void setVertex(const cocos2d::Vec2 &pos, const cocos2d::Vec3 &vertex)
     self->setVertex(arg1, arg2);
@@ -8205,7 +8283,7 @@ static int _cocos2d_TiledGrid3D_create1(lua_State *L)
 
     cocos2d::Size arg1;       /** gridSize */
 
-    auto_olua_check_cocos2d_Size(L, 1, &arg1);
+    olua_check_cocos2d_Size(L, 1, &arg1);
 
     // static cocos2d::TiledGrid3D *create(const cocos2d::Size &gridSize)
     cocos2d::TiledGrid3D *ret = cocos2d::TiledGrid3D::create(arg1);
@@ -8223,8 +8301,8 @@ static int _cocos2d_TiledGrid3D_create2(lua_State *L)
     cocos2d::Size arg1;       /** gridSize */
     cocos2d::Rect arg2;       /** rect */
 
-    auto_olua_check_cocos2d_Size(L, 1, &arg1);
-    manual_olua_check_cocos2d_Rect(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 1, &arg1);
+    olua_check_cocos2d_Rect(L, 2, &arg2);
 
     // static cocos2d::TiledGrid3D *create(const cocos2d::Size &gridSize, const cocos2d::Rect &rect)
     cocos2d::TiledGrid3D *ret = cocos2d::TiledGrid3D::create(arg1, arg2);
@@ -8243,7 +8321,7 @@ static int _cocos2d_TiledGrid3D_create3(lua_State *L)
     cocos2d::Texture2D *arg2 = nullptr;       /** texture */
     bool arg3 = false;       /** flipped */
 
-    auto_olua_check_cocos2d_Size(L, 1, &arg1);
+    olua_check_cocos2d_Size(L, 1, &arg1);
     olua_check_cppobj(L, 2, (void **)&arg2, "cc.Texture2D");
     olua_check_bool(L, 3, &arg3);
 
@@ -8265,10 +8343,10 @@ static int _cocos2d_TiledGrid3D_create4(lua_State *L)
     bool arg3 = false;       /** flipped */
     cocos2d::Rect arg4;       /** rect */
 
-    auto_olua_check_cocos2d_Size(L, 1, &arg1);
+    olua_check_cocos2d_Size(L, 1, &arg1);
     olua_check_cppobj(L, 2, (void **)&arg2, "cc.Texture2D");
     olua_check_bool(L, 3, &arg3);
-    manual_olua_check_cocos2d_Rect(L, 4, &arg4);
+    olua_check_cocos2d_Rect(L, 4, &arg4);
 
     // static cocos2d::TiledGrid3D *create(const cocos2d::Size &gridSize, cocos2d::Texture2D *texture, bool flipped, const cocos2d::Rect &rect)
     cocos2d::TiledGrid3D *ret = cocos2d::TiledGrid3D::create(arg1, arg2, arg3, arg4);
@@ -8284,28 +8362,28 @@ static int _cocos2d_TiledGrid3D_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 1) {
-        // if ((auto_olua_is_cocos2d_Size(L, 1))) {
+        // if ((olua_is_cocos2d_Size(L, 1))) {
             // static cocos2d::TiledGrid3D *create(const cocos2d::Size &gridSize)
             return _cocos2d_TiledGrid3D_create1(L);
         // }
     }
 
     if (num_args == 2) {
-        // if ((auto_olua_is_cocos2d_Size(L, 1)) && (manual_olua_is_cocos2d_Rect(L, 2))) {
+        // if ((olua_is_cocos2d_Size(L, 1)) && (olua_is_cocos2d_Rect(L, 2))) {
             // static cocos2d::TiledGrid3D *create(const cocos2d::Size &gridSize, const cocos2d::Rect &rect)
             return _cocos2d_TiledGrid3D_create2(L);
         // }
     }
 
     if (num_args == 3) {
-        // if ((auto_olua_is_cocos2d_Size(L, 1)) && (olua_is_cppobj(L, 2, "cc.Texture2D")) && (olua_is_bool(L, 3))) {
+        // if ((olua_is_cocos2d_Size(L, 1)) && (olua_is_cppobj(L, 2, "cc.Texture2D")) && (olua_is_bool(L, 3))) {
             // static cocos2d::TiledGrid3D *create(const cocos2d::Size &gridSize, cocos2d::Texture2D *texture, bool flipped)
             return _cocos2d_TiledGrid3D_create3(L);
         // }
     }
 
     if (num_args == 4) {
-        // if ((auto_olua_is_cocos2d_Size(L, 1)) && (olua_is_cppobj(L, 2, "cc.Texture2D")) && (olua_is_bool(L, 3)) && (manual_olua_is_cocos2d_Rect(L, 4))) {
+        // if ((olua_is_cocos2d_Size(L, 1)) && (olua_is_cppobj(L, 2, "cc.Texture2D")) && (olua_is_bool(L, 3)) && (olua_is_cocos2d_Rect(L, 4))) {
             // static cocos2d::TiledGrid3D *create(const cocos2d::Size &gridSize, cocos2d::Texture2D *texture, bool flipped, const cocos2d::Rect &rect)
             return _cocos2d_TiledGrid3D_create4(L);
         // }
@@ -8324,11 +8402,11 @@ static int _cocos2d_TiledGrid3D_getOriginalTile(lua_State *L)
     cocos2d::Vec2 arg1;       /** pos */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.TiledGrid3D");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // cocos2d::Quad3 getOriginalTile(const cocos2d::Vec2 &pos)
     cocos2d::Quad3 ret = self->getOriginalTile(arg1);
-    int num_ret = auto_olua_push_cocos2d_Quad3(L, &ret);
+    int num_ret = olua_push_cocos2d_Quad3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -8343,11 +8421,11 @@ static int _cocos2d_TiledGrid3D_getTile(lua_State *L)
     cocos2d::Vec2 arg1;       /** pos */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.TiledGrid3D");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // cocos2d::Quad3 getTile(const cocos2d::Vec2 &pos)
     cocos2d::Quad3 ret = self->getTile(arg1);
-    int num_ret = auto_olua_push_cocos2d_Quad3(L, &ret);
+    int num_ret = olua_push_cocos2d_Quad3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -8363,8 +8441,8 @@ static int _cocos2d_TiledGrid3D_setTile(lua_State *L)
     cocos2d::Quad3 arg2;       /** coords */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.TiledGrid3D");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
-    auto_olua_check_cocos2d_Quad3(L, 3, &arg2);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Quad3(L, 3, &arg2);
 
     // void setTile(const cocos2d::Vec2 &pos, const cocos2d::Quad3 &coords)
     self->setTile(arg1, arg2);
@@ -8419,7 +8497,7 @@ static int _cocos2d_NodeGrid_create2(lua_State *L)
 
     cocos2d::Rect arg1;       /** rect */
 
-    manual_olua_check_cocos2d_Rect(L, 1, &arg1);
+    olua_check_cocos2d_Rect(L, 1, &arg1);
 
     // static cocos2d::NodeGrid *create(const cocos2d::Rect &rect)
     cocos2d::NodeGrid *ret = cocos2d::NodeGrid::create(arg1);
@@ -8440,7 +8518,7 @@ static int _cocos2d_NodeGrid_create(lua_State *L)
     }
 
     if (num_args == 1) {
-        // if ((manual_olua_is_cocos2d_Rect(L, 1))) {
+        // if ((olua_is_cocos2d_Rect(L, 1))) {
             // static cocos2d::NodeGrid *create(const cocos2d::Rect &rect)
             return _cocos2d_NodeGrid_create2(L);
         // }
@@ -8478,7 +8556,7 @@ static int _cocos2d_NodeGrid_getGridRect(lua_State *L)
 
     // const cocos2d::Rect &getGridRect()
     const cocos2d::Rect &ret = self->getGridRect();
-    int num_ret = manual_olua_push_cocos2d_Rect(L, &ret);
+    int num_ret = olua_push_cocos2d_Rect(L, &ret);
 
     olua_endinvoke(L);
 
@@ -8511,7 +8589,7 @@ static int _cocos2d_NodeGrid_setGridRect(lua_State *L)
     cocos2d::Rect arg1;       /** gridRect */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.NodeGrid");
-    manual_olua_check_cocos2d_Rect(L, 2, &arg1);
+    olua_check_cocos2d_Rect(L, 2, &arg1);
 
     // void setGridRect(const cocos2d::Rect &gridRect)
     self->setGridRect(arg1);
@@ -8620,7 +8698,7 @@ static int _cocos2d_Grid3DAction_getGridRect(lua_State *L)
 
     // cocos2d::Rect getGridRect()
     cocos2d::Rect ret = self->getGridRect();
-    int num_ret = manual_olua_push_cocos2d_Rect(L, &ret);
+    int num_ret = olua_push_cocos2d_Rect(L, &ret);
 
     olua_endinvoke(L);
 
@@ -8635,11 +8713,11 @@ static int _cocos2d_Grid3DAction_getOriginalVertex(lua_State *L)
     cocos2d::Vec2 arg1;       /** position */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.Grid3DAction");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // cocos2d::Vec3 getOriginalVertex(const cocos2d::Vec2 &position)
     cocos2d::Vec3 ret = self->getOriginalVertex(arg1);
-    int num_ret = auto_olua_push_cocos2d_Vec3(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -8654,11 +8732,11 @@ static int _cocos2d_Grid3DAction_getVertex(lua_State *L)
     cocos2d::Vec2 arg1;       /** position */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.Grid3DAction");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // cocos2d::Vec3 getVertex(const cocos2d::Vec2 &position)
     cocos2d::Vec3 ret = self->getVertex(arg1);
-    int num_ret = auto_olua_push_cocos2d_Vec3(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -8674,8 +8752,8 @@ static int _cocos2d_Grid3DAction_setVertex(lua_State *L)
     cocos2d::Vec3 arg2;       /** vertex */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.Grid3DAction");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
-    auto_olua_check_cocos2d_Vec3(L, 3, &arg2);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec3(L, 3, &arg2);
 
     // void setVertex(const cocos2d::Vec2 &position, const cocos2d::Vec3 &vertex)
     self->setVertex(arg1, arg2);
@@ -8720,7 +8798,7 @@ static int _cocos2d_TiledGrid3DAction_create(lua_State *L)
     cocos2d::Size arg2;       /** gridSize */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
 
     // static cocos2d::TiledGrid3DAction *create(float duration, const cocos2d::Size &gridSize)
     cocos2d::TiledGrid3DAction *ret = cocos2d::TiledGrid3DAction::create((float)arg1, arg2);
@@ -8739,11 +8817,11 @@ static int _cocos2d_TiledGrid3DAction_getOriginalTile(lua_State *L)
     cocos2d::Vec2 arg1;       /** position */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.TiledGrid3DAction");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // cocos2d::Quad3 getOriginalTile(const cocos2d::Vec2 &position)
     cocos2d::Quad3 ret = self->getOriginalTile(arg1);
-    int num_ret = auto_olua_push_cocos2d_Quad3(L, &ret);
+    int num_ret = olua_push_cocos2d_Quad3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -8758,11 +8836,11 @@ static int _cocos2d_TiledGrid3DAction_getTile(lua_State *L)
     cocos2d::Vec2 arg1;       /** position */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.TiledGrid3DAction");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // cocos2d::Quad3 getTile(const cocos2d::Vec2 &position)
     cocos2d::Quad3 ret = self->getTile(arg1);
-    int num_ret = auto_olua_push_cocos2d_Quad3(L, &ret);
+    int num_ret = olua_push_cocos2d_Quad3(L, &ret);
 
     olua_endinvoke(L);
 
@@ -8778,8 +8856,8 @@ static int _cocos2d_TiledGrid3DAction_setTile(lua_State *L)
     cocos2d::Quad3 arg2;       /** coords */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.TiledGrid3DAction");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
-    auto_olua_check_cocos2d_Quad3(L, 3, &arg2);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Quad3(L, 3, &arg2);
 
     // void setTile(const cocos2d::Vec2 &position, const cocos2d::Quad3 &coords)
     self->setTile(arg1, arg2);
@@ -9161,7 +9239,7 @@ static int _cocos2d_Waves3D_create(lua_State *L)
     lua_Number arg4 = 0;       /** amplitude */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
     olua_check_uint(L, 3, &arg3);
     olua_check_number(L, 4, &arg4);
 
@@ -9261,7 +9339,7 @@ static int _cocos2d_FlipX3D_initWithSize(lua_State *L)
     lua_Number arg2 = 0;       /** duration */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.FlipX3D");
-    auto_olua_check_cocos2d_Size(L, 2, &arg1);
+    olua_check_cocos2d_Size(L, 2, &arg1);
     olua_check_number(L, 3, &arg2);
 
     // bool initWithSize(const cocos2d::Size &gridSize, float duration)
@@ -9347,8 +9425,8 @@ static int _cocos2d_Lens3D_create(lua_State *L)
     lua_Number arg4 = 0;       /** radius */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
-    auto_olua_check_cocos2d_Vec2(L, 3, &arg3);
+    olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Vec2(L, 3, &arg3);
     olua_check_number(L, 4, &arg4);
 
     // static cocos2d::Lens3D *create(float duration, const cocos2d::Size &gridSize, const cocos2d::Vec2 &position, float radius)
@@ -9387,7 +9465,7 @@ static int _cocos2d_Lens3D_getPosition(lua_State *L)
 
     // const cocos2d::Vec2 &getPosition()
     const cocos2d::Vec2 &ret = self->getPosition();
-    int num_ret = auto_olua_push_cocos2d_Vec2(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec2(L, &ret);
 
     olua_endinvoke(L);
 
@@ -9438,7 +9516,7 @@ static int _cocos2d_Lens3D_setPosition(lua_State *L)
     cocos2d::Vec2 arg1;       /** position */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.Lens3D");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // void setPosition(const cocos2d::Vec2 &position)
     self->setPosition(arg1);
@@ -9490,8 +9568,8 @@ static int _cocos2d_Ripple3D_create(lua_State *L)
     lua_Number arg6 = 0;       /** amplitude */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
-    auto_olua_check_cocos2d_Vec2(L, 3, &arg3);
+    olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Vec2(L, 3, &arg3);
     olua_check_number(L, 4, &arg4);
     olua_check_uint(L, 5, &arg5);
     olua_check_number(L, 6, &arg6);
@@ -9532,7 +9610,7 @@ static int _cocos2d_Ripple3D_getPosition(lua_State *L)
 
     // const cocos2d::Vec2 &getPosition()
     const cocos2d::Vec2 &ret = self->getPosition();
-    int num_ret = auto_olua_push_cocos2d_Vec2(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec2(L, &ret);
 
     olua_endinvoke(L);
 
@@ -9565,7 +9643,7 @@ static int _cocos2d_Ripple3D_setPosition(lua_State *L)
     cocos2d::Vec2 arg1;       /** position */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.Ripple3D");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // void setPosition(const cocos2d::Vec2 &position)
     self->setPosition(arg1);
@@ -9614,7 +9692,7 @@ static int _cocos2d_Shaky3D_create(lua_State *L)
     bool arg4 = false;       /** shakeZ */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
     olua_check_int(L, 3, &arg3);
     olua_check_bool(L, 4, &arg4);
 
@@ -9660,7 +9738,7 @@ static int _cocos2d_Liquid_create(lua_State *L)
     lua_Number arg4 = 0;       /** amplitude */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
     olua_check_uint(L, 3, &arg3);
     olua_check_number(L, 4, &arg4);
 
@@ -9746,7 +9824,7 @@ static int _cocos2d_Waves_create(lua_State *L)
     bool arg6 = false;       /** vertical */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
     olua_check_uint(L, 3, &arg3);
     olua_check_number(L, 4, &arg4);
     olua_check_bool(L, 5, &arg5);
@@ -9833,8 +9911,8 @@ static int _cocos2d_Twirl_create(lua_State *L)
     lua_Number arg5 = 0;       /** amplitude */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
-    auto_olua_check_cocos2d_Vec2(L, 3, &arg3);
+    olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Vec2(L, 3, &arg3);
     olua_check_uint(L, 4, &arg4);
     olua_check_number(L, 5, &arg5);
 
@@ -9874,7 +9952,7 @@ static int _cocos2d_Twirl_getPosition(lua_State *L)
 
     // const cocos2d::Vec2 &getPosition()
     const cocos2d::Vec2 &ret = self->getPosition();
-    int num_ret = auto_olua_push_cocos2d_Vec2(L, &ret);
+    int num_ret = olua_push_cocos2d_Vec2(L, &ret);
 
     olua_endinvoke(L);
 
@@ -9907,7 +9985,7 @@ static int _cocos2d_Twirl_setPosition(lua_State *L)
     cocos2d::Vec2 arg1;       /** position */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.Twirl");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // void setPosition(const cocos2d::Vec2 &position)
     self->setPosition(arg1);
@@ -9954,7 +10032,7 @@ static int _cocos2d_PageTurn3D_create(lua_State *L)
     cocos2d::Size arg2;       /** gridSize */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
 
     // static cocos2d::PageTurn3D *create(float duration, const cocos2d::Size &gridSize)
     cocos2d::PageTurn3D *ret = cocos2d::PageTurn3D::create((float)arg1, arg2);
@@ -9998,7 +10076,7 @@ static int _cocos2d_ShakyTiles3D_create(lua_State *L)
     bool arg4 = false;       /** shakeZ */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
     olua_check_int(L, 3, &arg3);
     olua_check_bool(L, 4, &arg4);
 
@@ -10044,7 +10122,7 @@ static int _cocos2d_ShatteredTiles3D_create(lua_State *L)
     bool arg4 = false;       /** shatterZ */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
     olua_check_int(L, 3, &arg3);
     olua_check_bool(L, 4, &arg4);
 
@@ -10089,7 +10167,7 @@ static int _cocos2d_ShuffleTiles_create(lua_State *L)
     lua_Unsigned arg3 = 0;       /** seed */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
     olua_check_uint(L, 3, &arg3);
 
     // static cocos2d::ShuffleTiles *create(float duration, const cocos2d::Size &gridSize, unsigned int seed)
@@ -10109,11 +10187,11 @@ static int _cocos2d_ShuffleTiles_getDelta(lua_State *L)
     cocos2d::Size arg1;       /** pos */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.ShuffleTiles");
-    auto_olua_check_cocos2d_Size(L, 2, &arg1);
+    olua_check_cocos2d_Size(L, 2, &arg1);
 
     // cocos2d::Size getDelta(const cocos2d::Size &pos)
     cocos2d::Size ret = self->getDelta(arg1);
-    int num_ret = auto_olua_push_cocos2d_Size(L, &ret);
+    int num_ret = olua_push_cocos2d_Size(L, &ret);
 
     olua_endinvoke(L);
 
@@ -10152,7 +10230,7 @@ static int _cocos2d_FadeOutTRTiles_create(lua_State *L)
     cocos2d::Size arg2;       /** gridSize */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
 
     // static cocos2d::FadeOutTRTiles *create(float duration, const cocos2d::Size &gridSize)
     cocos2d::FadeOutTRTiles *ret = cocos2d::FadeOutTRTiles::create((float)arg1, arg2);
@@ -10172,7 +10250,7 @@ static int _cocos2d_FadeOutTRTiles_testFunc(lua_State *L)
     lua_Number arg2 = 0;       /** time */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.FadeOutTRTiles");
-    auto_olua_check_cocos2d_Size(L, 2, &arg1);
+    olua_check_cocos2d_Size(L, 2, &arg1);
     olua_check_number(L, 3, &arg2);
 
     // float testFunc(const cocos2d::Size &pos, float time)
@@ -10193,7 +10271,7 @@ static int _cocos2d_FadeOutTRTiles_transformTile(lua_State *L)
     lua_Number arg2 = 0;       /** distance */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.FadeOutTRTiles");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
     olua_check_number(L, 3, &arg2);
 
     // void transformTile(const cocos2d::Vec2 &pos, float distance)
@@ -10212,7 +10290,7 @@ static int _cocos2d_FadeOutTRTiles_turnOffTile(lua_State *L)
     cocos2d::Vec2 arg1;       /** pos */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.FadeOutTRTiles");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // void turnOffTile(const cocos2d::Vec2 &pos)
     self->turnOffTile(arg1);
@@ -10230,7 +10308,7 @@ static int _cocos2d_FadeOutTRTiles_turnOnTile(lua_State *L)
     cocos2d::Vec2 arg1;       /** pos */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.FadeOutTRTiles");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // void turnOnTile(const cocos2d::Vec2 &pos)
     self->turnOnTile(arg1);
@@ -10275,7 +10353,7 @@ static int _cocos2d_FadeOutBLTiles_create(lua_State *L)
     cocos2d::Size arg2;       /** gridSize */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
 
     // static cocos2d::FadeOutBLTiles *create(float duration, const cocos2d::Size &gridSize)
     cocos2d::FadeOutBLTiles *ret = cocos2d::FadeOutBLTiles::create((float)arg1, arg2);
@@ -10317,7 +10395,7 @@ static int _cocos2d_FadeOutUpTiles_create(lua_State *L)
     cocos2d::Size arg2;       /** gridSize */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
 
     // static cocos2d::FadeOutUpTiles *create(float duration, const cocos2d::Size &gridSize)
     cocos2d::FadeOutUpTiles *ret = cocos2d::FadeOutUpTiles::create((float)arg1, arg2);
@@ -10359,7 +10437,7 @@ static int _cocos2d_FadeOutDownTiles_create(lua_State *L)
     cocos2d::Size arg2;       /** gridSize */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
 
     // static cocos2d::FadeOutDownTiles *create(float duration, const cocos2d::Size &gridSize)
     cocos2d::FadeOutDownTiles *ret = cocos2d::FadeOutDownTiles::create((float)arg1, arg2);
@@ -10401,7 +10479,7 @@ static int _cocos2d_TurnOffTiles_create1(lua_State *L)
     cocos2d::Size arg2;       /** gridSize */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
 
     // static cocos2d::TurnOffTiles *create(float duration, const cocos2d::Size &gridSize)
     cocos2d::TurnOffTiles *ret = cocos2d::TurnOffTiles::create((float)arg1, arg2);
@@ -10421,7 +10499,7 @@ static int _cocos2d_TurnOffTiles_create2(lua_State *L)
     lua_Unsigned arg3 = 0;       /** seed */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
     olua_check_uint(L, 3, &arg3);
 
     // static cocos2d::TurnOffTiles *create(float duration, const cocos2d::Size &gridSize, unsigned int seed)
@@ -10438,14 +10516,14 @@ static int _cocos2d_TurnOffTiles_create(lua_State *L)
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Size(L, 2))) {
+        // if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Size(L, 2))) {
             // static cocos2d::TurnOffTiles *create(float duration, const cocos2d::Size &gridSize)
             return _cocos2d_TurnOffTiles_create1(L);
         // }
     }
 
     if (num_args == 3) {
-        // if ((olua_is_number(L, 1)) && (auto_olua_is_cocos2d_Size(L, 2)) && (olua_is_uint(L, 3))) {
+        // if ((olua_is_number(L, 1)) && (olua_is_cocos2d_Size(L, 2)) && (olua_is_uint(L, 3))) {
             // static cocos2d::TurnOffTiles *create(float duration, const cocos2d::Size &gridSize, unsigned int seed)
             return _cocos2d_TurnOffTiles_create2(L);
         // }
@@ -10464,7 +10542,7 @@ static int _cocos2d_TurnOffTiles_turnOffTile(lua_State *L)
     cocos2d::Vec2 arg1;       /** pos */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.TurnOffTiles");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // void turnOffTile(const cocos2d::Vec2 &pos)
     self->turnOffTile(arg1);
@@ -10482,7 +10560,7 @@ static int _cocos2d_TurnOffTiles_turnOnTile(lua_State *L)
     cocos2d::Vec2 arg1;       /** pos */
 
     olua_to_cppobj(L, 1, (void **)&self, "cc.TurnOffTiles");
-    auto_olua_check_cocos2d_Vec2(L, 2, &arg1);
+    olua_check_cocos2d_Vec2(L, 2, &arg1);
 
     // void turnOnTile(const cocos2d::Vec2 &pos)
     self->turnOnTile(arg1);
@@ -10527,7 +10605,7 @@ static int _cocos2d_WavesTiles3D_create(lua_State *L)
     lua_Number arg4 = 0;       /** amplitude */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
     olua_check_uint(L, 3, &arg3);
     olua_check_number(L, 4, &arg4);
 
@@ -10611,7 +10689,7 @@ static int _cocos2d_JumpTiles3D_create(lua_State *L)
     lua_Number arg4 = 0;       /** amplitude */
 
     olua_check_number(L, 1, &arg1);
-    auto_olua_check_cocos2d_Size(L, 2, &arg2);
+    olua_check_cocos2d_Size(L, 2, &arg2);
     olua_check_uint(L, 3, &arg3);
     olua_check_number(L, 4, &arg4);
 
@@ -10759,6 +10837,7 @@ static int luaopen_cocos2d_SplitCols(lua_State *L)
 
 int luaopen_cocos2d_action(lua_State *L)
 {
+    olua_require(L, "cc.tweenfunc.TweenType", luaopen_cocos2d_tweenfunc_TweenType);
     olua_require(L, "cc.Action", luaopen_cocos2d_Action);
     olua_require(L, "cc.FiniteTimeAction", luaopen_cocos2d_FiniteTimeAction);
     olua_require(L, "cc.Speed", luaopen_cocos2d_Speed);
@@ -10798,6 +10877,7 @@ int luaopen_cocos2d_action(lua_State *L)
     olua_require(L, "cc.ReverseTime", luaopen_cocos2d_ReverseTime);
     olua_require(L, "cc.Animate", luaopen_cocos2d_Animate);
     olua_require(L, "cc.TargetedAction", luaopen_cocos2d_TargetedAction);
+    olua_require(L, "cc.ActionFloat.ActionFloatCallback", luaopen_cocos2d_ActionFloat_ActionFloatCallback);
     olua_require(L, "cc.ActionFloat", luaopen_cocos2d_ActionFloat);
     olua_require(L, "cc.ProgressTo", luaopen_cocos2d_ProgressTo);
     olua_require(L, "cc.ProgressFromTo", luaopen_cocos2d_ProgressFromTo);
