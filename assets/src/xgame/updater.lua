@@ -5,12 +5,7 @@ local http          = require "xgame.http"
 local filesystem    = require "xgame.filesystem"
 local Manifest      = require "xgame.Manifest"
 local runtime       = require "xgame.runtime"
-local timer         = require "xgame.timer"
 local Event         = require "xgame.Event"
-local cjson         = require "cjson.safe"
-
-local MAX_ATTEMPT_TIMES = 3
-local ATTEMPT_INTERVAL = 0.3
 
 local builtinManifest = downloader.builtinManifest
 local localManifest = downloader.localManifest
@@ -26,17 +21,6 @@ function M:ctor(url)
     self._manifests = {}
 end
 
-function M:_deferTry()
-    if self._attemptTimes < MAX_ATTEMPT_TIMES then
-        self._attemptTimes = self._attemptTimes + 1
-        timer.delay(ATTEMPT_INTERVAL, function ()
-            self:_checkVersion()
-        end)
-    else
-        self:_didError('version')
-    end
-end
-
 function M:_removeFileIfExist(path)
     if filesystem.exist(path) then
         self._shouldRestart = true
@@ -49,7 +33,7 @@ function M:_resolveAssetPath(path)
 end
 
 function M:_loadManifest(name)
-    local path = string.format('%s/%s.manifest', filesystem.dir.assets, name)
+    local path = string.format('%s/%s.metadata', filesystem.dir.assets, name)
     local m = self._manifests[path]
     if not m then
         m = Manifest.new(path)
@@ -58,7 +42,7 @@ function M:_loadManifest(name)
     return m
 end
 
-function M:_cmpVersion(v1, v2)
+function M:_cmpVersion(version1, version2)
     local function toIntVersion(v)
         local v1, v2, v3 = string.match(v, "(%d+)%.(%d+)%.(%d+)")
         if v1 then
@@ -67,11 +51,11 @@ function M:_cmpVersion(v1, v2)
             return 0
         end
     end
-    return toIntVersion(v1) - toIntVersion(v2)
+    return toIntVersion(version1) - toIntVersion(version2)
 end
 
-function M:_maxVersion(v1, v2)
-    return self:_cmpVersion(v1, v2) < 0 and v2 or v1
+function M:_maxVersion(version1, version2)
+    return self:_cmpVersion(version1, version2) < 0 and version2 or version1
 end
 
 function M:_checkAndDownloadManifest(name, info)
@@ -82,7 +66,7 @@ function M:_checkAndDownloadManifest(name, info)
             return false
         else
             filesystem.write(m.path, data)
-            m.data = cjson.decode(data)
+            m:setContent(data)
         end
     else
         print(string.format("manifest '%s' is up-to-date", name))
@@ -107,7 +91,7 @@ function M:_mergeManifests(versionData)
     remoteManifest:flush()
 end
 
-function M:_downloadAssets(localManifest, assets)
+function M:_downloadAssets(assets)
     local total = 0
     local current = 0
     for path, asset in pairs(assets) do
@@ -139,7 +123,7 @@ function M:_verifyAssets()
         filesystem.copy(builtinManifest.path, localManifest.path)
     end
 
-    -- compare builtin.manifest and local.manifest
+    -- compare builtin.metadata and local.metadata
     -- remove file when the date of builtin asset is newer
     local shouldSave = false
     for path, builtinAsset in pairs(builtinManifest.assets) do
@@ -155,7 +139,7 @@ function M:_verifyAssets()
         localManifest:flush()
     end
 
-    -- compare local.manifest and remote.manifest, should updated when:
+    -- compare local.metadata and remote.metadata, should updated when:
     -- 1. date not equal and asset.builtin = true
     -- 2. date not equal and pass filter test
     -- 3. date equal but file lose
@@ -197,7 +181,7 @@ function M:_verifyAssets()
 
     if next(assets) then
         self._shouldRestart = true
-        self:_downloadAssets(localManifest, assets)
+        self:_downloadAssets(assets)
     else
         print("all assets is up-to-date")
         runtime.manifestVersion = remoteManifest.version
@@ -213,7 +197,7 @@ function M:_checkVersion()
             self._url, runtime.os, runtime.appVersion, version, runtime.channel)
         local status, data = http({url = url, responseType = 'JSON'})
         if status ~= 200 or not data then
-            self:_deferTry()
+            self:_didError('version')
             return
         end
 
@@ -229,7 +213,7 @@ function M:_checkVersion()
         for _, info in pairs(data.assets) do
             newVersion = self:_maxVersion(newVersion, info.version)
             if not self:_checkAndDownloadManifest(info.name, info) then
-                self:_deferTry()
+                self:_didError('manifest')
                 return
             end
         end

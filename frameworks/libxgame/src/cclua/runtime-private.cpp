@@ -68,6 +68,11 @@ bool __runtime_canOpenURL(const std::string uri)
     return Jni::callStaticBooleanMethod(JAVA_APPCONTEXT_CLASS, "canOpenURL", uri);
 }
 
+uint32_t __runtime_getMaxFrameRate()
+{
+    return Jni::callStaticIntMethod(JAVA_APPCONTEXT_CLASS, "getMaxFrameRate");
+}
+
 const std::string __runtime_getLanguage()
 {
     static std::string value;
@@ -85,6 +90,16 @@ const std::string __runtime_getNetworkStatus()
 void __runtime_pullAllFeatures()
 {
     Jni::callStaticVoidMethod(JAVA_APPCONTEXT_CLASS, "pullAllFeatures");
+}
+
+const std::string __runtime_getPaste()
+{
+    return Jni::callStaticStringMethod(JAVA_APPCONTEXT_CLASS, "getPaste");
+}
+
+void __runtime_setPaste(const std::string &text)
+{
+    Jni::callStaticVoidMethod(JAVA_APPCONTEXT_CLASS, "setPaste", text);
 }
 #elif defined(CCLUA_OS_WIN32)
 
@@ -141,6 +156,21 @@ void __runtime_openURL(const std::string uri, const std::function<void(bool)> ca
 bool __runtime_canOpenURL(const std::string uri)
 {
 	return false;
+}
+
+uint32_t __runtime_getMaxFrameRate()
+{
+    return 60;
+}
+
+const std::string __runtime_getPaste()
+{
+    return "";
+}
+
+void __runtime_setPaste(const std::string &text)
+{
+    runtime::log("unsupport set paste");
 }
 
 #endif

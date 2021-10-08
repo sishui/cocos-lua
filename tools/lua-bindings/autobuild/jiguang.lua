@@ -13,7 +13,7 @@ HEADERS = [[
 CHUNK = nil
 
 
-typecls 'cclua::plugin::JPush'
+typeconf 'cclua::plugin::JPush'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
@@ -35,7 +35,7 @@ typecls 'cclua::plugin::JPush'
     .prop('enabled', nil, nil)
     .prop('registrationID', nil, nil)
 
-typecls 'cclua::plugin::JAuth'
+typeconf 'cclua::plugin::JAuth'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
@@ -48,10 +48,10 @@ typecls 'cclua::plugin::JAuth'
     .func(nil, 'static void clearPreLoginCache()')
     .func(nil, 'static void dismissLoginAuth(@optional bool needCloseAnim)')
     .func(nil, 'static void setSmsIntervalTime(long intervalTime)')
-    .func(nil, 'static void configUI(cocos2d::ValueMap &value)')
+    .func(nil, 'static void configUI(cocos2d::ValueMap &value, @optional bool landscape)')
     .callback {
         FUNCS =  {
-            'static void getToken(int timeout, @local const std::function<void (const cocos2d::ValueMap &)> callback)'
+            'static void getToken(int timeout, @local const std::function<void (const cocos2d::Value &)> callback)'
         },
         TAG_MAKER = 'Token',
         TAG_MODE = 'OLUA_TAG_NEW',
@@ -60,7 +60,7 @@ typecls 'cclua::plugin::JAuth'
     }
     .callback {
         FUNCS =  {
-            'static void preLogin(int timeout, @local const std::function<void (const cocos2d::ValueMap &)> callback)'
+            'static void preLogin(int timeout, @local const std::function<void (const cocos2d::Value &)> callback)'
         },
         TAG_MAKER = 'preLogin',
         TAG_MODE = 'OLUA_TAG_NEW',
@@ -69,7 +69,7 @@ typecls 'cclua::plugin::JAuth'
     }
     .callback {
         FUNCS =  {
-            'static void loginAuth(int timeout, @local const std::function<void (const cocos2d::ValueMap &)> callback)'
+            'static void loginAuth(int timeout, @local const std::function<void (const cocos2d::Value &)> callback)'
         },
         TAG_MAKER = 'loginAuth',
         TAG_MODE = 'OLUA_TAG_NEW',
@@ -78,7 +78,7 @@ typecls 'cclua::plugin::JAuth'
     }
     .callback {
         FUNCS =  {
-            'static void getSmsCode(const std::string &phonenum, const std::string &signid, const std::string &tempid, @local const std::function<void (const cocos2d::ValueMap &)> callback)'
+            'static void getSmsCode(const std::string &phonenum, const std::string &signid, const std::string &tempid, @local const std::function<void (const cocos2d::Value &)> callback)'
         },
         TAG_MAKER = 'SmsCode',
         TAG_MODE = 'OLUA_TAG_NEW',
@@ -87,7 +87,7 @@ typecls 'cclua::plugin::JAuth'
     }
     .prop('initSuccess', nil, nil)
 
-typecls 'cclua::plugin::JAnalytics::EventType'
+typeconf 'cclua::plugin::JAnalytics::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
@@ -100,7 +100,7 @@ typecls 'cclua::plugin::JAnalytics::EventType'
     .enum('COUNT', 'cclua::plugin::JAnalytics::EventType::COUNT')
     .enum('CALCULATE', 'cclua::plugin::JAnalytics::EventType::CALCULATE')
 
-typecls 'cclua::plugin::JAnalytics'
+typeconf 'cclua::plugin::JAnalytics'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)

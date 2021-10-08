@@ -27,9 +27,12 @@
 #include "cclua/xlua.h"
 #include "cclua/preferences.h"
 #include "cclua/FileFinder.h"
-//#include "wechat/lua_wechat.h"
 
 #include "lua-bindings/lua_cocos2d_3d.h"
+
+extern "C" {
+#include "luaopenssl/openssl.h"
+}
 
 #ifdef CCLUA_BUILD_COCOSSTUDIO
 #include "lua-bindings/lua_cocos2d_studio.h"
@@ -52,23 +55,50 @@
 #include "lua_swf.h"
 #endif // CCLUA_BUILD_SWF
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
-#define BUGLY_APPID "546f1cf279" // d21353e4-26c8-4f94-b646-cf88a225f039
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-#define BUGLY_APPID "c082cf3ca0" // c332369f-17b2-4f8e-9481-5810319e8c46
-#else
-#define BUGLY_APPID "<no appid>"
-#endif
+#ifdef CCLUA_BUILD_SQLITE3
+#include "sqlite3/lsqlite3.h"
+#endif // CCLUA_BUILD_SQLITE3
+
+#ifdef CCLUA_BUILD_LUASOCKET
+extern "C" {
+#include "luasocket/luasocket.h"
+#include "luasocket/luasocket_scripts.h"
+#include "luasocket/mime.h"
+}
+#endif // CCLUA_BUILD_LUASOCKET
+
+#ifdef CCLUA_BUILD_PBC
+#include "pbc/pbc.h"
+#endif // CCLUA_BUILD_PBC
+
+#ifdef CCLUA_BUILD_SPROTO
+#include "sproto/lsproto.h"
+#endif // CCLUA_BUILD_SPROTO
+
+#ifdef CCLUA_BUILD_LPEG
+#include "lpeg/lptree.h"
+#endif //CCLUA_BUILD_LPEG
 
 #if defined(CCLUA_BUILD_JPUSH) || defined(CCLUA_BUILD_JANALYTICS) || defined(CCLUA_BUILD_JAUTH)
 #include "jiguang/lua_jiguang.h"
 #include "jiguang/JiGuang.h"
-#define JPUSH_KEY "JPUSH_KEY"
+#endif
+
+#ifdef CCLUA_BUILD_TALKINGDATA
+#include "talkingdata/lua_talkingdata.h"
 #endif
 
 #ifdef CCLUA_BUILD_WECHAT
 #include "wechat/WeChat.h"
 #include "wechat/lua_wechat.h"
+#endif
+
+#if defined(CCLUA_BUILD_APPLE_AUTH) || defined(CCLUA_BUILD_APPLE_IAP)
+#include "apple/lua_apple.h"
+#endif
+
+#ifdef CCLUA_OS_WIN32
+#include "cclua/runtime-private.h"
 #endif
 
 USING_NS_CC;
@@ -98,12 +128,44 @@ static int _open_plugins(lua_State *L)
     olua_callfunc(L, luaopen_swf);
 #endif
     
+    olua_require(L, "openssl", luaopen_openssl);
+    
+#ifdef CCLUA_BUILD_SQLITE3
+    olua_require(L, "sqlite3", luaopen_lsqlite3);
+#endif
+    
+#ifdef CCLUA_BUILD_LUASOCKET
+    olua_require(L, "socket.core", luaopen_socket_core);
+    olua_require(L, "mime.core", luaopen_mime_core);
+    olua_callfunc(L, luaopen_luasocket_scripts);
+#endif // CCLUA_BUILD_LUASOCKET
+
+#ifdef CCLUA_BUILD_SPROTO
+    olua_require(L, "sproto.core", luaopen_sproto_core);
+#endif //CCLUA_BUILD_SPROTO
+
+#ifdef CCLUA_BUILD_LPEG
+    olua_require(L, "lpeg", luaopen_lpeg);
+#endif // CCLUA_BUILD_LPEG
+
+#ifdef CCLUA_BUILD_PBC
+    olua_require(L, "protobuf.c", luaopen_protobuf_c);
+#endif // CCLUA_BUILD_PBC
+    
 #if defined(CCLUA_BUILD_JPUSH) || defined(CCLUA_BUILD_JANALYTICS) || defined(CCLUA_BUILD_JAUTH)
     olua_callfunc(L, luaopen_jiguang);
 #endif
     
+#ifdef CCLUA_BUILD_TALKINGDATA
+    olua_callfunc(L, luaopen_talkingdata);
+#endif
+    
 #ifdef CCLUA_BUILD_WECHAT
     olua_callfunc(L, luaopen_wechat);
+#endif
+    
+#if defined(CCLUA_BUILD_APPLE_AUTH) || defined(CCLUA_BUILD_APPLE_IAP)
+    olua_callfunc(L, luaopen_apple);
 #endif
     return 0;
 }
@@ -127,20 +189,14 @@ bool AppDelegate::applicationDidFinishLaunching()
      *      return MyFileFinder::create();
      *  });
      */
-    
-#if defined(CCLUA_BUILD_JPUSH)
-    plugin::JPush::init(JPUSH_KEY, runtime::getChannel());
+
+#ifdef CCLUA_OS_WIN32
+    cclua::__runtime_setPackageName(APP_PACKAGE_NAME);
 #endif
     
-#if defined(CCLUA_BUILD_JAUTH)
-    plugin::JAuth::init(JPUSH_KEY, runtime::getChannel());
-#endif
+    // runtime::setProperty("cclua.metadata.key", "hello");
     
-#if defined(CCLUA_BUILD_JANALYTICS)
-    plugin::JAnalytics::init(JPUSH_KEY, runtime::getChannel());
-#endif
-    initGLView("cocos-lua");
-    runtime::initBugly(BUGLY_APPID);
+    initGLView(APP_NAME);
     runtime::luaOpen(_open_plugins);
     
     return RuntimeContext::applicationDidFinishLaunching();

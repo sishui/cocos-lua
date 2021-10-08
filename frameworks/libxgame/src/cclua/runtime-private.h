@@ -19,6 +19,8 @@ const std::string __runtime_getNetworkStatus();
 void __runtime_openURL(const std::string uri, const std::function<void (bool)> callback);
 bool __runtime_canOpenURL(const std::string uri);
 
+uint32_t __runtime_getMaxFrameRate();
+
 #ifdef CCLUA_OS_IOS
 void __runtime_setAudioSessionCatalog(const std::string &catalog);
 const std::string __runtime_getAudioSessionCatalog();
@@ -35,6 +37,9 @@ void __runtime_pullAllFeatures();
 #ifdef CCLUA_OS_WIN32
 void __runtime_setPackageName(const std::string &packageName);
 #endif
+
+const std::string __runtime_getPaste();
+void __runtime_setPaste(const std::string &text);
 
 NS_CCLUA_END
 

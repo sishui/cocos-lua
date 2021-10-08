@@ -1,8 +1,7 @@
 return function (conf)
-    local shell = require "core.shell"
+    local toolset = require "toolset"
     local lfs   = require "lfs"
-
-    require "core.simulator"
+    local md5   = require "md5"
 
     print("start build manifest")
     print("  setting name: " .. conf.NAME)
@@ -22,8 +21,8 @@ return function (conf)
     local newPaths = {}
     local hasUpdate = false
 
-    for _, path in ipairs(shell.list(ASSETS_PATH)) do
-        if path == 'builtin.manifest' or not SHOULD_BUILD(path) then
+    for _, path in ipairs(toolset.list(ASSETS_PATH)) do
+        if path == 'builtin.metadata' or not SHOULD_BUILD(path) then
             goto continue
         end
 
@@ -45,7 +44,7 @@ return function (conf)
                 path = path,
                 date = os.time(),
                 modified = modified,
-                md5 = shell.md5sum(fullPath),
+                md5 = md5.sumhexa(fullPath, true),
             }
         end
 
@@ -85,7 +84,7 @@ return function (conf)
 
         writeline('{')
         writeline('  "package_url":"%s",', conf.URL .. '/assets')
-        writeline('  "manifest_url":"%s",', conf.URL .. '/assets.manifest')
+        writeline('  "manifest_url":"%s",', conf.URL .. '/assets.metadata')
         writeline('  "date":"%s",', os.date("!%Y-%m-%d %H:%M:%S", os.time() + 8 * 60 * 60))
         writeline('  "version":"%s",', conf.VERSION)
 
@@ -105,14 +104,14 @@ return function (conf)
         writeline('  }')
         writeline('}')
 
-        shell.write(conf.ASSETS_MANIFEST_PATH, table.concat(data, ''))
+        toolset.write_metadata(conf.ASSETS_MANIFEST_PATH, table.concat(data, ''), conf)
 
         if conf.VERSION_MANIFEST_PATH then
-            shell.write(conf.VERSION_MANIFEST_PATH, shell.format [[
+            toolset.write(conf.VERSION_MANIFEST_PATH, toolset.format [[
                 {
                     "runtime": "${conf.RUNTIME}",
                     "assets": [
-                        {"name": "main", "url":"${conf.URL}/assets.manifest", "version":"${conf.VERSION}"}
+                        {"name": "main", "url":"${conf.URL}/assets.metadata", "version":"${conf.VERSION}"}
                     ]
                 }
             ]])

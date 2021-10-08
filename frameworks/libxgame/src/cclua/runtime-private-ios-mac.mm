@@ -281,6 +281,15 @@ bool __runtime_canOpenURL(const std::string uri)
 #endif
 }
 
+uint32_t __runtime_getMaxFrameRate()
+{
+#ifdef CCLUA_OS_IOS
+    return (uint32_t)[UIScreen mainScreen].maximumFramesPerSecond;
+#else
+    return 60;
+#endif
+}
+
 const std::string __runtime_getLanguage()
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -296,6 +305,29 @@ const std::string __runtime_getNetworkStatus()
     return [[context getNetworkStatus] UTF8String];
 #else
     return "WIFI";
+#endif
+}
+
+const std::string __runtime_getPaste()
+{
+#ifdef CCLUA_OS_IOS
+    @autoreleasepool {
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        NSString *string = pasteboard.string;
+        return string ? [string UTF8String] : "";
+    }
+#else
+    return "";
+#endif
+}
+
+void __runtime_setPaste(const std::string &text)
+{
+#ifdef CCLUA_OS_IOS
+    @autoreleasepool {
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = [NSString stringWithUTF8String:text.c_str()];
+    }
 #endif
 }
 

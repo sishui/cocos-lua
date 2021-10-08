@@ -1,6 +1,8 @@
 package cclua;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +25,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.Display;
 import android.view.WindowManager;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
@@ -146,6 +149,13 @@ public class AppContext extends Cocos2dxActivity {
     }
 
     @SuppressWarnings("unused")
+    public static int getMaxFrameRate() {
+        final AppContext context = (AppContext) AppContext.getContext();
+        Display display = context.getWindowManager().getDefaultDisplay();
+        return (int)display.getRefreshRate();
+    }
+
+    @SuppressWarnings("unused")
     public static void installAPK(final String path) {
         final AppContext context = (AppContext) AppContext.getContext();
         context.runOnUiThread(new Runnable() {
@@ -224,6 +234,22 @@ public class AppContext extends Cocos2dxActivity {
         return "0";
     }
 
+    public static String getPaste() {
+        ClipboardManager clipboard = (ClipboardManager)getContext().getSystemService(CLIPBOARD_SERVICE);
+        ClipData clipData = clipboard.getPrimaryClip();
+        if (clipData != null && clipData.getItemCount() > 0) {
+            return String.valueOf(clipData.getItemAt(0).getText());
+        } else {
+            return "";
+        }
+    }
+
+    public static void setPaste(String data) {
+        ClipboardManager clipboard = (ClipboardManager)getContext().getSystemService(CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("cocos", data);
+        clipboard.setPrimaryClip(clipData);
+    }
+
     @SuppressWarnings("unused")
     public static int getSDKInt() {
         return Build.VERSION.SDK_INT;
@@ -248,7 +274,7 @@ public class AppContext extends Cocos2dxActivity {
 
     @SuppressWarnings("unused")
     public static String getChannel() {
-        return getMetaData("CHANNEL");
+        return getMetaData("cclua.channel");
     }
 
     @SuppressWarnings("unused")

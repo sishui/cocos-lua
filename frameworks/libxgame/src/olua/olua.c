@@ -23,8 +23,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#define OLUA_CORE
-
 #include "olua.h"
 
 #define OLUA_CIDX_ISA  (lua_upvalueindex(1))
@@ -494,7 +492,7 @@ static bool test_tag_mode(lua_State *L, int idx, const char *tag, int mode)
     return false;
 }
 
-OLUA_API const char *olua_setcallback(lua_State *L, void *obj, const char *tag, int fidx, int tagmode)
+OLUA_API const char *olua_setcallback(lua_State *L, void *obj, int fidx, const char *tag, int tagmode)
 {
     const char *func = NULL;
     fidx = lua_absindex(L, fidx);
@@ -1278,9 +1276,9 @@ static int l_take(lua_State *L)
 static int l_move(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TUSERDATA);
-    lua_getfield(L, 1, "__move");
+    lua_getfield(L, 1, "__olua_move");
     if (!olua_isfunction(L, -1)) {
-        luaL_error(L, "method '__move' not found in '%s'", olua_objstring(L, 1));
+        luaL_error(L, "method '__olua_move' not found in '%s'", olua_objstring(L, 1));
     }
     lua_insert(L, 1);
     lua_call(L, lua_gettop(L) - 1, LUA_MULTRET);

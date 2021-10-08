@@ -31,6 +31,7 @@ static std::vector<std::pair<std::string, std::string>> _suspendedEvents;
 static std::string _openURI;
 static std::unordered_map<std::string, bool> _supportedFeatures;
 static std::unordered_map<std::string, bool> _tracebackCaches;
+static std::unordered_map<std::string, std::string> _properties;
 static int _sampleCount = 1;
 static std::unordered_map<int, runtime::RefCallback> _refCallbacks;
 static int _refCount = -1;
@@ -61,8 +62,7 @@ void runtime::init()
     FileFinder::setDelegate(FileFinder::create());
     filesystem::addSearchPath(filesystem::getDocumentDirectory() + "/assets", true);
     filesystem::addSearchPath(_workdir, true);
-    filesystem::remove(filesystem::getBuiltinCacheDirectory());
-    Director::getInstance()->setAnimationInterval(1.0f / 60);
+    runtime::setFrameRate(60);
     Director::getInstance()->setDisplayStats(runtime::isDebug());
     
 #ifdef CCLUA_OS_ANDROID
@@ -81,7 +81,6 @@ void runtime::init()
     
     // create paths
     filesystem::createDirectory(filesystem::getCacheDirectory());
-    filesystem::createDirectory(filesystem::getBuiltinCacheDirectory());
     filesystem::createDirectory(filesystem::getTmpDirectory());
     filesystem::createDirectory(filesystem::getDocumentDirectory() + "/assets");
     
@@ -138,6 +137,7 @@ void runtime::gc()
 
 void runtime::clearStorage()
 {
+    filesystem::remove(filesystem::getBuiltinCacheDirectory());
     filesystem::remove(filesystem::getDocumentDirectory() + "/assets");
     filesystem::createDirectory(filesystem::getDocumentDirectory() + "/assets");
     runtime::log("app clean version: %s(%s)", runtime::getAppVersion().c_str(),
@@ -251,7 +251,7 @@ void runtime::luaOpen(lua_CFunction libfunc)
 //
 const std::string runtime::getVersion()
 {
-    return "2.4.0";
+    return "2.4.9";
 }
 
 const uint64_t runtime::getCocosVersion()
@@ -307,6 +307,31 @@ void runtime::setManifestVersion(const std::string &version)
 const std::string runtime::getNetworkStatus()
 {
     return __runtime_getNetworkStatus();
+}
+
+bool runtime::hasProperty(const std::string &key)
+{
+    return _properties.find(key) != _properties.end();
+}
+
+std::string runtime::getProperty(const std::string &key)
+{
+    return runtime::hasProperty(key) ? _properties[key] : "";
+}
+
+void runtime::setProperty(const std::string &key, const std::string &value)
+{
+    _properties[key] = value;
+}
+
+const std::string runtime::getPaste()
+{
+    return __runtime_getPaste();
+}
+
+void runtime::setPaste(const std::string &text)
+{
+    __runtime_setPaste(text);
 }
 
 #if COCOS2D_VERSION >= 0x00040000
@@ -381,6 +406,24 @@ const std::string runtime::getAudioSessionCatalog()
 #else
     return "";
 #endif
+}
+
+uint32_t runtime::getMaxFrameRate()
+{
+    return __runtime_getMaxFrameRate();
+}
+
+uint32_t runtime::getFrameRate()
+{
+    return (uint32_t)round(1.0 / Director::getInstance()->getAnimationInterval());
+}
+
+void runtime::setFrameRate(uint32_t frameRate)
+{
+    if (runtime::getFrameRate() != frameRate) {
+        CCASSERT(frameRate > 0, "frameRate > 0");
+        Director::getInstance()->setAnimationInterval(1.0 / frameRate);
+    }
 }
 
 const PermissionStatus runtime::getPermissionStatus(Permission permission)
@@ -689,6 +732,86 @@ void runtime::reportError(const char *err, const char *traceback)
         }
     }
 #endif
+}
+
+cocos2d::backend::ProgramCache *runtime::getProgramCache()
+{
+    return backend::ProgramCache::getInstance();
+}
+
+cocos2d::FileUtils *runtime::getFileUtils()
+{
+    return FileFinder::getInstance();
+}
+
+cocos2d::SpriteFrameCache *runtime::getSpriteFrameCache()
+{
+    return SpriteFrameCache::getInstance();
+}
+
+cocos2d::TextureCache *runtime::getTextureCache()
+{
+    return Director::getInstance()->getTextureCache();
+}
+
+cocos2d::Scheduler *runtime::getScheduler()
+{
+    return Director::getInstance()->getScheduler();
+}
+
+cocos2d::ActionManager *runtime::getActionManager()
+{
+    return Director::getInstance()->getActionManager();
+}
+
+cocos2d::EventDispatcher *runtime::getEventDispatcher()
+{
+    return Director::getInstance()->getEventDispatcher();
+}
+
+bool runtime::isDisplayStats()
+{
+    return Director::getInstance()->isDisplayStats();
+}
+
+void runtime::setDisplayStats(bool displayStats)
+{
+    Director::getInstance()->setDisplayStats(displayStats);
+}
+
+cocos2d::Scene *runtime::getRunningScene()
+{
+    return Director::getInstance()->getRunningScene();
+}
+
+void runtime::pushScene(cocos2d::Scene *scene)
+{
+    Director::getInstance()->pushScene(scene);
+}
+
+void runtime::replaceScene(cocos2d::Scene *scene)
+{
+    Director::getInstance()->replaceScene(scene);
+}
+
+void runtime::popScene()
+{
+    Director::getInstance()->popScene();
+}
+
+void runtime::popToRootScene()
+{
+    Director::getInstance()->popToRootScene();
+}
+
+void runtime::purgeCachedData()
+{
+    Director::getInstance()->purgeCachedData();
+}
+
+void runtime::exit()
+{
+    Director::getInstance()->end();
 }
 
 //

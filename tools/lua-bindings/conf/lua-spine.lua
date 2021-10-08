@@ -112,6 +112,9 @@ make_luacls = function (cppname)
     return cppname
 end
 
+typedef 'spine::PropertyId'
+    .decltype 'lua_Integer'
+
 typedef 'spine::String'
 typedef 'spine::EventData'
 typedef 'spine::Color'
@@ -187,8 +190,14 @@ typeconf 'spine::Timeline'
     .exclude 'getEvents'
 
 typeconf 'spine::CurveTimeline'
+typeconf 'spine::CurveTimeline1'
+typeconf 'spine::CurveTimeline2'
 typeconf 'spine::AttachmentTimeline'
-typeconf 'spine::ColorTimeline'
+typeconf 'spine::RGBATimeline'
+typeconf 'spine::RGBTimeline'
+typeconf 'spine::AlphaTimeline'
+typeconf 'spine::RGBA2Timeline'
+typeconf 'spine::RGB2Timeline'
 typeconf 'spine::DeformTimeline'
 typeconf 'spine::DrawOrderTimeline'
 typeconf 'spine::EventTimeline'
@@ -201,7 +210,6 @@ typeconf 'spine::ShearTimeline'
 typeconf 'spine::TransformConstraintTimeline'
 typeconf 'spine::ScaleTimeline'
 typeconf 'spine::RotateTimeline'
-typeconf 'spine::TwoColorTimeline'
 
 typeconf 'spine::VertexEffect'
     .exclude 'begin'

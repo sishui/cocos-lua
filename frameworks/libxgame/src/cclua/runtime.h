@@ -3,6 +3,7 @@
 
 #include "lua.hpp"
 #include "cocos2d.h"
+#include "renderer/backend/ProgramCache.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #define CCLUA_OS_ANDROID
@@ -113,11 +114,23 @@ public:
     static void setManifestVersion(const std::string &version);
     static const std::string getNetworkStatus();
     
+    // property value
+    static bool hasProperty(const std::string &key);
+    static std::string getProperty(const std::string &key);
+    static void setProperty(const std::string &key, const std::string &value);
+    
+    static const std::string getPaste();
+    static void setPaste(const std::string &text);
+    
 #if COCOS2D_VERSION >= 0x00040000
     static cocos2d::RenderTexture *capture(cocos2d::Node *node, float width, float height, cocos2d::backend::PixelFormat format = cocos2d::backend::PixelFormat::RGBA8888, cocos2d::backend::PixelFormat depthStencilFormat = cocos2d::backend::PixelFormat::D24S8);
 #else
     static cocos2d::RenderTexture *capture(cocos2d::Node *node, float width, float height, cocos2d::Texture2D::PixelFormat format = cocos2d::Texture2D::PixelFormat::RGBA8888, GLuint depthStencilFormat = 0x88f0);
 #endif
+    
+    static uint32_t getMaxFrameRate();
+    static uint32_t getFrameRate();
+    static void setFrameRate(uint32_t frameRate);
     
     // ios only
     static const PermissionStatus getPermissionStatus(Permission permission);
@@ -165,6 +178,23 @@ public:
     static void disableReport();
     static void reportError(const char *err, const char *traceback);
     
+    // Director api
+    static cocos2d::backend::ProgramCache *getProgramCache();
+    static cocos2d::FileUtils *getFileUtils();
+    static cocos2d::SpriteFrameCache *getSpriteFrameCache();
+    static cocos2d::TextureCache *getTextureCache();
+    static cocos2d::Scheduler *getScheduler();
+    static cocos2d::ActionManager *getActionManager();
+    static cocos2d::EventDispatcher *getEventDispatcher();
+    static bool isDisplayStats();
+    static void setDisplayStats(bool displayStats);
+    static cocos2d::Scene *getRunningScene();
+    static void pushScene(cocos2d::Scene *scene);
+    static void replaceScene(cocos2d::Scene *scene);
+    static void popScene();
+    static void popToRootScene();
+    static void purgeCachedData();
+    static void exit();
 private:
     static void once(const std::string &event, const std::function<void()> callback);
     static void on(const std::string &event, const std::function<void()> callback);
