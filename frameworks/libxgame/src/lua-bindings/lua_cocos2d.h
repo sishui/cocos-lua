@@ -14,26 +14,8 @@
 #include "navmesh/CCNavMesh.h"
 #include "cclua/xlua.h"
 
-int luaopen_cocos2d(lua_State *L);
-
-// cocos2d::ccSchedulerFunc
-bool olua_is_cocos2d_ccSchedulerFunc(lua_State *L, int idx);
-int olua_push_cocos2d_ccSchedulerFunc(lua_State *L, const cocos2d::ccSchedulerFunc *value);
-void olua_check_cocos2d_ccSchedulerFunc(lua_State *L, int idx, cocos2d::ccSchedulerFunc *value);
-
-// cocos2d::EventListenerTouchOneByOne::ccTouchBeganCallback
-bool olua_is_cocos2d_EventListenerTouchOneByOne_ccTouchBeganCallback(lua_State *L, int idx);
-int olua_push_cocos2d_EventListenerTouchOneByOne_ccTouchBeganCallback(lua_State *L, const cocos2d::EventListenerTouchOneByOne::ccTouchBeganCallback *value);
-void olua_check_cocos2d_EventListenerTouchOneByOne_ccTouchBeganCallback(lua_State *L, int idx, cocos2d::EventListenerTouchOneByOne::ccTouchBeganCallback *value);
-
-// cocos2d::EventListenerTouchOneByOne::ccTouchCallback
-bool olua_is_cocos2d_EventListenerTouchOneByOne_ccTouchCallback(lua_State *L, int idx);
-int olua_push_cocos2d_EventListenerTouchOneByOne_ccTouchCallback(lua_State *L, const cocos2d::EventListenerTouchOneByOne::ccTouchCallback *value);
-void olua_check_cocos2d_EventListenerTouchOneByOne_ccTouchCallback(lua_State *L, int idx, cocos2d::EventListenerTouchOneByOne::ccTouchCallback *value);
-
-// cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback
-bool olua_is_cocos2d_EventListenerTouchAllAtOnce_ccTouchesCallback(lua_State *L, int idx);
-int olua_push_cocos2d_EventListenerTouchAllAtOnce_ccTouchesCallback(lua_State *L, const cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback *value);
-void olua_check_cocos2d_EventListenerTouchAllAtOnce_ccTouchesCallback(lua_State *L, int idx, cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback *value);
+OLUA_BEGIN_DECLS
+OLUA_LIB int luaopen_cocos2d(lua_State *L);
+OLUA_END_DECLS
 
 #endif

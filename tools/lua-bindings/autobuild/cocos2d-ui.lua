@@ -2,9 +2,9 @@
 
 dofile "autobuild/cocos2d-ui-types.lua"
 
-NAME = "cocos2d_ui"
-PATH = "../../frameworks/libxgame/src/lua-bindings"
-HEADERS = [[
+name = "cocos2d_ui"
+path = "../../frameworks/libxgame/src/lua-bindings"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "lua-bindings/LuaCocosAdapter.h"
@@ -13,14 +13,15 @@ HEADERS = [[
     #include "ui/CocosGUI.h"
     #include "ui/UIScrollViewBar.h"
 ]]
-CHUNK = nil
+chunk = nil
+luaopen = nil
 
 
 typeconf 'cocos2d::ui::Widget::FocusDirection'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('LEFT', 'cocos2d::ui::Widget::FocusDirection::LEFT')
     .enum('RIGHT', 'cocos2d::ui::Widget::FocusDirection::RIGHT')
     .enum('UP', 'cocos2d::ui::Widget::FocusDirection::UP')
@@ -30,7 +31,7 @@ typeconf 'cocos2d::ui::Widget::PositionType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ABSOLUTE', 'cocos2d::ui::Widget::PositionType::ABSOLUTE')
     .enum('PERCENT', 'cocos2d::ui::Widget::PositionType::PERCENT')
 
@@ -38,7 +39,7 @@ typeconf 'cocos2d::ui::Widget::SizeType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ABSOLUTE', 'cocos2d::ui::Widget::SizeType::ABSOLUTE')
     .enum('PERCENT', 'cocos2d::ui::Widget::SizeType::PERCENT')
 
@@ -46,7 +47,7 @@ typeconf 'cocos2d::ui::Widget::TouchEventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('BEGAN', 'cocos2d::ui::Widget::TouchEventType::BEGAN')
     .enum('MOVED', 'cocos2d::ui::Widget::TouchEventType::MOVED')
     .enum('ENDED', 'cocos2d::ui::Widget::TouchEventType::ENDED')
@@ -56,7 +57,7 @@ typeconf 'cocos2d::ui::Widget::TextureResType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('LOCAL', 'cocos2d::ui::Widget::TextureResType::LOCAL')
     .enum('PLIST', 'cocos2d::ui::Widget::TextureResType::PLIST')
 
@@ -64,7 +65,7 @@ typeconf 'cocos2d::ui::Widget::BrightStyle'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::ui::Widget::BrightStyle::NONE')
     .enum('NORMAL', 'cocos2d::ui::Widget::BrightStyle::NORMAL')
     .enum('HIGHLIGHT', 'cocos2d::ui::Widget::BrightStyle::HIGHLIGHT')
@@ -73,25 +74,25 @@ typeconf 'cocos2d::ui::Widget::ccWidgetTouchCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::Widget::ccWidgetClickCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::Widget::ccWidgetEventCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::Widget'
     .supercls('cocos2d::ProtectedNode')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Widget()')
     .func(nil, 'static cocos2d::ui::Widget *create()')
     .func(nil, 'void setEnabled(bool enabled)')
@@ -165,33 +166,33 @@ typeconf 'cocos2d::ui::Widget'
     .func(nil, 'void onFocusChange(@nullable cocos2d::ui::Widget *widgetLostFocus, @nullable cocos2d::ui::Widget *widgetGetFocus)')
     .func(nil, 'void dispatchFocusEvent(@nullable cocos2d::ui::Widget *widgetLoseFocus, @nullable cocos2d::ui::Widget *widgetGetFocus)')
     .var('onFocusChanged', '@nullable std::function<void (cocos2d::ui::Widget *, cocos2d::ui::Widget *)> onFocusChanged')
-    .var('onNextFocusedWidget', '@nullable @local std::function<cocos2d::ui::Widget * (cocos2d::ui::Widget::FocusDirection)> onNextFocusedWidget')
+    .var('onNextFocusedWidget', '@nullable @localvar std::function<cocos2d::ui::Widget * (cocos2d::ui::Widget::FocusDirection)> onNextFocusedWidget')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addTouchEventListener(@nullable const cocos2d::ui::Widget::ccWidgetTouchCallback &callback)'
         },
-        TAG_MAKER = 'addTouchEventListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'addTouchEventListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addClickEventListener(@nullable const cocos2d::ui::Widget::ccWidgetClickCallback &callback)'
         },
-        TAG_MAKER = 'addClickEventListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'addClickEventListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addCCSEventListener(@nullable const cocos2d::ui::Widget::ccWidgetEventCallback &callback)'
         },
-        TAG_MAKER = 'addCCSEventListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'addCCSEventListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('enabled', nil, nil)
     .prop('bright', nil, nil)
@@ -232,7 +233,7 @@ typeconf 'cocos2d::ui::Helper'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ui::Widget *seekWidgetByTag(cocos2d::ui::Widget *root, int tag)')
     .func(nil, 'static cocos2d::ui::Widget *seekWidgetByName(cocos2d::ui::Widget *root, const std::string &name)')
     .func(nil, 'static cocos2d::ui::Widget *seekActionWidgetByActionTag(cocos2d::ui::Widget *root, int tag)')
@@ -246,7 +247,7 @@ typeconf 'cocos2d::ui::Scale9Sprite::State'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NORMAL', 'cocos2d::ui::Scale9Sprite::State::NORMAL')
     .enum('GRAY', 'cocos2d::ui::Scale9Sprite::State::GRAY')
 
@@ -254,7 +255,7 @@ typeconf 'cocos2d::ui::Scale9Sprite::RenderingType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('SIMPLE', 'cocos2d::ui::Scale9Sprite::RenderingType::SIMPLE')
     .enum('SLICE', 'cocos2d::ui::Scale9Sprite::RenderingType::SLICE')
 
@@ -262,7 +263,7 @@ typeconf 'cocos2d::ui::Scale9Sprite'
     .supercls('cocos2d::Sprite')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Scale9Sprite()')
     .func(nil, 'static cocos2d::ui::Scale9Sprite *create()', 'static cocos2d::ui::Scale9Sprite *create(const std::string &file, const cocos2d::Rect &rect, const cocos2d::Rect &capInsets)', 'static cocos2d::ui::Scale9Sprite *create(const cocos2d::Rect &capInsets, const std::string &file)', 'static cocos2d::ui::Scale9Sprite *create(const std::string &file, const cocos2d::Rect &rect)', 'static cocos2d::ui::Scale9Sprite *create(const std::string &file)')
     .func(nil, 'static cocos2d::ui::Scale9Sprite *createWithSpriteFrame(cocos2d::SpriteFrame *spriteFrame)', 'static cocos2d::ui::Scale9Sprite *createWithSpriteFrame(cocos2d::SpriteFrame *spriteFrame, const cocos2d::Rect &capInsets)')
@@ -312,7 +313,7 @@ typeconf 'cocos2d::ui::LayoutComponent::HorizontalEdge'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('None', 'cocos2d::ui::LayoutComponent::HorizontalEdge::None')
     .enum('Left', 'cocos2d::ui::LayoutComponent::HorizontalEdge::Left')
     .enum('Right', 'cocos2d::ui::LayoutComponent::HorizontalEdge::Right')
@@ -322,7 +323,7 @@ typeconf 'cocos2d::ui::LayoutComponent::VerticalEdge'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('None', 'cocos2d::ui::LayoutComponent::VerticalEdge::None')
     .enum('Bottom', 'cocos2d::ui::LayoutComponent::VerticalEdge::Bottom')
     .enum('Top', 'cocos2d::ui::LayoutComponent::VerticalEdge::Top')
@@ -332,7 +333,7 @@ typeconf 'cocos2d::ui::LayoutComponent'
     .supercls('cocos2d::Component')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'LayoutComponent()')
     .func(nil, 'static cocos2d::ui::LayoutComponent *create()')
     .func(nil, 'static cocos2d::ui::LayoutComponent *bindLayoutComponent(cocos2d::Node *node)')
@@ -413,7 +414,7 @@ typeconf 'cocos2d::ui::LayoutParameter::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::ui::LayoutParameter::Type::NONE')
     .enum('LINEAR', 'cocos2d::ui::LayoutParameter::Type::LINEAR')
     .enum('RELATIVE', 'cocos2d::ui::LayoutParameter::Type::RELATIVE')
@@ -422,7 +423,7 @@ typeconf 'cocos2d::ui::LayoutParameter'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'LayoutParameter()')
     .func(nil, 'static cocos2d::ui::LayoutParameter *create()')
     .func(nil, 'void setMargin(const cocos2d::ui::Margin &margin)')
@@ -438,7 +439,7 @@ typeconf 'cocos2d::ui::LinearLayoutParameter::LinearGravity'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::ui::LinearLayoutParameter::LinearGravity::NONE')
     .enum('LEFT', 'cocos2d::ui::LinearLayoutParameter::LinearGravity::LEFT')
     .enum('TOP', 'cocos2d::ui::LinearLayoutParameter::LinearGravity::TOP')
@@ -451,7 +452,7 @@ typeconf 'cocos2d::ui::LinearLayoutParameter'
     .supercls('cocos2d::ui::LayoutParameter')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'LinearLayoutParameter()')
     .func(nil, 'static cocos2d::ui::LinearLayoutParameter *create()')
     .func(nil, 'void setGravity(cocos2d::ui::LinearLayoutParameter::LinearGravity gravity)')
@@ -462,7 +463,7 @@ typeconf 'cocos2d::ui::RelativeLayoutParameter::RelativeAlign'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::ui::RelativeLayoutParameter::RelativeAlign::NONE')
     .enum('PARENT_TOP_LEFT', 'cocos2d::ui::RelativeLayoutParameter::RelativeAlign::PARENT_TOP_LEFT')
     .enum('PARENT_TOP_CENTER_HORIZONTAL', 'cocos2d::ui::RelativeLayoutParameter::RelativeAlign::PARENT_TOP_CENTER_HORIZONTAL')
@@ -490,7 +491,7 @@ typeconf 'cocos2d::ui::RelativeLayoutParameter'
     .supercls('cocos2d::ui::LayoutParameter')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RelativeLayoutParameter()')
     .func(nil, 'static cocos2d::ui::RelativeLayoutParameter *create()')
     .func(nil, 'void setAlign(cocos2d::ui::RelativeLayoutParameter::RelativeAlign align)')
@@ -507,7 +508,7 @@ typeconf 'cocos2d::ui::Layout::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ABSOLUTE', 'cocos2d::ui::Layout::Type::ABSOLUTE')
     .enum('VERTICAL', 'cocos2d::ui::Layout::Type::VERTICAL')
     .enum('HORIZONTAL', 'cocos2d::ui::Layout::Type::HORIZONTAL')
@@ -517,7 +518,7 @@ typeconf 'cocos2d::ui::Layout::ClippingType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('STENCIL', 'cocos2d::ui::Layout::ClippingType::STENCIL')
     .enum('SCISSOR', 'cocos2d::ui::Layout::ClippingType::SCISSOR')
 
@@ -525,7 +526,7 @@ typeconf 'cocos2d::ui::Layout::BackGroundColorType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::ui::Layout::BackGroundColorType::NONE')
     .enum('SOLID', 'cocos2d::ui::Layout::BackGroundColorType::SOLID')
     .enum('GRADIENT', 'cocos2d::ui::Layout::BackGroundColorType::GRADIENT')
@@ -534,7 +535,7 @@ typeconf 'cocos2d::ui::Layout'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'Layout()')
     .func(nil, 'static cocos2d::ui::Layout *create()')
@@ -595,7 +596,7 @@ typeconf 'cocos2d::ui::HBox'
     .supercls('cocos2d::ui::Layout')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'HBox()')
     .func(nil, 'static cocos2d::ui::HBox *create()', 'static cocos2d::ui::HBox *create(const cocos2d::Size &size)')
     .func(nil, 'bool initWithSize(const cocos2d::Size &size)')
@@ -604,7 +605,7 @@ typeconf 'cocos2d::ui::VBox'
     .supercls('cocos2d::ui::Layout')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'VBox()')
     .func(nil, 'static cocos2d::ui::VBox *create()', 'static cocos2d::ui::VBox *create(const cocos2d::Size &size)')
     .func(nil, 'bool initWithSize(const cocos2d::Size &size)')
@@ -613,7 +614,7 @@ typeconf 'cocos2d::ui::RelativeBox'
     .supercls('cocos2d::ui::Layout')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RelativeBox()')
     .func(nil, 'static cocos2d::ui::RelativeBox *create()', 'static cocos2d::ui::RelativeBox *create(const cocos2d::Size &size)')
     .func(nil, 'bool initWithSize(const cocos2d::Size &size)')
@@ -622,14 +623,14 @@ typeconf 'cocos2d::ui::WebView::ccWebViewCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .ifdef('*', '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)')
 
 typeconf 'cocos2d::ui::WebView'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .ifdef('*', '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)')
     .func(nil, 'static cocos2d::ui::WebView *create()')
     .func(nil, 'void setJavascriptInterfaceScheme(const std::string &scheme)')
@@ -651,76 +652,76 @@ typeconf 'cocos2d::ui::WebView'
     .func(nil, 'void setBackgroundTransparent()')
     .func(nil, 'WebView()')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setOnShouldStartLoading(@nullable const std::function<bool (WebView *, const std::string &)> &callback)'
         },
-        TAG_MAKER = 'OnShouldStartLoading',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnShouldStartLoading',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setOnDidFinishLoading(@nullable const cocos2d::ui::WebView::ccWebViewCallback &callback)'
         },
-        TAG_MAKER = 'OnDidFinishLoading',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnDidFinishLoading',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setOnDidFailLoading(@nullable const cocos2d::ui::WebView::ccWebViewCallback &callback)'
         },
-        TAG_MAKER = 'OnDidFailLoading',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnDidFailLoading',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setOnJSCallback(@nullable const cocos2d::ui::WebView::ccWebViewCallback &callback)'
         },
-        TAG_MAKER = 'OnJSCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnJSCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@local std::function<bool (cocos2d::ui::WebView *, const std::string &)> getOnShouldStartLoading()'
+        funcs =  {
+            '@localvar std::function<bool (cocos2d::ui::WebView *, const std::string &)> getOnShouldStartLoading()'
         },
-        TAG_MAKER = 'OnShouldStartLoading',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnShouldStartLoading',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@local cocos2d::ui::WebView::ccWebViewCallback getOnDidFinishLoading()'
+        funcs =  {
+            '@localvar cocos2d::ui::WebView::ccWebViewCallback getOnDidFinishLoading()'
         },
-        TAG_MAKER = 'OnDidFinishLoading',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnDidFinishLoading',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@local cocos2d::ui::WebView::ccWebViewCallback getOnDidFailLoading()'
+        funcs =  {
+            '@localvar cocos2d::ui::WebView::ccWebViewCallback getOnDidFailLoading()'
         },
-        TAG_MAKER = 'OnDidFailLoading',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnDidFailLoading',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@local cocos2d::ui::WebView::ccWebViewCallback getOnJSCallback()'
+        funcs =  {
+            '@localvar cocos2d::ui::WebView::ccWebViewCallback getOnJSCallback()'
         },
-        TAG_MAKER = 'OnJSCallback',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnJSCallback',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('onShouldStartLoading', nil, nil)
     .prop('onDidFinishLoading', nil, nil)
@@ -732,7 +733,7 @@ typeconf 'cocos2d::ui::VideoPlayer::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .ifdef('*', '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)')
     .enum('PLAYING', 'cocos2d::ui::VideoPlayer::EventType::PLAYING')
     .enum('PAUSED', 'cocos2d::ui::VideoPlayer::EventType::PAUSED')
@@ -744,14 +745,14 @@ typeconf 'cocos2d::ui::VideoPlayer::ccVideoPlayerCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .ifdef('*', '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)')
 
 typeconf 'cocos2d::ui::VideoPlayer::StyleType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .ifdef('*', '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)')
     .enum('DEFAULT', 'cocos2d::ui::VideoPlayer::StyleType::DEFAULT')
     .enum('NONE', 'cocos2d::ui::VideoPlayer::StyleType::NONE')
@@ -760,7 +761,7 @@ typeconf 'cocos2d::ui::VideoPlayer'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .ifdef('*', '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)')
     .func(nil, 'static cocos2d::ui::VideoPlayer *create()')
     .func(nil, 'void setFileName(const std::string &videoPath)')
@@ -783,13 +784,13 @@ typeconf 'cocos2d::ui::VideoPlayer'
     .func(nil, 'void onPlayEvent(int event)')
     .func(nil, 'VideoPlayer()')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addEventListener(const cocos2d::ui::VideoPlayer::ccVideoPlayerCallback &callback)'
         },
-        TAG_MAKER = 'videoPlayerCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'videoPlayerCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('fileName', nil, nil)
     .prop('url', nil, nil)
@@ -803,7 +804,7 @@ typeconf 'cocos2d::ui::AbstractCheckButton'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void loadTextures(const std::string &background, const std::string &backgroundSelected, const std::string &cross, const std::string &backgroundDisabled, const std::string &frontCrossDisabled, @optional cocos2d::ui::Widget::TextureResType texType)')
     .func(nil, 'void loadTextureBackGround(const std::string &backGround, @optional cocos2d::ui::Widget::TextureResType type)')
     .func(nil, 'void loadTextureBackGroundSelected(const std::string &backGroundSelected, @optional cocos2d::ui::Widget::TextureResType texType)')
@@ -842,7 +843,7 @@ typeconf 'cocos2d::ui::TabHeader::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('SELECTED', 'cocos2d::ui::TabHeader::EventType::SELECTED')
     .enum('UNSELECTED', 'cocos2d::ui::TabHeader::EventType::UNSELECTED')
 
@@ -850,7 +851,7 @@ typeconf 'cocos2d::ui::TabHeader'
     .supercls('cocos2d::ui::AbstractCheckButton')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ui::TabHeader *create()', 'static cocos2d::ui::TabHeader *create(const std::string &titleStr, const std::string &backGround, const std::string &cross, @optional cocos2d::ui::Widget::TextureResType texType)', 'static cocos2d::ui::TabHeader *create(const std::string &titleStr, const std::string &backGround, const std::string &backGroundSelected, const std::string &cross, const std::string &backGroundDisabled, const std::string &frontCrossDisabled, @optional cocos2d::ui::Widget::TextureResType texType)')
     .func(nil, '@addref(protectedChildren |) cocos2d::Label *getTitleRenderer()')
     .func(nil, 'void setTitleText(const std::string &text)')
@@ -873,7 +874,7 @@ typeconf 'cocos2d::ui::TabControl::Dock'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('TOP', 'cocos2d::ui::TabControl::Dock::TOP')
     .enum('LEFT', 'cocos2d::ui::TabControl::Dock::LEFT')
     .enum('BOTTOM', 'cocos2d::ui::TabControl::Dock::BOTTOM')
@@ -883,20 +884,20 @@ typeconf 'cocos2d::ui::TabControl::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('SELECT_CHANGED', 'cocos2d::ui::TabControl::EventType::SELECT_CHANGED')
 
 typeconf 'cocos2d::ui::TabControl::ccTabControlCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::TabControl'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ui::TabControl *create()')
     .func(nil, '@delref(protectedChildren ~) void removeTab(int index)')
     .func(nil, 'void setSelectTab(int index)', 'void setSelectTab(cocos2d::ui::TabHeader *tabHeader)')
@@ -917,13 +918,13 @@ typeconf 'cocos2d::ui::TabControl'
     .func(nil, 'void setHeaderDockPlace(cocos2d::ui::TabControl::Dock dockPlace)')
     .func(nil, 'cocos2d::ui::TabControl::Dock getHeaderDockPlace()')
     .callback {
-        FUNCS =  {
-            'void setTabChangedEventListener(@nullable @local const cocos2d::ui::TabControl::ccTabControlCallback &callback)'
+        funcs =  {
+            'void setTabChangedEventListener(@localvar @nullable const cocos2d::ui::TabControl::ccTabControlCallback &callback)'
         },
-        TAG_MAKER = 'tabChangedEventListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'tabChangedEventListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('tabCount', nil, nil)
     .prop('selectedTabIndex', nil, nil)
@@ -937,7 +938,7 @@ typeconf 'cocos2d::ui::ScrollView::Direction'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::ui::ScrollView::Direction::NONE')
     .enum('VERTICAL', 'cocos2d::ui::ScrollView::Direction::VERTICAL')
     .enum('HORIZONTAL', 'cocos2d::ui::ScrollView::Direction::HORIZONTAL')
@@ -947,7 +948,7 @@ typeconf 'cocos2d::ui::ScrollView::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('SCROLL_TO_TOP', 'cocos2d::ui::ScrollView::EventType::SCROLL_TO_TOP')
     .enum('SCROLL_TO_BOTTOM', 'cocos2d::ui::ScrollView::EventType::SCROLL_TO_BOTTOM')
     .enum('SCROLL_TO_LEFT', 'cocos2d::ui::ScrollView::EventType::SCROLL_TO_LEFT')
@@ -966,13 +967,13 @@ typeconf 'cocos2d::ui::ScrollView::ccScrollViewCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::ScrollView'
     .supercls('cocos2d::ui::Layout')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'ScrollView()')
     .func(nil, 'static cocos2d::ui::ScrollView *create()')
@@ -1037,13 +1038,13 @@ typeconf 'cocos2d::ui::ScrollView'
     .func(nil, 'bool isScrolling()')
     .func(nil, 'bool isAutoScrolling()')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addEventListener(const cocos2d::ui::ScrollView::ccScrollViewCallback &callback)'
         },
-        TAG_MAKER = 'scrollViewCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'scrollViewCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('direction', nil, nil)
     .prop('innerContainer', nil, nil)
@@ -1070,7 +1071,7 @@ typeconf 'cocos2d::ui::ListView::Gravity'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('LEFT', 'cocos2d::ui::ListView::Gravity::LEFT')
     .enum('RIGHT', 'cocos2d::ui::ListView::Gravity::RIGHT')
     .enum('CENTER_HORIZONTAL', 'cocos2d::ui::ListView::Gravity::CENTER_HORIZONTAL')
@@ -1082,7 +1083,7 @@ typeconf 'cocos2d::ui::ListView::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ON_SELECTED_ITEM_START', 'cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_START')
     .enum('ON_SELECTED_ITEM_END', 'cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_END')
 
@@ -1090,7 +1091,7 @@ typeconf 'cocos2d::ui::ListView::MagneticType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::ui::ListView::MagneticType::NONE')
     .enum('CENTER', 'cocos2d::ui::ListView::MagneticType::CENTER')
     .enum('BOTH_END', 'cocos2d::ui::ListView::MagneticType::BOTH_END')
@@ -1103,13 +1104,13 @@ typeconf 'cocos2d::ui::ListView::ccListViewCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::ListView'
     .supercls('cocos2d::ui::ScrollView')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'ListView()')
     .func(nil, 'static cocos2d::ui::ListView *create()')
@@ -1155,14 +1156,14 @@ typeconf 'cocos2d::ui::ListView'
     .func(nil, 'ssize_t getCurSelectedIndex()')
     .func(nil, 'void setCurSelectedIndex(int itemIndex)')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addEventListener(const cocos2d::ui::ListView::ccListViewCallback &callback)',
             '@using void addEventListener(const cocos2d::ui::ScrollView::ccScrollViewCallback &callback)'
         },
-        TAG_MAKER = 'ListViewCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'ListViewCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('items', nil, nil)
     .prop('magneticType', nil, nil)
@@ -1184,7 +1185,7 @@ typeconf 'cocos2d::ui::LoadingBar::Direction'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('LEFT', 'cocos2d::ui::LoadingBar::Direction::LEFT')
     .enum('RIGHT', 'cocos2d::ui::LoadingBar::Direction::RIGHT')
 
@@ -1192,7 +1193,7 @@ typeconf 'cocos2d::ui::LoadingBar'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'LoadingBar()')
     .func(nil, 'static cocos2d::ui::LoadingBar *create()', 'static cocos2d::ui::LoadingBar *create(const std::string &textureName, @optional float percentage)', 'static cocos2d::ui::LoadingBar *create(const std::string &textureName, cocos2d::ui::Widget::TextureResType texType, @optional float percentage)')
@@ -1216,14 +1217,14 @@ typeconf 'cocos2d::ui::PageView::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('TURNING', 'cocos2d::ui::PageView::EventType::TURNING')
 
 typeconf 'cocos2d::ui::PageView::TouchDirection'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('LEFT', 'cocos2d::ui::PageView::TouchDirection::LEFT')
     .enum('RIGHT', 'cocos2d::ui::PageView::TouchDirection::RIGHT')
     .enum('UP', 'cocos2d::ui::PageView::TouchDirection::UP')
@@ -1233,13 +1234,13 @@ typeconf 'cocos2d::ui::PageView::ccPageViewCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::PageView'
     .supercls('cocos2d::ui::ListView')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'PageView()')
     .func(nil, 'static cocos2d::ui::PageView *create()')
@@ -1273,14 +1274,14 @@ typeconf 'cocos2d::ui::PageView'
     .func(nil, 'float getIndicatorIndexNodesScale()')
     .func(nil, 'void setAutoScrollStopEpsilon(float epsilon)')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addEventListener(const cocos2d::ui::PageView::ccPageViewCallback &callback)',
             '@using void addEventListener(const cocos2d::ui::ScrollView::ccScrollViewCallback &callback)'
         },
-        TAG_MAKER = 'PageViewCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'PageViewCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('currentPageIndex', nil, nil)
     .prop('indicatorEnabled', nil, nil)
@@ -1297,7 +1298,7 @@ typeconf 'cocos2d::ui::RichElement::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('TEXT', 'cocos2d::ui::RichElement::Type::TEXT')
     .enum('IMAGE', 'cocos2d::ui::RichElement::Type::IMAGE')
     .enum('CUSTOM', 'cocos2d::ui::RichElement::Type::CUSTOM')
@@ -1307,7 +1308,7 @@ typeconf 'cocos2d::ui::RichElement'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RichElement()')
     .func(nil, 'bool init(int tag, const cocos2d::Color3B &color, uint8_t opacity)')
     .func(nil, 'bool equalType(cocos2d::ui::RichElement::Type type)')
@@ -1317,7 +1318,7 @@ typeconf 'cocos2d::ui::RichElementText'
     .supercls('cocos2d::ui::RichElement')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RichElementText()')
     .func(nil, 'bool init(int tag, const cocos2d::Color3B &color, uint8_t opacity, const std::string &text, const std::string &fontName, float fontSize, uint32_t flags, const std::string &url, @optional const cocos2d::Color3B &outlineColor, @optional int outlineSize, @optional const cocos2d::Color3B &shadowColor, @optional const cocos2d::Size &shadowOffset, @optional int shadowBlurRadius, @optional const cocos2d::Color3B &glowColor)')
     .func(nil, 'static cocos2d::ui::RichElementText *create(int tag, const cocos2d::Color3B &color, uint8_t opacity, const std::string &text, const std::string &fontName, float fontSize, @optional uint32_t flags, @optional const std::string &url, @optional const cocos2d::Color3B &outlineColor, @optional int outlineSize, @optional const cocos2d::Color3B &shadowColor, @optional const cocos2d::Size &shadowOffset, @optional int shadowBlurRadius, @optional const cocos2d::Color3B &glowColor)')
@@ -1326,7 +1327,7 @@ typeconf 'cocos2d::ui::RichElementImage'
     .supercls('cocos2d::ui::RichElement')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RichElementImage()')
     .func(nil, 'bool init(int tag, const cocos2d::Color3B &color, uint8_t opacity, const std::string &filePath, @optional const std::string &url, @optional cocos2d::ui::Widget::TextureResType texType)')
     .func(nil, 'static cocos2d::ui::RichElementImage *create(int tag, const cocos2d::Color3B &color, uint8_t opacity, const std::string &filePath, @optional const std::string &url, @optional cocos2d::ui::Widget::TextureResType texType)')
@@ -1338,7 +1339,7 @@ typeconf 'cocos2d::ui::RichElementCustomNode'
     .supercls('cocos2d::ui::RichElement')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RichElementCustomNode()')
     .func(nil, 'bool init(int tag, const cocos2d::Color3B &color, uint8_t opacity, cocos2d::Node *customNode)')
     .func(nil, 'static cocos2d::ui::RichElementCustomNode *create(int tag, const cocos2d::Color3B &color, uint8_t opacity, cocos2d::Node *customNode)')
@@ -1347,7 +1348,7 @@ typeconf 'cocos2d::ui::RichElementNewLine'
     .supercls('cocos2d::ui::RichElement')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RichElementNewLine()')
     .func(nil, 'static cocos2d::ui::RichElementNewLine *create(int tag, const cocos2d::Color3B &color, uint8_t opacity)')
 
@@ -1355,7 +1356,7 @@ typeconf 'cocos2d::ui::RichText::WrapMode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('WRAP_PER_WORD', 'cocos2d::ui::RichText::WrapMode::WRAP_PER_WORD')
     .enum('WRAP_PER_CHAR', 'cocos2d::ui::RichText::WrapMode::WRAP_PER_CHAR')
 
@@ -1363,7 +1364,7 @@ typeconf 'cocos2d::ui::RichText::HorizontalAlignment'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('LEFT', 'cocos2d::ui::RichText::HorizontalAlignment::LEFT')
     .enum('CENTER', 'cocos2d::ui::RichText::HorizontalAlignment::CENTER')
     .enum('RIGHT', 'cocos2d::ui::RichText::HorizontalAlignment::RIGHT')
@@ -1372,13 +1373,13 @@ typeconf 'cocos2d::ui::RichText::OpenUrlHandler'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::RichText'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('KEY_VERTICAL_SPACE', 'cocos2d::ui::RichText::KEY_VERTICAL_SPACE', 'const std::string')
     .const('KEY_WRAP_MODE', 'cocos2d::ui::RichText::KEY_WRAP_MODE', 'const std::string')
     .const('KEY_HORIZONTAL_ALIGNMENT', 'cocos2d::ui::RichText::KEY_HORIZONTAL_ALIGNMENT', 'const std::string')
@@ -1467,22 +1468,22 @@ typeconf 'cocos2d::ui::RichText'
     .func(nil, 'static void removeTagDescription(const std::string &tag)')
     .func(nil, 'void openUrl(const std::string &url)')
     .callback {
-        FUNCS =  {
-            'static cocos2d::ui::RichText *createWithXML(const std::string &xml, @optional const cocos2d::ValueMap &defaults, @local @optional const cocos2d::ui::RichText::OpenUrlHandler &handleOpenUrl)'
+        funcs =  {
+            'static cocos2d::ui::RichText *createWithXML(const std::string &xml, @optional const cocos2d::ValueMap &defaults, @localvar @optional const cocos2d::ui::RichText::OpenUrlHandler &handleOpenUrl)'
         },
-        TAG_MAKER = 'OpenUrlHandler',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = "return",
-        TAG_SCOPE = 'object',
+        tag_maker = 'OpenUrlHandler',
+        tag_mode = 'replace',
+        tag_store = -1,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setOpenUrlHandler(@local const cocos2d::ui::RichText::OpenUrlHandler &handleOpenUrl)'
+        funcs =  {
+            'void setOpenUrlHandler(@localvar const cocos2d::ui::RichText::OpenUrlHandler &handleOpenUrl)'
         },
-        TAG_MAKER = 'OpenUrlHandler',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OpenUrlHandler',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('wrapMode', nil, nil)
     .prop('horizontalAlignment', nil, nil)
@@ -1511,7 +1512,7 @@ typeconf 'cocos2d::ui::ScrollViewBar'
     .supercls('cocos2d::ProtectedNode')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ScrollViewBar(cocos2d::ui::ScrollView *parent, cocos2d::ui::ScrollView::Direction direction)')
     .func(nil, 'static cocos2d::ui::ScrollViewBar *create(cocos2d::ui::ScrollView *parent, cocos2d::ui::ScrollView::Direction direction)')
     .func(nil, 'void setPositionFromCorner(const cocos2d::Vec2 &positionFromCorner)')
@@ -1534,7 +1535,7 @@ typeconf 'cocos2d::ui::Slider::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ON_PERCENTAGE_CHANGED', 'cocos2d::ui::Slider::EventType::ON_PERCENTAGE_CHANGED')
     .enum('ON_SLIDEBALL_DOWN', 'cocos2d::ui::Slider::EventType::ON_SLIDEBALL_DOWN')
     .enum('ON_SLIDEBALL_UP', 'cocos2d::ui::Slider::EventType::ON_SLIDEBALL_UP')
@@ -1544,13 +1545,13 @@ typeconf 'cocos2d::ui::Slider::ccSliderCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::Slider'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'Slider()')
     .func(nil, 'static cocos2d::ui::Slider *create()', 'static cocos2d::ui::Slider *create(const std::string &barTextureName, const std::string &normalBallTextureName, @optional cocos2d::ui::Widget::TextureResType resType)')
@@ -1584,13 +1585,13 @@ typeconf 'cocos2d::ui::Slider'
     .func(nil, 'cocos2d::ResourceData getBallPressedFile()')
     .func(nil, 'cocos2d::ResourceData getBallDisabledFile()')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addEventListener(const cocos2d::ui::Slider::ccSliderCallback &callback)'
         },
-        TAG_MAKER = 'sliderCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'sliderCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('scale9Enabled', nil, nil)
     .prop('capInsetsBarRenderer', nil, nil)
@@ -1612,7 +1613,7 @@ typeconf 'cocos2d::ui::Text::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('SYSTEM', 'cocos2d::ui::Text::Type::SYSTEM')
     .enum('TTF', 'cocos2d::ui::Text::Type::TTF')
 
@@ -1620,7 +1621,7 @@ typeconf 'cocos2d::ui::Text'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'Text()')
     .func(nil, 'static cocos2d::ui::Text *create()', 'static cocos2d::ui::Text *create(const std::string &textContent, const std::string &fontName, float fontSize)')
@@ -1682,7 +1683,7 @@ typeconf 'cocos2d::ui::TextAtlas'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'TextAtlas()')
     .func(nil, 'static cocos2d::ui::TextAtlas *create()', 'static cocos2d::ui::TextAtlas *create(const std::string &stringValue, const std::string &charMapFile, int itemWidth, int itemHeight, const std::string &startCharMap)')
@@ -1700,7 +1701,7 @@ typeconf 'cocos2d::ui::TextBMFont'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'TextBMFont()')
     .func(nil, 'static cocos2d::ui::TextBMFont *create()', 'static cocos2d::ui::TextBMFont *create(const std::string &text, const std::string &filename)')
@@ -1718,7 +1719,7 @@ typeconf 'cocos2d::ui::UICCTextField'
     .supercls('cocos2d::TextFieldTTF')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ui::UICCTextField *create()', 'static cocos2d::ui::UICCTextField *create(const std::string &placeholder, const std::string &fontName, float fontSize)')
     .func(nil, 'UICCTextField()')
     .func(nil, 'bool onTextFieldAttachWithIME(cocos2d::TextFieldTTF *pSender)')
@@ -1756,7 +1757,7 @@ typeconf 'cocos2d::ui::TextField::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ATTACH_WITH_IME', 'cocos2d::ui::TextField::EventType::ATTACH_WITH_IME')
     .enum('DETACH_WITH_IME', 'cocos2d::ui::TextField::EventType::DETACH_WITH_IME')
     .enum('INSERT_TEXT', 'cocos2d::ui::TextField::EventType::INSERT_TEXT')
@@ -1766,13 +1767,13 @@ typeconf 'cocos2d::ui::TextField::ccTextFieldCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::TextField'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'TextField()')
     .func(nil, 'static cocos2d::ui::TextField *create()', 'static cocos2d::ui::TextField *create(const std::string &placeholder, const std::string &fontName, int fontSize)')
@@ -1821,13 +1822,13 @@ typeconf 'cocos2d::ui::TextField'
     .func(nil, 'void setCursorPosition(std::size_t cursorPosition)')
     .func(nil, 'void setCursorFromPoint(const cocos2d::Vec2 &point, const cocos2d::Camera *camera)')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addEventListener(const cocos2d::ui::TextField::ccTextFieldCallback &callback)'
         },
-        TAG_MAKER = 'textFieldCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'textFieldCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('touchSize', nil, nil)
     .prop('placeHolder', nil, nil)
@@ -1853,7 +1854,7 @@ typeconf 'cocos2d::ui::Button'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'Button()')
     .func(nil, 'static cocos2d::ui::Button *create()', 'static cocos2d::ui::Button *create(const std::string &normalImage, @optional const std::string &selectedImage, @optional const std::string &disableImage, @optional cocos2d::ui::Widget::TextureResType texType)')
@@ -1919,7 +1920,7 @@ typeconf 'cocos2d::ui::CheckBox::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('SELECTED', 'cocos2d::ui::CheckBox::EventType::SELECTED')
     .enum('UNSELECTED', 'cocos2d::ui::CheckBox::EventType::UNSELECTED')
 
@@ -1927,31 +1928,31 @@ typeconf 'cocos2d::ui::CheckBox::ccCheckBoxCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::CheckBox'
     .supercls('cocos2d::ui::AbstractCheckButton')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'CheckBox()')
     .func(nil, 'static cocos2d::ui::CheckBox *create()', 'static cocos2d::ui::CheckBox *create(const std::string &backGround, const std::string &backGroundSelected, const std::string &cross, const std::string &backGroundDisabled, const std::string &frontCrossDisabled, @optional cocos2d::ui::Widget::TextureResType texType)', 'static cocos2d::ui::CheckBox *create(const std::string &backGround, const std::string &cross, @optional cocos2d::ui::Widget::TextureResType texType)')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addEventListener(const cocos2d::ui::CheckBox::ccCheckBoxCallback &callback)'
         },
-        TAG_MAKER = 'checkBoxCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'checkBoxCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
 
 typeconf 'cocos2d::ui::RadioButton::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('SELECTED', 'cocos2d::ui::RadioButton::EventType::SELECTED')
     .enum('UNSELECTED', 'cocos2d::ui::RadioButton::EventType::UNSELECTED')
 
@@ -1959,44 +1960,44 @@ typeconf 'cocos2d::ui::RadioButton::ccRadioButtonCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::RadioButton'
     .supercls('cocos2d::ui::AbstractCheckButton')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'RadioButton()')
     .func(nil, 'static cocos2d::ui::RadioButton *create()', 'static cocos2d::ui::RadioButton *create(const std::string &backGround, const std::string &backGroundSelected, const std::string &cross, const std::string &backGroundDisabled, const std::string &frontCrossDisabled, @optional cocos2d::ui::Widget::TextureResType texType)', 'static cocos2d::ui::RadioButton *create(const std::string &backGround, const std::string &cross, @optional cocos2d::ui::Widget::TextureResType texType)')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addEventListener(const cocos2d::ui::RadioButton::ccRadioButtonCallback &callback)'
         },
-        TAG_MAKER = 'radioButtonCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'radioButtonCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
 
 typeconf 'cocos2d::ui::RadioButtonGroup::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('SELECT_CHANGED', 'cocos2d::ui::RadioButtonGroup::EventType::SELECT_CHANGED')
 
 typeconf 'cocos2d::ui::RadioButtonGroup::ccRadioButtonGroupCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::ui::RadioButtonGroup'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RadioButtonGroup()')
     .func(nil, 'static cocos2d::ui::RadioButtonGroup *create()')
     .func(nil, 'int getSelectedButtonIndex()')
@@ -2010,13 +2011,13 @@ typeconf 'cocos2d::ui::RadioButtonGroup'
     .func(nil, 'void setAllowedNoSelection(bool allowedNoSelection)')
     .func(nil, 'bool isAllowedNoSelection()')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addEventListener(const cocos2d::ui::RadioButtonGroup::ccRadioButtonGroupCallback &callback)'
         },
-        TAG_MAKER = 'radioButtonCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'radioButtonCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('selectedButtonIndex', nil, nil)
     .prop('numberOfRadioButtons', nil, nil)
@@ -2026,7 +2027,7 @@ typeconf 'cocos2d::ui::ImageView'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'ImageView()')
     .func(nil, 'static cocos2d::ui::ImageView *create()', 'static cocos2d::ui::ImageView *create(const std::string &imageFileName, @optional cocos2d::ui::Widget::TextureResType texType)')
@@ -2049,7 +2050,7 @@ typeconf 'cocos2d::ui::EditBoxDelegate::EditBoxEndAction'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('UNKNOWN', 'cocos2d::ui::EditBoxDelegate::EditBoxEndAction::UNKNOWN')
     .enum('TAB_TO_NEXT', 'cocos2d::ui::EditBoxDelegate::EditBoxEndAction::TAB_TO_NEXT')
     .enum('TAB_TO_PREVIOUS', 'cocos2d::ui::EditBoxDelegate::EditBoxEndAction::TAB_TO_PREVIOUS')
@@ -2059,7 +2060,7 @@ typeconf 'cocos2d::ui::EditBoxDelegate'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void editBoxEditingDidBegin(cocos2d::ui::EditBox *)')
     .func(nil, 'void editBoxTextChanged(cocos2d::ui::EditBox *, const std::string &)')
     .func(nil, 'void editBoxReturn(cocos2d::ui::EditBox *editBox)')
@@ -2069,18 +2070,18 @@ typeconf 'cocos2d::ui::LuaEditBoxDelegate'
     .supercls('cocos2d::ui::EditBoxDelegate')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'LuaEditBoxDelegate()')
-    .var('onEditingDidBegin', '@nullable @local std::function<void (cocos2d::ui::EditBox *)> onEditingDidBegin')
-    .var('onTextChanged', '@nullable @local std::function<void (cocos2d::ui::EditBox *, const std::string &)> onTextChanged')
-    .var('onReturn', '@nullable @local std::function<void (cocos2d::ui::EditBox *)> onReturn')
-    .var('onEditingDidEndWithAction', '@nullable @local std::function<void (cocos2d::ui::EditBox *, EditBoxDelegate::EditBoxEndAction)> onEditingDidEndWithAction')
+    .var('onEditingDidBegin', '@nullable @localvar std::function<void (cocos2d::ui::EditBox *)> onEditingDidBegin')
+    .var('onTextChanged', '@nullable @localvar std::function<void (cocos2d::ui::EditBox *, const std::string &)> onTextChanged')
+    .var('onReturn', '@nullable @localvar std::function<void (cocos2d::ui::EditBox *)> onReturn')
+    .var('onEditingDidEndWithAction', '@nullable @localvar std::function<void (cocos2d::ui::EditBox *, EditBoxDelegate::EditBoxEndAction)> onEditingDidEndWithAction')
 
 typeconf 'cocos2d::ui::EditBox::KeyboardReturnType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('DEFAULT', 'cocos2d::ui::EditBox::KeyboardReturnType::DEFAULT')
     .enum('DONE', 'cocos2d::ui::EditBox::KeyboardReturnType::DONE')
     .enum('SEND', 'cocos2d::ui::EditBox::KeyboardReturnType::SEND')
@@ -2092,7 +2093,7 @@ typeconf 'cocos2d::ui::EditBox::InputMode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ANY', 'cocos2d::ui::EditBox::InputMode::ANY')
     .enum('EMAIL_ADDRESS', 'cocos2d::ui::EditBox::InputMode::EMAIL_ADDRESS')
     .enum('NUMERIC', 'cocos2d::ui::EditBox::InputMode::NUMERIC')
@@ -2105,7 +2106,7 @@ typeconf 'cocos2d::ui::EditBox::InputFlag'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('PASSWORD', 'cocos2d::ui::EditBox::InputFlag::PASSWORD')
     .enum('SENSITIVE', 'cocos2d::ui::EditBox::InputFlag::SENSITIVE')
     .enum('INITIAL_CAPS_WORD', 'cocos2d::ui::EditBox::InputFlag::INITIAL_CAPS_WORD')
@@ -2117,7 +2118,7 @@ typeconf 'cocos2d::ui::EditBox'
     .supercls('cocos2d::ui::Widget')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ui::EditBox *create(const cocos2d::Size &size, cocos2d::ui::Scale9Sprite *normalSprite, @optional cocos2d::ui::Scale9Sprite *pressedSprite, @optional cocos2d::ui::Scale9Sprite *disabledSprite)', 'static cocos2d::ui::EditBox *create(const cocos2d::Size &size, const std::string &normalImage, cocos2d::ui::Widget::TextureResType texType)', 'static cocos2d::ui::EditBox *create(const cocos2d::Size &size, const std::string &normalImage, @optional const std::string &pressedImage, @optional const std::string &disabledImage, @optional cocos2d::ui::Widget::TextureResType texType)')
     .func(nil, 'EditBox()')
     .func(nil, 'bool initWithSizeAndBackgroundSprite(const cocos2d::Size &size, const std::string &normal9SpriteBg, @optional cocos2d::ui::Widget::TextureResType texType)', 'bool initWithSizeAndBackgroundSprite(const cocos2d::Size &size, cocos2d::ui::Scale9Sprite *normal9SpriteBg)', 'bool initWithSizeAndBackgroundSprite(const cocos2d::Size &size, cocos2d::ui::Scale9Sprite *normalSprite, cocos2d::ui::Scale9Sprite *pressedSprite, cocos2d::ui::Scale9Sprite *disabledSprite)')

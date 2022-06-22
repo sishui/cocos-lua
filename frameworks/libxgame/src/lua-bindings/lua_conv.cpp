@@ -78,7 +78,7 @@ int olua_unpack_cocos2d_Vec2(lua_State *L, const cocos2d::Vec2 *value)
     return 2;
 }
 
-bool olua_ispack_cocos2d_Vec2(lua_State *L, int idx)
+bool olua_canpack_cocos2d_Vec2(lua_State *L, int idx)
 {
     return olua_is_number(L, idx + 0) && olua_is_number(L, idx + 1);
 }
@@ -172,7 +172,7 @@ int olua_unpack_cocos2d_Vec3(lua_State *L, const cocos2d::Vec3 *value)
     return 3;
 }
 
-bool olua_ispack_cocos2d_Vec3(lua_State *L, int idx)
+bool olua_canpack_cocos2d_Vec3(lua_State *L, int idx)
 {
     return olua_is_number(L, idx + 0) && olua_is_number(L, idx + 1) && olua_is_number(L, idx + 2);
 }
@@ -280,7 +280,7 @@ int olua_unpack_cocos2d_Vec4(lua_State *L, const cocos2d::Vec4 *value)
     return 4;
 }
 
-bool olua_ispack_cocos2d_Vec4(lua_State *L, int idx)
+bool olua_canpack_cocos2d_Vec4(lua_State *L, int idx)
 {
     return olua_is_number(L, idx + 0) && olua_is_number(L, idx + 1) && olua_is_number(L, idx + 2) && olua_is_number(L, idx + 3);
 }
@@ -360,7 +360,7 @@ int olua_unpack_cocos2d_Size(lua_State *L, const cocos2d::Size *value)
     return 2;
 }
 
-bool olua_ispack_cocos2d_Size(lua_State *L, int idx)
+bool olua_canpack_cocos2d_Size(lua_State *L, int idx)
 {
     return olua_is_number(L, idx + 0) && olua_is_number(L, idx + 1);
 }
@@ -476,7 +476,7 @@ int olua_unpack_cocos2d_Viewport(lua_State *L, const cocos2d::Viewport *value)
     return 4;
 }
 
-bool olua_ispack_cocos2d_Viewport(lua_State *L, int idx)
+bool olua_canpack_cocos2d_Viewport(lua_State *L, int idx)
 {
     return olua_is_int(L, idx + 0) && olua_is_int(L, idx + 1) && olua_is_uint(L, idx + 2) && olua_is_uint(L, idx + 3);
 }
@@ -592,7 +592,7 @@ int olua_unpack_cocos2d_ScissorRect(lua_State *L, const cocos2d::ScissorRect *va
     return 4;
 }
 
-bool olua_ispack_cocos2d_ScissorRect(lua_State *L, int idx)
+bool olua_canpack_cocos2d_ScissorRect(lua_State *L, int idx)
 {
     return olua_is_number(L, idx + 0) && olua_is_number(L, idx + 1) && olua_is_number(L, idx + 2) && olua_is_number(L, idx + 3);
 }
@@ -700,7 +700,7 @@ int olua_unpack_cocos2d_Quaternion(lua_State *L, const cocos2d::Quaternion *valu
     return 4;
 }
 
-bool olua_ispack_cocos2d_Quaternion(lua_State *L, int idx)
+bool olua_canpack_cocos2d_Quaternion(lua_State *L, int idx)
 {
     return olua_is_number(L, idx + 0) && olua_is_number(L, idx + 1) && olua_is_number(L, idx + 2) && olua_is_number(L, idx + 3);
 }
@@ -836,7 +836,7 @@ int olua_unpack_cocos2d_AffineTransform(lua_State *L, const cocos2d::AffineTrans
     return 6;
 }
 
-bool olua_ispack_cocos2d_AffineTransform(lua_State *L, int idx)
+bool olua_canpack_cocos2d_AffineTransform(lua_State *L, int idx)
 {
     return olua_is_number(L, idx + 0) && olua_is_number(L, idx + 1) && olua_is_number(L, idx + 2) && olua_is_number(L, idx + 3) && olua_is_number(L, idx + 4) && olua_is_number(L, idx + 5);
 }
@@ -986,7 +986,7 @@ int olua_unpack_GLContextAttrs(lua_State *L, const GLContextAttrs *value)
     return 7;
 }
 
-bool olua_ispack_GLContextAttrs(lua_State *L, int idx)
+bool olua_canpack_GLContextAttrs(lua_State *L, int idx)
 {
     return olua_is_int(L, idx + 0) && olua_is_int(L, idx + 1) && olua_is_int(L, idx + 2) && olua_is_int(L, idx + 3) && olua_is_int(L, idx + 4) && olua_is_int(L, idx + 5) && olua_is_int(L, idx + 6);
 }
@@ -1070,7 +1070,7 @@ int olua_unpack_cocos2d_Tex2F(lua_State *L, const cocos2d::Tex2F *value)
     return 2;
 }
 
-bool olua_ispack_cocos2d_Tex2F(lua_State *L, int idx)
+bool olua_canpack_cocos2d_Tex2F(lua_State *L, int idx)
 {
     return olua_is_number(L, idx + 0) && olua_is_number(L, idx + 1);
 }
@@ -1178,7 +1178,7 @@ int olua_unpack_cocos2d_T2F_Quad(lua_State *L, const cocos2d::T2F_Quad *value)
     return 4;
 }
 
-bool olua_ispack_cocos2d_T2F_Quad(lua_State *L, int idx)
+bool olua_canpack_cocos2d_T2F_Quad(lua_State *L, int idx)
 {
     return olua_is_cocos2d_Tex2F(L, idx + 0) && olua_is_cocos2d_Tex2F(L, idx + 1) && olua_is_cocos2d_Tex2F(L, idx + 2) && olua_is_cocos2d_Tex2F(L, idx + 3);
 }
@@ -1272,7 +1272,7 @@ int olua_unpack_cocos2d_ccBezierConfig(lua_State *L, const cocos2d::ccBezierConf
     return 3;
 }
 
-bool olua_ispack_cocos2d_ccBezierConfig(lua_State *L, int idx)
+bool olua_canpack_cocos2d_ccBezierConfig(lua_State *L, int idx)
 {
     return olua_is_cocos2d_Vec2(L, idx + 0) && olua_is_cocos2d_Vec2(L, idx + 1) && olua_is_cocos2d_Vec2(L, idx + 2);
 }
@@ -1484,7 +1484,7 @@ int olua_unpack_cocos2d_TTFConfig(lua_State *L, const cocos2d::TTFConfig *value)
     return 10;
 }
 
-bool olua_ispack_cocos2d_TTFConfig(lua_State *L, int idx)
+bool olua_canpack_cocos2d_TTFConfig(lua_State *L, int idx)
 {
     return olua_is_std_string(L, idx + 0) && olua_is_number(L, idx + 1) && olua_is_uint(L, idx + 2) && olua_is_string(L, idx + 3) && olua_is_bool(L, idx + 4) && olua_is_int(L, idx + 5) && olua_is_bool(L, idx + 6) && olua_is_bool(L, idx + 7) && olua_is_bool(L, idx + 8) && olua_is_bool(L, idx + 9);
 }
@@ -1564,7 +1564,7 @@ int olua_unpack_cocos2d_BlendFunc(lua_State *L, const cocos2d::BlendFunc *value)
     return 2;
 }
 
-bool olua_ispack_cocos2d_BlendFunc(lua_State *L, int idx)
+bool olua_canpack_cocos2d_BlendFunc(lua_State *L, int idx)
 {
     return olua_is_uint(L, idx + 0) && olua_is_uint(L, idx + 1);
 }
@@ -1672,7 +1672,7 @@ int olua_unpack_cocos2d_ui_Margin(lua_State *L, const cocos2d::ui::Margin *value
     return 4;
 }
 
-bool olua_ispack_cocos2d_ui_Margin(lua_State *L, int idx)
+bool olua_canpack_cocos2d_ui_Margin(lua_State *L, int idx)
 {
     return olua_is_number(L, idx + 0) && olua_is_number(L, idx + 1) && olua_is_number(L, idx + 2) && olua_is_number(L, idx + 3);
 }
@@ -1766,7 +1766,7 @@ int olua_unpack_cocos2d_ResourceData(lua_State *L, const cocos2d::ResourceData *
     return 3;
 }
 
-bool olua_ispack_cocos2d_ResourceData(lua_State *L, int idx)
+bool olua_canpack_cocos2d_ResourceData(lua_State *L, int idx)
 {
     return olua_is_int(L, idx + 0) && olua_is_std_string(L, idx + 1) && olua_is_std_string(L, idx + 2);
 }
@@ -1874,7 +1874,7 @@ int olua_unpack_cocos2d_Quad3(lua_State *L, const cocos2d::Quad3 *value)
     return 4;
 }
 
-bool olua_ispack_cocos2d_Quad3(lua_State *L, int idx)
+bool olua_canpack_cocos2d_Quad3(lua_State *L, int idx)
 {
     return olua_is_cocos2d_Vec3(L, idx + 0) && olua_is_cocos2d_Vec3(L, idx + 1) && olua_is_cocos2d_Vec3(L, idx + 2) && olua_is_cocos2d_Vec3(L, idx + 3);
 }
@@ -1968,7 +1968,7 @@ int olua_unpack_cocos2d_Texture2D_PixelFormatInfo(lua_State *L, const cocos2d::T
     return 3;
 }
 
-bool olua_ispack_cocos2d_Texture2D_PixelFormatInfo(lua_State *L, int idx)
+bool olua_canpack_cocos2d_Texture2D_PixelFormatInfo(lua_State *L, int idx)
 {
     return olua_is_int(L, idx + 0) && olua_is_bool(L, idx + 1) && olua_is_bool(L, idx + 2);
 }
@@ -2062,7 +2062,7 @@ int olua_unpack_cocos2d_Controller_KeyStatus(lua_State *L, const cocos2d::Contro
     return 3;
 }
 
-bool olua_ispack_cocos2d_Controller_KeyStatus(lua_State *L, int idx)
+bool olua_canpack_cocos2d_Controller_KeyStatus(lua_State *L, int idx)
 {
     return olua_is_bool(L, idx + 0) && olua_is_number(L, idx + 1) && olua_is_bool(L, idx + 2);
 }
@@ -2254,7 +2254,7 @@ int olua_unpack_cocos2d_NavMeshAgentParam(lua_State *L, const cocos2d::NavMeshAg
     return 10;
 }
 
-bool olua_ispack_cocos2d_NavMeshAgentParam(lua_State *L, int idx)
+bool olua_canpack_cocos2d_NavMeshAgentParam(lua_State *L, int idx)
 {
     return olua_is_number(L, idx + 0) && olua_is_number(L, idx + 1) && olua_is_number(L, idx + 2) && olua_is_number(L, idx + 3) && olua_is_number(L, idx + 4) && olua_is_number(L, idx + 5) && olua_is_number(L, idx + 6) && olua_is_uint(L, idx + 7) && olua_is_uint(L, idx + 8) && olua_is_uint(L, idx + 9);
 }
@@ -2334,7 +2334,7 @@ int olua_unpack_cocos2d_OffMeshLinkData(lua_State *L, const cocos2d::OffMeshLink
     return 2;
 }
 
-bool olua_ispack_cocos2d_OffMeshLinkData(lua_State *L, int idx)
+bool olua_canpack_cocos2d_OffMeshLinkData(lua_State *L, int idx)
 {
     return olua_is_cocos2d_Vec3(L, idx + 0) && olua_is_cocos2d_Vec3(L, idx + 1);
 }
@@ -2514,7 +2514,7 @@ int olua_unpack_cocos2d_backend_BlendDescriptor(lua_State *L, const cocos2d::bac
     return 8;
 }
 
-bool olua_ispack_cocos2d_backend_BlendDescriptor(lua_State *L, int idx)
+bool olua_canpack_cocos2d_backend_BlendDescriptor(lua_State *L, int idx)
 {
     return olua_is_uint(L, idx + 0) && olua_is_bool(L, idx + 1) && olua_is_uint(L, idx + 2) && olua_is_uint(L, idx + 3) && olua_is_uint(L, idx + 4) && olua_is_uint(L, idx + 5) && olua_is_uint(L, idx + 6) && olua_is_uint(L, idx + 7);
 }
@@ -2630,7 +2630,7 @@ int olua_unpack_cocos2d_backend_SamplerDescriptor(lua_State *L, const cocos2d::b
     return 4;
 }
 
-bool olua_ispack_cocos2d_backend_SamplerDescriptor(lua_State *L, int idx)
+bool olua_canpack_cocos2d_backend_SamplerDescriptor(lua_State *L, int idx)
 {
     return olua_is_uint(L, idx + 0) && olua_is_uint(L, idx + 1) && olua_is_uint(L, idx + 2) && olua_is_uint(L, idx + 3);
 }
@@ -2640,12 +2640,12 @@ int olua_push_cocos2d_backend_TextureInfo(lua_State *L, const cocos2d::backend::
     if (value) {
         lua_createtable(L, 0, 2);
 
-        olua_push_std_vector<uint32_t>(L, &value->slot, [L](uint32_t value) {
+        olua_push_array<uint32_t>(L, &value->slot, [L](uint32_t value) {
             olua_push_uint(L, (lua_Unsigned)value);
         });
         olua_setfield(L, -2, "slot");
 
-        olua_push_std_vector<cocos2d::backend::TextureBackend *>(L, &value->textures, [L](cocos2d::backend::TextureBackend *value) {
+        olua_push_array<cocos2d::backend::TextureBackend *>(L, &value->textures, [L](cocos2d::backend::TextureBackend *value) {
             olua_push_cppobj(L, value, "ccb.TextureBackend");
         });
         olua_setfield(L, -2, "textures");
@@ -2668,7 +2668,7 @@ void olua_check_cocos2d_backend_TextureInfo(lua_State *L, int idx, cocos2d::back
     std::vector<cocos2d::backend::TextureBackend *> arg2;       /** textures */
 
     olua_getfield(L, idx, "slot");
-    olua_check_std_vector<uint32_t>(L, -1, &arg1, [L](uint32_t *value) {
+    olua_check_array<uint32_t>(L, -1, &arg1, [L](uint32_t *value) {
         lua_Unsigned obj;
         olua_check_uint(L, -1, &obj);
         *value = (uint32_t)obj;
@@ -2677,7 +2677,7 @@ void olua_check_cocos2d_backend_TextureInfo(lua_State *L, int idx, cocos2d::back
     lua_pop(L, 1);
 
     olua_getfield(L, idx, "textures");
-    olua_check_std_vector<cocos2d::backend::TextureBackend *>(L, -1, &arg2, [L](cocos2d::backend::TextureBackend **value) {
+    olua_check_array<cocos2d::backend::TextureBackend *>(L, -1, &arg2, [L](cocos2d::backend::TextureBackend **value) {
         olua_check_cppobj(L, -1, (void **)value, "ccb.TextureBackend");
     });
     value->textures = (std::vector<cocos2d::backend::TextureBackend *>)arg2;
@@ -2699,14 +2699,14 @@ void olua_pack_cocos2d_backend_TextureInfo(lua_State *L, int idx, cocos2d::backe
     std::vector<uint32_t> arg1;       /** slot */
     std::vector<cocos2d::backend::TextureBackend *> arg2;       /** textures */
 
-    olua_check_std_vector<uint32_t>(L, idx + 0, &arg1, [L](uint32_t *value) {
+    olua_check_array<uint32_t>(L, idx + 0, &arg1, [L](uint32_t *value) {
         lua_Unsigned obj;
         olua_check_uint(L, -1, &obj);
         *value = (uint32_t)obj;
     });
     value->slot = (std::vector<uint32_t>)arg1;
 
-    olua_check_std_vector<cocos2d::backend::TextureBackend *>(L, idx + 1, &arg2, [L](cocos2d::backend::TextureBackend **value) {
+    olua_check_array<cocos2d::backend::TextureBackend *>(L, idx + 1, &arg2, [L](cocos2d::backend::TextureBackend **value) {
         olua_check_cppobj(L, -1, (void **)value, "ccb.TextureBackend");
     });
     value->textures = (std::vector<cocos2d::backend::TextureBackend *>)arg2;
@@ -2715,10 +2715,10 @@ void olua_pack_cocos2d_backend_TextureInfo(lua_State *L, int idx, cocos2d::backe
 int olua_unpack_cocos2d_backend_TextureInfo(lua_State *L, const cocos2d::backend::TextureInfo *value)
 {
     if (value) {
-        olua_push_std_vector<uint32_t>(L, &value->slot, [L](uint32_t value) {
+        olua_push_array<uint32_t>(L, &value->slot, [L](uint32_t value) {
             olua_push_uint(L, (lua_Unsigned)value);
         });
-        olua_push_std_vector<cocos2d::backend::TextureBackend *>(L, &value->textures, [L](cocos2d::backend::TextureBackend *value) {
+        olua_push_array<cocos2d::backend::TextureBackend *>(L, &value->textures, [L](cocos2d::backend::TextureBackend *value) {
             olua_push_cppobj(L, value, "ccb.TextureBackend");
         });
     } else {
@@ -2730,9 +2730,9 @@ int olua_unpack_cocos2d_backend_TextureInfo(lua_State *L, const cocos2d::backend
     return 2;
 }
 
-bool olua_ispack_cocos2d_backend_TextureInfo(lua_State *L, int idx)
+bool olua_canpack_cocos2d_backend_TextureInfo(lua_State *L, int idx)
 {
-    return olua_is_std_vector(L, idx + 0) && olua_is_std_vector(L, idx + 1);
+    return olua_is_array(L, idx + 0) && olua_is_array(L, idx + 1);
 }
 
 int olua_push_cocos2d_backend_AttributeBindInfo(lua_State *L, const cocos2d::backend::AttributeBindInfo *value)
@@ -2844,7 +2844,7 @@ int olua_unpack_cocos2d_backend_AttributeBindInfo(lua_State *L, const cocos2d::b
     return 4;
 }
 
-bool olua_ispack_cocos2d_backend_AttributeBindInfo(lua_State *L, int idx)
+bool olua_canpack_cocos2d_backend_AttributeBindInfo(lua_State *L, int idx)
 {
     return olua_is_std_string(L, idx + 0) && olua_is_int(L, idx + 1) && olua_is_int(L, idx + 2) && olua_is_int(L, idx + 3);
 }
@@ -3024,7 +3024,7 @@ int olua_unpack_cocos2d_backend_UniformInfo(lua_State *L, const cocos2d::backend
     return 8;
 }
 
-bool olua_ispack_cocos2d_backend_UniformInfo(lua_State *L, int idx)
+bool olua_canpack_cocos2d_backend_UniformInfo(lua_State *L, int idx)
 {
     return olua_is_int(L, idx + 0) && olua_is_int(L, idx + 1) && olua_is_uint(L, idx + 2) && olua_is_bool(L, idx + 3) && olua_is_uint(L, idx + 4) && olua_is_uint(L, idx + 5) && olua_is_bool(L, idx + 6) && olua_is_bool(L, idx + 7);
 }
@@ -3202,7 +3202,7 @@ int olua_unpack_cocos2d_backend_TextureDescriptor(lua_State *L, const cocos2d::b
     return 8;
 }
 
-bool olua_ispack_cocos2d_backend_TextureDescriptor(lua_State *L, int idx)
+bool olua_canpack_cocos2d_backend_TextureDescriptor(lua_State *L, int idx)
 {
     return olua_is_uint(L, idx + 0) && olua_is_uint(L, idx + 1) && olua_is_uint(L, idx + 2) && olua_is_uint(L, idx + 3) && olua_is_uint(L, idx + 4) && olua_is_uint(L, idx + 5) && olua_is_cocos2d_backend_SamplerDescriptor(L, idx + 6) && olua_is_int(L, idx + 7);
 }
@@ -3350,7 +3350,7 @@ int olua_unpack_cocos2d_backend_StencilDescriptor(lua_State *L, const cocos2d::b
     return 6;
 }
 
-bool olua_ispack_cocos2d_backend_StencilDescriptor(lua_State *L, int idx)
+bool olua_canpack_cocos2d_backend_StencilDescriptor(lua_State *L, int idx)
 {
     return olua_is_uint(L, idx + 0) && olua_is_uint(L, idx + 1) && olua_is_uint(L, idx + 2) && olua_is_uint(L, idx + 3) && olua_is_uint(L, idx + 4) && olua_is_uint(L, idx + 5);
 }
@@ -3494,7 +3494,7 @@ int olua_unpack_cocos2d_backend_DepthStencilDescriptor(lua_State *L, const cocos
     return 6;
 }
 
-bool olua_ispack_cocos2d_backend_DepthStencilDescriptor(lua_State *L, int idx)
+bool olua_canpack_cocos2d_backend_DepthStencilDescriptor(lua_State *L, int idx)
 {
     return olua_is_uint(L, idx + 0) && olua_is_bool(L, idx + 1) && olua_is_bool(L, idx + 2) && olua_is_bool(L, idx + 3) && olua_is_cocos2d_backend_StencilDescriptor(L, idx + 4) && olua_is_cocos2d_backend_StencilDescriptor(L, idx + 5);
 }
@@ -3624,12 +3624,14 @@ int olua_unpack_cocos2d_backend_VertexLayout_Attribute(lua_State *L, const cocos
     return 5;
 }
 
-bool olua_ispack_cocos2d_backend_VertexLayout_Attribute(lua_State *L, int idx)
+bool olua_canpack_cocos2d_backend_VertexLayout_Attribute(lua_State *L, int idx)
 {
     return olua_is_std_string(L, idx + 0) && olua_is_uint(L, idx + 1) && olua_is_uint(L, idx + 2) && olua_is_uint(L, idx + 3) && olua_is_bool(L, idx + 4);
 }
 
-int luaopen_conv(lua_State *L)
+OLUA_BEGIN_DECLS
+OLUA_LIB int luaopen_conv(lua_State *L)
 {
     return 0;
 }
+OLUA_END_DECLS

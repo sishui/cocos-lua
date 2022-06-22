@@ -2,22 +2,23 @@
 
 dofile "autobuild/bugly-types.lua"
 
-NAME = "bugly"
-PATH = "../../frameworks/libxgame/src/bugly"
-HEADERS = [[
+name = "bugly"
+path = "../../frameworks/libxgame/src/bugly"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "cclua/xlua.h"
     #include "bugly/CrashReport.h"
 ]]
-CHUNK = nil
+chunk = nil
+luaopen = nil
 
 
 typeconf 'cclua::CrashReport::LogLevel'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .ifdef('*', '#ifdef CCLUA_BUILD_BUGLY')
     .enum('Off', 'cclua::CrashReport::LogLevel::Off')
     .enum('Error', 'cclua::CrashReport::LogLevel::Error')
@@ -30,7 +31,7 @@ typeconf 'cclua::CrashReport'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require([[cclua::runtime::registerFeature("bugly", true);]])
+    .luaopen([[cclua::runtime::registerFeature("bugly", true);]])
     .ifdef('*', '#ifdef CCLUA_BUILD_BUGLY')
     .func(nil, 'static void init(const char *appid)')
     .func(nil, 'static void setUid(const char *uid)')

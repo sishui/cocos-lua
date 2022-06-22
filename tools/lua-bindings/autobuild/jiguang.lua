@@ -2,22 +2,23 @@
 
 dofile "autobuild/jiguang-types.lua"
 
-NAME = "jiguang"
-PATH = "../../frameworks/plugins/jiguang"
-HEADERS = [[
+name = "jiguang"
+path = "../../frameworks/plugins/jiguang"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "cclua/xlua.h"
     #include "JiGuang.h"
 ]]
-CHUNK = nil
+chunk = nil
+luaopen = nil
 
 
 typeconf 'cclua::plugin::JPush'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require([[cclua::runtime::registerFeature("jpush", true);]])
+    .luaopen([[cclua::runtime::registerFeature("jpush", true);]])
     .ifdef('*', '#ifdef CCLUA_BUILD_JPUSH')
     .func(nil, 'static void init(const std::string &appKey, const std::string &channel)')
     .func(nil, 'static void setAlias(const std::string &alias)')
@@ -39,7 +40,7 @@ typeconf 'cclua::plugin::JAuth'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require([[cclua::runtime::registerFeature("jauth", true);]])
+    .luaopen([[cclua::runtime::registerFeature("jauth", true);]])
     .ifdef('*', '#ifdef CCLUA_BUILD_JAUTH')
     .func(nil, 'static void init(const std::string &appKey, const std::string &channel)')
     .func(nil, 'static bool isInitSuccess()')
@@ -50,40 +51,40 @@ typeconf 'cclua::plugin::JAuth'
     .func(nil, 'static void setSmsIntervalTime(long intervalTime)')
     .func(nil, 'static void configUI(cocos2d::ValueMap &value, @optional bool landscape)')
     .callback {
-        FUNCS =  {
-            'static void getToken(int timeout, @local const std::function<void (const cocos2d::Value &)> callback)'
+        funcs =  {
+            'static void getToken(int timeout, @localvar const std::function<void (const cocos2d::Value &)> callback)'
         },
-        TAG_MAKER = 'Token',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'Token',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
-            'static void preLogin(int timeout, @local const std::function<void (const cocos2d::Value &)> callback)'
+        funcs =  {
+            'static void preLogin(int timeout, @localvar const std::function<void (const cocos2d::Value &)> callback)'
         },
-        TAG_MAKER = 'preLogin',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'preLogin',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
-            'static void loginAuth(int timeout, @local const std::function<void (const cocos2d::Value &)> callback)'
+        funcs =  {
+            'static void loginAuth(int timeout, @localvar const std::function<void (const cocos2d::Value &)> callback)'
         },
-        TAG_MAKER = 'loginAuth',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'loginAuth',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
-            'static void getSmsCode(const std::string &phonenum, const std::string &signid, const std::string &tempid, @local const std::function<void (const cocos2d::Value &)> callback)'
+        funcs =  {
+            'static void getSmsCode(const std::string &phonenum, const std::string &signid, const std::string &tempid, @localvar const std::function<void (const cocos2d::Value &)> callback)'
         },
-        TAG_MAKER = 'SmsCode',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'SmsCode',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .prop('initSuccess', nil, nil)
 
@@ -91,7 +92,7 @@ typeconf 'cclua::plugin::JAnalytics::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .ifdef('*', '#ifdef CCLUA_BUILD_JANALYTICS')
     .enum('LOGIN', 'cclua::plugin::JAnalytics::EventType::LOGIN')
     .enum('REGISTER', 'cclua::plugin::JAnalytics::EventType::REGISTER')
@@ -104,7 +105,7 @@ typeconf 'cclua::plugin::JAnalytics'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require([[cclua::runtime::registerFeature("janalytics", true);]])
+    .luaopen([[cclua::runtime::registerFeature("janalytics", true);]])
     .ifdef('*', '#ifdef CCLUA_BUILD_JANALYTICS')
     .func(nil, 'static void init(const std::string &appKey, const std::string &channel)')
     .func(nil, 'static void startTrackPage(const std::string &pageName)')

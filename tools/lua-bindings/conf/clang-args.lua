@@ -28,6 +28,10 @@ clang {
         // dragonbones
         #include "CCDragonBonesHeaders.h"
 
+        // box2d
+        #include "box2d/box2d.h"
+        #include "box2d/Box2DAdapter.h"
+
         // xgame
         #include "cclua/filesystem.h"
         #include "cclua/runtime.h"
@@ -57,19 +61,11 @@ clang {
         '-I../../frameworks/cocos2d-x/cocos/editor-support',
         '-I../../frameworks/cocos2d-x/cocos/platform',
         '-I../../frameworks/cocos2d-x/external',
+        '-I../../frameworks/box2d/include',
         '-I../../frameworks/libfairygui/Classes',
         '-I../../frameworks/libdragonbones/src',
         '-I../../frameworks/libxgame/src',
         '-I../../frameworks/libxgame/src/lua',
         '-I../../frameworks/plugins',
-
-        '-x', 'c++', '-nostdinc', '-std=c++11',
-        '-U__SSE__',
-        '-DANDROID', '-target', 'armv7-none-linux-androideabi',
-
-        '-idirafter', '${HOMEDIR}/include/c++',
-        '-idirafter', '${HOMEDIR}/include/c',
-        '-idirafter', '${HOMEDIR}/include/android-sysroot/x86_64-linux-android',
-        '-idirafter', '${HOMEDIR}/include/android-sysroot',
     },
 }

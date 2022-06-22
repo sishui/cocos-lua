@@ -2,9 +2,9 @@
 
 dofile "autobuild/fairygui-types.lua"
 
-NAME = "fairygui"
-PATH = "../../frameworks/libxgame/src/lua-bindings"
-HEADERS = [[
+name = "fairygui"
+path = "../../frameworks/libxgame/src/lua-bindings"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "cclua/xlua.h"
@@ -17,7 +17,7 @@ HEADERS = [[
     #include "utils/html/HtmlObject.h"
     #include "utils/html/HtmlParser.h"
 ]]
-CHUNK = [[
+chunk = [[
     bool olua_is_fairygui_EventTag(lua_State *L, int idx)
     {
         return olua_isinteger(L, idx) || olua_isa<void>(L, idx);
@@ -35,6 +35,7 @@ CHUNK = [[
         }
     }
 ]]
+luaopen = nil
 
 typeconv 'fairygui::Margin'
     .var('left', 'float left')
@@ -60,7 +61,7 @@ typeconf 'fairygui::UIEventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('Enter', 'fairygui::UIEventType::Enter', 'const int')
     .const('Exit', 'fairygui::UIEventType::Exit', 'const int')
     .const('Changed', 'fairygui::UIEventType::Changed', 'const int')
@@ -91,12 +92,20 @@ typeconf 'fairygui::UIEventType'
     .const('DragEnd', 'fairygui::UIEventType::DragEnd', 'const int')
     .const('Drop', 'fairygui::UIEventType::Drop', 'const int')
     .const('GearStop', 'fairygui::UIEventType::GearStop', 'const int')
+    .func('__index', [[
+        {
+            const char *cls = olua_checkfieldstring(L, 1, "classname");
+            const char *key = olua_tostring(L, 2);
+            luaL_error(L, "enum '%s.%s' not found", cls, key);
+            return 0;
+        }
+    ]])
 
 typeconf 'fairygui::EventCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::UIEventDispatcher'
     .supercls('cocos2d::Ref')
@@ -123,47 +132,47 @@ typeconf 'fairygui::UIEventDispatcher'
             return std::string(buf);
         }
     ]])
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'UIEventDispatcher()')
     .func(nil, 'bool hasEventListener(int eventType)', 'bool hasEventListener(int eventType, const fairygui::EventTag &tag)')
     .func(nil, 'bool dispatchEvent(int eventType, @optional void *data, @optional const cocos2d::Value &dataValue)')
     .func(nil, 'bool bubbleEvent(int eventType, @optional void *data, @optional const cocos2d::Value &dataValue)')
     .func(nil, 'bool isDispatchingEvent(int eventType)')
     .callback {
-        FUNCS =  {
-            'void addEventListener(int eventType, @local const fairygui::EventCallback &callback)',
-            'void addEventListener(int eventType, @local const fairygui::EventCallback &callback, const fairygui::EventTag &tag)'
+        funcs =  {
+            'void addEventListener(int eventType, @localvar const fairygui::EventCallback &callback)',
+            'void addEventListener(int eventType, @localvar const fairygui::EventCallback &callback, const fairygui::EventTag &tag)'
         },
-        TAG_MAKER = {'makeListenerTag(L, #1, 0)', 'makeListenerTag(L, #1, 4)'},
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = {'makeListenerTag(L, #1, 0)', 'makeListenerTag(L, #1, 4)'},
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void removeEventListener(int eventType)',
             'void removeEventListener(int eventType, const fairygui::EventTag &tag)'
         },
-        TAG_MAKER = {'makeListenerTag(L, #1, 0)', 'makeListenerTag(L, #1, 3)'},
-        TAG_MODE = {'OLUA_TAG_SUBSTARTWITH', 'OLUA_TAG_SUBEQUAL'},
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = {'makeListenerTag(L, #1, 0)', 'makeListenerTag(L, #1, 3)'},
+        tag_mode = {'substartwith', 'subequal'},
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void removeEventListeners()'
         },
-        TAG_MAKER = 'makeListenerTag(L, -1, 0)',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeListenerTag(L, -1, 0)',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
 
 typeconf 'fairygui::EventContext'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'EventContext()')
     .func(nil, 'int getType()')
     .func(nil, 'cocos2d::Ref *getSender()')
@@ -186,14 +195,14 @@ typeconf 'fairygui::IHitTest'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'bool hitTest(fairygui::GComponent *obj, const cocos2d::Vec2 &localPoint)')
 
 typeconf 'fairygui::PixelHitTest'
     .supercls('fairygui::IHitTest')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'PixelHitTest(fairygui::PixelHitTestData *data, int offsetX, int offsetY)')
     .var('offsetX', 'int offsetX')
     .var('offsetY', 'int offsetY')
@@ -204,7 +213,7 @@ typeconf 'fairygui::PixelHitTestData'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'PixelHitTestData()')
     .var('pixelWidth', 'int pixelWidth')
     .var('scale', 'float scale')
@@ -215,13 +224,13 @@ typeconf 'fairygui::InputProcessor::CaptureEventCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::InputProcessor'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'fairygui::InputEvent *getRecentInput()')
     .func(nil, 'static bool isTouchOnUI()')
     .func(nil, 'InputProcessor(fairygui::GComponent *owner)')
@@ -235,13 +244,13 @@ typeconf 'fairygui::InputProcessor'
     .func(nil, 'void touchMove(cocos2d::Touch *touch, cocos2d::Event *event)')
     .func(nil, 'void touchUp(cocos2d::Touch *touch, cocos2d::Event *event)')
     .callback {
-        FUNCS =  {
-            'void setCaptureCallback(@nullable @local fairygui::InputProcessor::CaptureEventCallback value)'
+        funcs =  {
+            'void setCaptureCallback(@localvar @nullable fairygui::InputProcessor::CaptureEventCallback value)'
         },
-        TAG_MAKER = 'CaptureCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'CaptureCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('recentInput', nil, nil)
     .prop('touchOnUI', nil, nil)
@@ -250,7 +259,7 @@ typeconf 'fairygui::InputEvent'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'InputEvent()')
     .func(nil, 'fairygui::GObject *getTarget()')
     .func(nil, 'const int getX()')
@@ -285,7 +294,7 @@ typeconf 'fairygui::TextFormat'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('OUTLINE', 'fairygui::TextFormat::OUTLINE', 'const int')
     .const('SHADOW', 'fairygui::TextFormat::SHADOW', 'const int')
     .const('GLOW', 'fairygui::TextFormat::GLOW', 'const int')
@@ -316,7 +325,7 @@ typeconf 'fairygui::EaseType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Linear', 'fairygui::EaseType::Linear')
     .enum('SineIn', 'fairygui::EaseType::SineIn')
     .enum('SineOut', 'fairygui::EaseType::SineOut')
@@ -354,14 +363,14 @@ typeconf 'fairygui::EaseManager'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static float evaluate(fairygui::EaseType easeType, float time, float duration, float overshootOrAmplitude, float period)')
 
 typeconf 'fairygui::TweenPropType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('None', 'fairygui::TweenPropType::None')
     .enum('X', 'fairygui::TweenPropType::X')
     .enum('Y', 'fairygui::TweenPropType::Y')
@@ -380,25 +389,25 @@ typeconf 'fairygui::GPath'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::GTweener::GTweenCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::GTweener::GTweenCallback0'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::GTweener'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GTweener()')
     .func(nil, 'fairygui::GTweener *setDelay(float value)')
     .func(nil, 'float getDelay()')
@@ -429,40 +438,40 @@ typeconf 'fairygui::GTweener'
     .var('value', 'fairygui::TweenValue value')
     .var('deltaValue', 'fairygui::TweenValue deltaValue')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'fairygui::GTweener *onUpdate(fairygui::GTweener::GTweenCallback callback)'
         },
-        TAG_MAKER = 'onUpdate',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'onUpdate',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'fairygui::GTweener *onStart(fairygui::GTweener::GTweenCallback callback)'
         },
-        TAG_MAKER = 'onStart',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'onStart',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'fairygui::GTweener *onComplete(fairygui::GTweener::GTweenCallback0 callback)'
         },
-        TAG_MAKER = 'onComplete',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'onComplete',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'fairygui::GTweener *onComplete1(fairygui::GTweener::GTweenCallback callback)'
         },
-        TAG_MAKER = 'onComplete1',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'onComplete1',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('delay', nil, nil)
     .prop('duration', nil, nil)
@@ -487,7 +496,7 @@ typeconf 'fairygui::GTween'
             return false;
         }
     ]])
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static fairygui::GTweener *to(float startValue, float endValue, float duration)', 'static fairygui::GTweener *to(const cocos2d::Vec2 &startValue, const cocos2d::Vec2 &endValue, float duration)', 'static fairygui::GTweener *to(const cocos2d::Vec3 &startValue, const cocos2d::Vec3 &endValue, float duration)', 'static fairygui::GTweener *to(const cocos2d::Vec4 &startValue, const cocos2d::Vec4 &endValue, float duration)', 'static fairygui::GTweener *to(const cocos2d::Color4B &startValue, const cocos2d::Color4B &endValue, float duration)')
     .func(nil, 'static fairygui::GTweener *toColor(const cocos2d::Color4B &startValue, const cocos2d::Color4B &endValue, float duration)')
     .func(nil, 'static fairygui::GTweener *toDouble(double startValue, double endValue, float duration)')
@@ -498,86 +507,86 @@ typeconf 'fairygui::GTween'
     .func(nil, 'static fairygui::GTweener *getTween(cocos2d::Ref *target)', 'static fairygui::GTweener *getTween(cocos2d::Ref *target, fairygui::TweenPropType propType)')
     .func(nil, 'static void clean()')
     .insert('to', {
-        BEFORE = nil,
-        AFTER = [[
+        before = nil,
+        after = [[
             olua_pushclassobj<fairygui::GTween>(L);
-            olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
+            olua_addref(L, -1, "tweeners", -2, OLUA_FLAG_MULTIPLE);
             olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
             lua_pop(L, 1);
         ]],
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('toColor', {
-        BEFORE = nil,
-        AFTER = [[
+        before = nil,
+        after = [[
             olua_pushclassobj<fairygui::GTween>(L);
-            olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
+            olua_addref(L, -1, "tweeners", -2, OLUA_FLAG_MULTIPLE);
             olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
             lua_pop(L, 1);
         ]],
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('toDouble', {
-        BEFORE = nil,
-        AFTER = [[
+        before = nil,
+        after = [[
             olua_pushclassobj<fairygui::GTween>(L);
-            olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
+            olua_addref(L, -1, "tweeners", -2, OLUA_FLAG_MULTIPLE);
             olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
             lua_pop(L, 1);
         ]],
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('delayedCall', {
-        BEFORE = nil,
-        AFTER = [[
+        before = nil,
+        after = [[
             olua_pushclassobj<fairygui::GTween>(L);
-            olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
+            olua_addref(L, -1, "tweeners", -2, OLUA_FLAG_MULTIPLE);
             olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
             lua_pop(L, 1);
         ]],
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('shake', {
-        BEFORE = nil,
-        AFTER = [[
+        before = nil,
+        after = [[
             olua_pushclassobj<fairygui::GTween>(L);
-            olua_addref(L, -1, "tweeners", -2, OLUA_MODE_MULTIPLE);
+            olua_addref(L, -1, "tweeners", -2, OLUA_FLAG_MULTIPLE);
             olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
             lua_pop(L, 1);
         ]],
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('kill', {
-        BEFORE = nil,
-        AFTER = [[
+        before = nil,
+        after = [[
             olua_pushclassobj<fairygui::GTween>(L);
             olua_visitrefs(L, -1, "tweeners", should_del_tweener_ref);
             lua_pop(L, 1);
         ]],
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('clean', {
-        BEFORE = nil,
-        AFTER = [[
+        before = nil,
+        after = [[
             olua_pushclassobj<fairygui::GTween>(L);
             olua_delallrefs(L, -1, "tweeners");
             lua_pop(L, 1);
         ]],
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        cbefore = nil,
+        cafter = nil,
     })
 
 typeconf 'fairygui::UIPackage'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('URL_PREFIX', 'fairygui::UIPackage::URL_PREFIX', 'const std::string')
     .func(nil, 'UIPackage()')
     .func(nil, 'static fairygui::UIPackage *getById(const std::string &id)')
@@ -610,7 +619,7 @@ typeconf 'fairygui::PackageItem'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'PackageItem()')
     .func(nil, 'void load()')
     .func(nil, 'fairygui::PackageItem *getBranch()')
@@ -639,7 +648,7 @@ typeconf 'fairygui::PackageItemType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('IMAGE', 'fairygui::PackageItemType::IMAGE')
     .enum('MOVIECLIP', 'fairygui::PackageItemType::MOVIECLIP')
     .enum('SOUND', 'fairygui::PackageItemType::SOUND')
@@ -656,7 +665,7 @@ typeconf 'fairygui::ObjectType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('IMAGE', 'fairygui::ObjectType::IMAGE')
     .enum('MOVIECLIP', 'fairygui::ObjectType::MOVIECLIP')
     .enum('SWF', 'fairygui::ObjectType::SWF')
@@ -681,7 +690,7 @@ typeconf 'fairygui::ButtonMode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('COMMON', 'fairygui::ButtonMode::COMMON')
     .enum('CHECK', 'fairygui::ButtonMode::CHECK')
     .enum('RADIO', 'fairygui::ButtonMode::RADIO')
@@ -690,7 +699,7 @@ typeconf 'fairygui::ChildrenRenderOrder'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ASCENT', 'fairygui::ChildrenRenderOrder::ASCENT')
     .enum('DESCENT', 'fairygui::ChildrenRenderOrder::DESCENT')
     .enum('ARCH', 'fairygui::ChildrenRenderOrder::ARCH')
@@ -699,7 +708,7 @@ typeconf 'fairygui::OverflowType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('VISIBLE', 'fairygui::OverflowType::VISIBLE')
     .enum('HIDDEN', 'fairygui::OverflowType::HIDDEN')
     .enum('SCROLL', 'fairygui::OverflowType::SCROLL')
@@ -708,7 +717,7 @@ typeconf 'fairygui::ScrollType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('HORIZONTAL', 'fairygui::ScrollType::HORIZONTAL')
     .enum('VERTICAL', 'fairygui::ScrollType::VERTICAL')
     .enum('BOTH', 'fairygui::ScrollType::BOTH')
@@ -717,7 +726,7 @@ typeconf 'fairygui::ScrollBarDisplayType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('DEFAULT', 'fairygui::ScrollBarDisplayType::DEFAULT')
     .enum('VISIBLE', 'fairygui::ScrollBarDisplayType::VISIBLE')
     .enum('AUTO', 'fairygui::ScrollBarDisplayType::AUTO')
@@ -727,7 +736,7 @@ typeconf 'fairygui::LoaderFillType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'fairygui::LoaderFillType::NONE')
     .enum('SCALE', 'fairygui::LoaderFillType::SCALE')
     .enum('SCALE_MATCH_HEIGHT', 'fairygui::LoaderFillType::SCALE_MATCH_HEIGHT')
@@ -739,7 +748,7 @@ typeconf 'fairygui::ProgressTitleType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('PERCENT', 'fairygui::ProgressTitleType::PERCENT')
     .enum('VALUE_MAX', 'fairygui::ProgressTitleType::VALUE_MAX')
     .enum('VALUE', 'fairygui::ProgressTitleType::VALUE')
@@ -749,7 +758,7 @@ typeconf 'fairygui::ListLayoutType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('SINGLE_COLUMN', 'fairygui::ListLayoutType::SINGLE_COLUMN')
     .enum('SINGLE_ROW', 'fairygui::ListLayoutType::SINGLE_ROW')
     .enum('FLOW_HORIZONTAL', 'fairygui::ListLayoutType::FLOW_HORIZONTAL')
@@ -760,7 +769,7 @@ typeconf 'fairygui::ListSelectionMode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('SINGLE', 'fairygui::ListSelectionMode::SINGLE')
     .enum('MULTIPLE', 'fairygui::ListSelectionMode::MULTIPLE')
     .enum('MULTIPLE_SINGLECLICK', 'fairygui::ListSelectionMode::MULTIPLE_SINGLECLICK')
@@ -770,7 +779,7 @@ typeconf 'fairygui::GroupLayoutType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'fairygui::GroupLayoutType::NONE')
     .enum('HORIZONTAL', 'fairygui::GroupLayoutType::HORIZONTAL')
     .enum('VERTICAL', 'fairygui::GroupLayoutType::VERTICAL')
@@ -779,7 +788,7 @@ typeconf 'fairygui::PopupDirection'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('AUTO', 'fairygui::PopupDirection::AUTO')
     .enum('UP', 'fairygui::PopupDirection::UP')
     .enum('DOWN', 'fairygui::PopupDirection::DOWN')
@@ -788,7 +797,7 @@ typeconf 'fairygui::AutoSizeType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'fairygui::AutoSizeType::NONE')
     .enum('BOTH', 'fairygui::AutoSizeType::BOTH')
     .enum('HEIGHT', 'fairygui::AutoSizeType::HEIGHT')
@@ -798,7 +807,7 @@ typeconf 'fairygui::FlipType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'fairygui::FlipType::NONE')
     .enum('HORIZONTAL', 'fairygui::FlipType::HORIZONTAL')
     .enum('VERTICAL', 'fairygui::FlipType::VERTICAL')
@@ -808,7 +817,7 @@ typeconf 'fairygui::TransitionActionType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('XY', 'fairygui::TransitionActionType::XY')
     .enum('Size', 'fairygui::TransitionActionType::Size')
     .enum('Scale', 'fairygui::TransitionActionType::Scale')
@@ -831,7 +840,7 @@ typeconf 'fairygui::FillMethod'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('None', 'fairygui::FillMethod::None')
     .enum('Horizontal', 'fairygui::FillMethod::Horizontal')
     .enum('Vertical', 'fairygui::FillMethod::Vertical')
@@ -843,7 +852,7 @@ typeconf 'fairygui::FillOrigin'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Top', 'fairygui::FillOrigin::Top')
     .enum('Bottom', 'fairygui::FillOrigin::Bottom')
     .enum('Left', 'fairygui::FillOrigin::Left')
@@ -853,7 +862,7 @@ typeconf 'fairygui::ObjectPropID'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Text', 'fairygui::ObjectPropID::Text')
     .enum('Icon', 'fairygui::ObjectPropID::Icon')
     .enum('Color', 'fairygui::ObjectPropID::Color')
@@ -869,7 +878,7 @@ typeconf 'fairygui::GController'
     .supercls('fairygui::UIEventDispatcher')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GController()')
     .func(nil, 'fairygui::GComponent *getParent()')
     .func(nil, 'void setParent(fairygui::GComponent *value)')
@@ -905,7 +914,7 @@ typeconf 'fairygui::GObject'
     .supercls('fairygui::UIEventDispatcher')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static fairygui::GObject *getDraggingObject()')
     .func(nil, 'GObject()')
     .func(nil, 'static fairygui::GObject *create()')
@@ -1001,23 +1010,23 @@ typeconf 'fairygui::GObject'
     .var('minSize', 'cocos2d::Size minSize')
     .var('maxSize', 'cocos2d::Size maxSize')
     .callback {
-        FUNCS =  {
-            'void addClickListener(@local const fairygui::EventCallback &callback)',
-            'void addClickListener(@local const fairygui::EventCallback &callback, const fairygui::EventTag &tag)'
+        funcs =  {
+            'void addClickListener(@localvar const fairygui::EventCallback &callback)',
+            'void addClickListener(@localvar const fairygui::EventCallback &callback, const fairygui::EventTag &tag)'
         },
-        TAG_MAKER = {'makeListenerTag(L, fairygui::UIEventType::Click, 0)', 'makeListenerTag(L, fairygui::UIEventType::Click, 3)'},
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = {'makeListenerTag(L, fairygui::UIEventType::Click, 0)', 'makeListenerTag(L, fairygui::UIEventType::Click, 3)'},
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void removeClickListener(const fairygui::EventTag &tag)'
         },
-        TAG_MAKER = 'makeListenerTag(L, fairygui::UIEventType::Click, 2)',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeListenerTag(L, fairygui::UIEventType::Click, 2)',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('relations', 'Relations* relations()', nil)
     .prop('displayObject', 'cocos2d::Node* displayObject()', nil)
@@ -1053,24 +1062,24 @@ typeconf 'fairygui::GObject'
     .prop('parent', nil, nil)
     .prop('root', nil, nil)
     .insert('center', {
-        BEFORE = [[
+        before = [[
             if (!self->getParent() && !fairygui::UIRoot) {
                 luaL_error(L, "UIRoot and parent are both nullptr");
             }
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('makeFullScreen', {
-        BEFORE = [[
+        before = [[
             if (!fairygui::UIRoot) {
                 luaL_error(L, "UIRoot is nullptr");
             }
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
 
 typeconf 'fairygui::GComponent'
@@ -1081,21 +1090,25 @@ typeconf 'fairygui::GComponent'
         static int _fairygui_GComponent_getTransition(lua_State *L);
         static int _fairygui_GComponent_getChild(lua_State *L);
     ]])
-    .require(nil)
+    .luaopen(nil)
     .func('__index', [[
         {
-            auto self = olua_toobj<fairygui::GComponent>(L, 1);
-            if (olua_isstring(L, 2)) {
-                fairygui::GObject *child = self->getChild(olua_tostring(L, 2));
-                if (child) {
-                    olua_pushobj<fairygui::GObject>(L, child);
-                    olua_addref(L, 1, "children", -1, OLUA_MODE_MULTIPLE);
-                    return 1;
+            if(olua_isuserdata(L, 1)) {
+                if (olua_isstring(L, 2)) {
+                    auto self = olua_toobj<fairygui::GComponent>(L, 1);
+                    fairygui::GObject *child = self->getChild(olua_tostring(L, 2));
+                    if (child) {
+                        olua_pushobj<fairygui::GObject>(L, child);
+                        olua_addref(L, 1, "children", -1, OLUA_FLAG_MULTIPLE);
+                        return 1;
+                    }
                 }
+                lua_settop(L, 2);
+                olua_getvariable(L, 1);
+                return 1;
+            } else {
+                return 0;
             }
-            lua_settop(L, 2);
-            olua_getvariable(L, 1);
-            return 1;
         }
     ]])
     .func('resolve', [[
@@ -1210,7 +1223,7 @@ typeconf 'fairygui::GRoot'
     .supercls('fairygui::GComponent')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GRoot()')
     .func(nil, 'static fairygui::GRoot *create(cocos2d::Scene *scene, @optional int zOrder)')
     .func(nil, 'static fairygui::GRoot *getInstance()')
@@ -1258,46 +1271,46 @@ typeconf 'fairygui::GRoot'
     .prop('soundEnabled', nil, nil)
     .prop('soundVolumeScale', nil, nil)
     .insert('create', {
-        BEFORE = nil,
-        AFTER = [[
+        before = nil,
+        after = [[
             olua_push_cppobj<cocos2d::Node>(L, ret->displayObject());
-            olua_addref(L, -1, "fgui.root", -2, OLUA_MODE_SINGLE);
-            olua_addref(L, 1, "children", -1, OLUA_MODE_MULTIPLE);
+            olua_addref(L, -1, "fgui.root", -2, OLUA_FLAG_SINGLE);
+            olua_addref(L, 1, "children", -1, OLUA_FLAG_MULTIPLE);
             lua_pop(L, 1);
         ]],
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('hideWindow', {
-        BEFORE = [[
+        before = [[
             int parent = 1;
             if (arg1->getParent()) {
                 olua_push_cppobj<fairygui::GComponent>(L, arg1->getParent());
                 parent = lua_gettop(L);
             }
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('hideWindowImmediately', {
-        BEFORE = [[
+        before = [[
             int parent = 1;
             if (arg1->getParent()) {
                 olua_push_cppobj<fairygui::GComponent>(L, arg1->getParent());
                 parent = lua_gettop(L);
             }
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
 
 typeconf 'fairygui::GGroup'
     .supercls('fairygui::GObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GGroup()')
     .func(nil, 'static fairygui::GGroup *create()')
     .func(nil, 'fairygui::GroupLayoutType getLayout()')
@@ -1329,7 +1342,7 @@ typeconf 'fairygui::GScrollBar'
     .supercls('fairygui::GComponent')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GScrollBar()')
     .func(nil, 'static fairygui::GScrollBar *create()')
     .func(nil, 'void setScrollPane(fairygui::ScrollPane *target, bool vertical)')
@@ -1342,7 +1355,7 @@ typeconf 'fairygui::GLoader'
     .supercls('fairygui::GObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GLoader()')
     .func(nil, 'static fairygui::GLoader *create()')
     .func(nil, 'const std::string &getURL()')
@@ -1393,7 +1406,7 @@ typeconf 'fairygui::GLoader3D'
     .supercls('fairygui::GObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GLoader3D()')
     .func(nil, 'static fairygui::GLoader3D *create()')
     .func(nil, 'const std::string &getURL()')
@@ -1440,7 +1453,7 @@ typeconf 'fairygui::GTextField'
     .supercls('fairygui::GObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'bool isUBBEnabled()')
     .func(nil, 'void setUBBEnabled(bool value)')
     .func(nil, 'fairygui::AutoSizeType getAutoSize()')
@@ -1474,7 +1487,7 @@ typeconf 'fairygui::GBasicTextField'
     .supercls('fairygui::GTextField')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GBasicTextField()')
     .func(nil, 'static fairygui::GBasicTextField *create()')
 
@@ -1482,7 +1495,7 @@ typeconf 'fairygui::GGraph'
     .supercls('fairygui::GObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func('drawPolygon', [[
         {
             fairygui::GGraph *self = nullptr;
@@ -1495,7 +1508,7 @@ typeconf 'fairygui::GGraph'
             olua_check_int(L, 2, &lineSize);
             olua_check_cocos2d_Color4F(L, 3, &lineColor);
             olua_check_cocos2d_Color4F(L, 4, &fillColor);
-            olua_check_std_vector<cocos2d::Vec2>(L, 5, &points, [L](cocos2d::Vec2 *value) {
+            olua_check_array<cocos2d::Vec2>(L, 5, &points, [L](cocos2d::Vec2 *value) {
                 olua_check_cocos2d_Vec2(L, -1, value);
             });
 
@@ -1528,7 +1541,7 @@ typeconf 'fairygui::GGraph'
                 self->drawRegularPolygon((int)lineSize, lineColor, fillColor, (int)sides, (float)startAngle);
             } else {
                 olua_check_number(L, 6, &startAngle);
-                olua_check_std_vector<float>(L, 7, &distances, [L](float *value) {
+                olua_check_array<float>(L, 7, &distances, [L](float *value) {
                     *value = (float)olua_checknumber(L, -1);
                 });
                 self->drawRegularPolygon((int)lineSize, lineColor, fillColor, (int)sides, (float)startAngle, distances.size() ? &distances[0] : nullptr, (int)distances.size());
@@ -1551,7 +1564,7 @@ typeconf 'fairygui::GButton'
     .supercls('fairygui::GComponent')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('UP', 'fairygui::GButton::UP', 'const std::string')
     .const('DOWN', 'fairygui::GButton::DOWN', 'const std::string')
     .const('OVER', 'fairygui::GButton::OVER', 'const std::string')
@@ -1591,7 +1604,7 @@ typeconf 'fairygui::GImage'
     .supercls('fairygui::GObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GImage()')
     .func(nil, 'static fairygui::GImage *create()')
     .func(nil, 'fairygui::FlipType getFlip()')
@@ -1617,7 +1630,7 @@ typeconf 'fairygui::GLabel'
     .supercls('fairygui::GComponent')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GLabel()')
     .func(nil, 'static fairygui::GLabel *create()')
     .func(nil, 'const std::string &getTitle()')
@@ -1636,19 +1649,19 @@ typeconf 'fairygui::GList::ListItemRenderer'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::GList::ListItemProvider'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::GList'
     .supercls('fairygui::GComponent')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GList()')
     .func(nil, 'static fairygui::GList *create()')
     .func(nil, 'const std::string &getDefaultItem()')
@@ -1699,7 +1712,7 @@ typeconf 'fairygui::GList'
     .func(nil, 'int childIndexToItemIndex(int index)')
     .func(nil, 'int itemIndexToChildIndex(int index)')
     .var('itemRenderer', '@nullable fairygui::GList::ListItemRenderer itemRenderer')
-    .var('itemProvider', '@nullable @local fairygui::GList::ListItemProvider itemProvider')
+    .var('itemProvider', '@nullable @localvar fairygui::GList::ListItemProvider itemProvider')
     .var('scrollItemToViewOnClick', 'bool scrollItemToViewOnClick')
     .var('foldInvisibleItems', 'bool foldInvisibleItems')
     .prop('defaultItem', nil, nil)
@@ -1717,21 +1730,21 @@ typeconf 'fairygui::GList'
     .prop('virtual', nil, nil)
     .prop('numItems', nil, nil)
     .insert('itemRenderer', {
-        BEFORE = nil,
-        AFTER = nil,
-        CALLBACK_BEFORE = [[
+        before = nil,
+        after = nil,
+        cbefore = [[
             olua_push_cppobj<fairygui::GComponent>(L, (fairygui::GComponent *)cb_store);
-            olua_addref(L, -1, "children", top + 2, OLUA_MODE_MULTIPLE);
+            olua_addref(L, -1, "children", top + 2, OLUA_FLAG_MULTIPLE);
             lua_pop(L, 1);
         ]],
-        CALLBACK_AFTER = nil,
+        cafter = nil,
     })
 
 typeconf 'fairygui::GMovieClip'
     .supercls('fairygui::GObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GMovieClip()')
     .func(nil, 'static fairygui::GMovieClip *create()')
     .func(nil, 'bool isPlaying()')
@@ -1746,13 +1759,13 @@ typeconf 'fairygui::GMovieClip'
     .func(nil, 'cocos2d::Color3B getColor()')
     .func(nil, 'void setColor(const cocos2d::Color3B &value)')
     .callback {
-        FUNCS =  {
-            'void setPlaySettings(@optional int start, @optional int end, @optional int times, @optional int endAt, @local @optional std::function<void ()> completeCallback)'
+        funcs =  {
+            'void setPlaySettings(@optional int start, @optional int end, @optional int times, @optional int endAt, @localvar @optional std::function<void ()> completeCallback)'
         },
-        TAG_MAKER = 'PlaySettings',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'PlaySettings',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('playing', nil, nil)
     .prop('frame', nil, nil)
@@ -1764,7 +1777,7 @@ typeconf 'fairygui::GProgressBar'
     .supercls('fairygui::GComponent')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GProgressBar()')
     .func(nil, 'static fairygui::GProgressBar *create()')
     .func(nil, 'fairygui::ProgressTitleType getTitleType()')
@@ -1786,7 +1799,7 @@ typeconf 'fairygui::GComboBox'
     .supercls('fairygui::GComponent')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GComboBox()')
     .func(nil, 'static fairygui::GComboBox *create()')
     .func(nil, 'const std::string &getTitle()')
@@ -1825,7 +1838,7 @@ typeconf 'fairygui::GRichTextField'
     .supercls('fairygui::GTextField')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GRichTextField()')
     .func(nil, 'static fairygui::GRichTextField *create()')
     .func(nil, 'fairygui::HtmlObject *getControl(const std::string &name)')
@@ -1834,7 +1847,7 @@ typeconf 'fairygui::GSlider'
     .supercls('fairygui::GComponent')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GSlider()')
     .func(nil, 'static fairygui::GSlider *create()')
     .func(nil, 'fairygui::ProgressTitleType getTitleType()')
@@ -1859,7 +1872,7 @@ typeconf 'fairygui::GTextInput'
     .supercls('fairygui::GTextField')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GTextInput()')
     .func(nil, 'static fairygui::GTextInput *create()')
     .func(nil, 'void setPrompt(const std::string &value)')
@@ -1872,7 +1885,7 @@ typeconf 'fairygui::PopupMenu'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static fairygui::PopupMenu *create(const std::string &resourceURL)', 'static fairygui::PopupMenu *create()')
     .func(nil, 'PopupMenu()')
     .func(nil, 'void addSeperator()')
@@ -1890,28 +1903,28 @@ typeconf 'fairygui::PopupMenu'
     .func(nil, '@addref(list ^) fairygui::GList *getList()')
     .func(nil, '@delref(children ~ parent)@addref(children | parent) void show()', '@delref(children ~ parent)@addref(children | parent) void show(fairygui::GObject *target, fairygui::PopupDirection dir)')
     .callback {
-        FUNCS =  {
-            '@addref(children | parent) fairygui::GButton *addItem(const std::string &caption, @local fairygui::EventCallback callback)'
+        funcs =  {
+            '@addref(children | parent) fairygui::GButton *addItem(const std::string &caption, @localvar fairygui::EventCallback callback)'
         },
-        TAG_MAKER = 'makeListenerTag(L, fairygui::UIEventType::ClickMenu, 0)',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = "return",
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeListenerTag(L, fairygui::UIEventType::ClickMenu, 0)',
+        tag_mode = 'replace',
+        tag_store = -1,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@addref(children | parent) fairygui::GButton *addItemAt(const std::string &caption, int index, @local fairygui::EventCallback callback)'
+        funcs =  {
+            '@addref(children | parent) fairygui::GButton *addItemAt(const std::string &caption, int index, @localvar fairygui::EventCallback callback)'
         },
-        TAG_MAKER = 'makeListenerTag(L, fairygui::UIEventType::ClickMenu, 0)',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = "return",
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeListenerTag(L, fairygui::UIEventType::ClickMenu, 0)',
+        tag_mode = 'replace',
+        tag_store = -1,
+        tag_scope = 'object',
     }
     .prop('itemCount', nil, nil)
     .prop('contentPane', nil, nil)
     .prop('list', nil, nil)
     .insert('show', {
-        BEFORE = [[
+        before = [[
             fairygui::GRoot *root = fairygui::UIRoot;
             if (lua_gettop(L) > 1) {
                 fairygui::GObject *target = olua_checkobj<fairygui::GObject>(L, 2);
@@ -1923,52 +1936,52 @@ typeconf 'fairygui::PopupMenu'
             olua_push_cppobj<fairygui::GRoot>(L, root);
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('removeItem', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<fairygui::GList>(L, self->getList());
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('clearItems', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<fairygui::GList>(L, self->getList());
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('addItem', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<fairygui::GList>(L, self->getList());
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('addItemAt', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<fairygui::GList>(L, self->getList());
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
 
 typeconf 'fairygui::Relations'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Relations(fairygui::GObject *owner)')
     .func(nil, 'void add(fairygui::GObject *target, fairygui::RelationType relationType)', 'void add(fairygui::GObject *target, fairygui::RelationType relationType, bool usePercent)')
     .func(nil, 'void remove(fairygui::GObject *target, fairygui::RelationType relationType)')
@@ -1985,7 +1998,7 @@ typeconf 'fairygui::RelationType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Left_Left', 'fairygui::RelationType::Left_Left')
     .enum('Left_Center', 'fairygui::RelationType::Left_Center')
     .enum('Left_Right', 'fairygui::RelationType::Left_Right')
@@ -2016,7 +2029,7 @@ typeconf 'fairygui::RelationItem'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RelationItem(fairygui::GObject *owner)')
     .func(nil, '@addref(target ^) fairygui::GObject *getTarget()')
     .func(nil, 'void setTarget(@addref(target ^) fairygui::GObject *value)')
@@ -2033,7 +2046,7 @@ typeconf 'fairygui::ScrollPane'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ScrollPane(fairygui::GComponent *owner)')
     .func(nil, '@addref(owner ^) fairygui::GComponent *getOwner()')
     .func(nil, '@addref(header ^) fairygui::GComponent *getHeader()')
@@ -2120,19 +2133,19 @@ typeconf 'fairygui::Transition::PlayCompleteCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::Transition::TransitionHook'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::Transition'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Transition(fairygui::GComponent *owner)')
     .func(nil, '@addref(owner ^) fairygui::GComponent *getOwner()')
     .func(nil, 'bool isPlaying()')
@@ -2151,43 +2164,43 @@ typeconf 'fairygui::Transition'
     .func(nil, 'void onOwnerRemovedFromStage()')
     .var('name', 'std::string name')
     .callback {
-        FUNCS =  {
-            'void play(@local @optional fairygui::Transition::PlayCompleteCallback callback)',
-            'void play(int times, float delay, @local @optional fairygui::Transition::PlayCompleteCallback callback)',
-            'void play(int times, float delay, float startTime, float endTime, @local @optional fairygui::Transition::PlayCompleteCallback callback)'
+        funcs =  {
+            'void play(@localvar @optional fairygui::Transition::PlayCompleteCallback callback)',
+            'void play(int times, float delay, @localvar @optional fairygui::Transition::PlayCompleteCallback callback)',
+            'void play(int times, float delay, float startTime, float endTime, @localvar @optional fairygui::Transition::PlayCompleteCallback callback)'
         },
-        TAG_MAKER = 'play',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'play',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void playReverse(@local @optional fairygui::Transition::PlayCompleteCallback callback)',
-            'void playReverse(int times, float delay, @local @optional fairygui::Transition::PlayCompleteCallback callback)'
+        funcs =  {
+            'void playReverse(@localvar @optional fairygui::Transition::PlayCompleteCallback callback)',
+            'void playReverse(int times, float delay, @localvar @optional fairygui::Transition::PlayCompleteCallback callback)'
         },
-        TAG_MAKER = 'playReverse',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'playReverse',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setHook(const std::string &label, @nullable @local fairygui::Transition::TransitionHook callback)'
+        funcs =  {
+            'void setHook(const std::string &label, @localvar @nullable fairygui::Transition::TransitionHook callback)'
         },
-        TAG_MAKER = '("hook." + #1)',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = '("hook." + #1)',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void clearHooks()'
         },
-        TAG_MAKER = '("hook.")',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = '("hook.")',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('owner', nil, nil)
     .prop('playing', nil, nil)
@@ -2197,7 +2210,7 @@ typeconf 'fairygui::UIConfig'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static void registerFont(const std::string &aliasName, const std::string &realName)')
     .func(nil, 'static const std::string &getRealFontName(const std::string &aliasName, @ret bool *isTTF)')
     .var('defaultFont', 'static std::string defaultFont')
@@ -2226,18 +2239,18 @@ typeconf 'fairygui::IUISource'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'const std::string &getFileName()')
     .func(nil, 'void setFileName(const std::string &value)')
     .func(nil, 'bool isLoaded()')
     .callback {
-        FUNCS =  {
-            'void load(@nullable @local std::function<void ()> callback)'
+        funcs =  {
+            'void load(@localvar @nullable std::function<void ()> callback)'
         },
-        TAG_MAKER = 'load',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'load',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('fileName', nil, nil)
     .prop('loaded', nil, nil)
@@ -2281,7 +2294,7 @@ typeconf 'fairygui::UISource'
         };
         NS_FGUI_END
     ]])
-    .require(nil)
+    .luaopen(nil)
     .func('create', 'static UISource *create()')
     .func('loadComplete', 'void loadComplete()')
 
@@ -2289,7 +2302,7 @@ typeconf 'fairygui::Window'
     .supercls('fairygui::GComponent')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Window()')
     .func(nil, 'static fairygui::Window *create()')
     .func(nil, '@delref(children ~ parent)@addref(children | parent) void show()')
@@ -2328,7 +2341,7 @@ typeconf 'fairygui::Window'
     .prop('contentArea', nil, nil)
     .prop('modalWaitingPane', nil, nil)
     .insert('show', {
-        BEFORE = [[
+        before = [[
             fairygui::GComponent *root = fairygui::UIRoot;
             if (!root) {
                 luaL_error(L, "no root to add 'Window'");
@@ -2336,12 +2349,12 @@ typeconf 'fairygui::Window'
             olua_push_cppobj<fairygui::GComponent>(L, root);
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('hide', {
-        BEFORE = [[
+        before = [[
             fairygui::GComponent *root = self->getParent() ? self->getParent() : fairygui::UIRoot;
             if (!root) {
                 return 0;
@@ -2349,12 +2362,12 @@ typeconf 'fairygui::Window'
             olua_push_cppobj<fairygui::GComponent>(L, root);
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('hideImmediately', {
-        BEFORE = [[
+        before = [[
             fairygui::GComponent *root = self->getParent() ? self->getParent() : fairygui::UIRoot;
             if (!root) {
                 return 0;
@@ -2362,16 +2375,16 @@ typeconf 'fairygui::Window'
             olua_push_cppobj<fairygui::GComponent>(L, root);
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
 
 typeconf 'fairygui::DragDropManager'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'DragDropManager()')
     .func(nil, 'static fairygui::DragDropManager *getInstance()')
     .func(nil, 'fairygui::GLoader *getAgent()')
@@ -2386,44 +2399,44 @@ typeconf 'fairygui::UIObjectFactory::GLoaderCreator'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::UIObjectFactory::GComponentCreator'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::UIObjectFactory'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static fairygui::GObject *newObject(fairygui::PackageItem *pi)', 'static fairygui::GObject *newObject(fairygui::ObjectType type)')
     .callback {
-        FUNCS =  {
-            'static void setPackageItemExtension(const std::string &url, @local fairygui::UIObjectFactory::GComponentCreator creator)'
+        funcs =  {
+            'static void setPackageItemExtension(const std::string &url, @localvar fairygui::UIObjectFactory::GComponentCreator creator)'
         },
-        TAG_MAKER = 'PackageItemExtension',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'PackageItemExtension',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'static void setLoaderExtension(@local fairygui::UIObjectFactory::GLoaderCreator creator)'
+        funcs =  {
+            'static void setLoaderExtension(@localvar fairygui::UIObjectFactory::GLoaderCreator creator)'
         },
-        TAG_MAKER = 'LoaderExtension',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'LoaderExtension',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
 
 typeconf 'fairygui::GearBase'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GearBase(fairygui::GObject *owner)')
     .func(nil, 'static fairygui::GearBase *create(fairygui::GObject *owner, int index)')
     .var('disableAllTweenEffect', 'static bool disableAllTweenEffect')
@@ -2432,7 +2445,7 @@ typeconf 'fairygui::GTreeNode'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static fairygui::GTreeNode *create(@optional bool isFolder, @optional const std::string &resURL)')
     .func(nil, 'GTreeNode()')
     .func(nil, 'fairygui::GTreeNode *getParent()')
@@ -2477,19 +2490,19 @@ typeconf 'fairygui::GTree::TreeNodeRenderFunction'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::GTree::TreeNodeWillExpandFunction'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'fairygui::GTree'
     .supercls('fairygui::GList')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'GTree()')
     .func(nil, 'static fairygui::GTree *create()')
     .func(nil, 'int getIndent()')
@@ -2510,32 +2523,32 @@ typeconf 'fairygui::GTree'
     .prop('rootNode', nil, nil)
     .prop('selectedNode', nil, nil)
     .insert('treeNodeRender', {
-        BEFORE = nil,
-        AFTER = nil,
-        CALLBACK_BEFORE = [[
+        before = nil,
+        after = nil,
+        cbefore = [[
             olua_push_cppobj<fairygui::GComponent>(L, (fairygui::GComponent *)cb_store);
-            olua_addref(L, -1, "nodes", top + 1, OLUA_MODE_MULTIPLE);
-            olua_addref(L, -1, "children",top + 2, OLUA_MODE_MULTIPLE);
+            olua_addref(L, -1, "nodes", top + 1, OLUA_FLAG_MULTIPLE);
+            olua_addref(L, -1, "children",top + 2, OLUA_FLAG_MULTIPLE);
             lua_pop(L, 1);
         ]],
-        CALLBACK_AFTER = nil,
+        cafter = nil,
     })
     .insert('treeNodeWillExpand', {
-        BEFORE = nil,
-        AFTER = nil,
-        CALLBACK_BEFORE = [[
+        before = nil,
+        after = nil,
+        cbefore = [[
             olua_push_cppobj<fairygui::GComponent>(L, (fairygui::GComponent *)cb_store);
-            olua_addref(L, -1, "nodes", top + 1, OLUA_MODE_MULTIPLE);
+            olua_addref(L, -1, "nodes", top + 1, OLUA_FLAG_MULTIPLE);
             lua_pop(L, 1);
         ]],
-        CALLBACK_AFTER = nil,
+        cafter = nil,
     })
 
 typeconf 'fairygui::FUIContainer'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'FUIContainer()')
     .func(nil, 'static fairygui::FUIContainer *create()')
     .func(nil, 'bool isClippingEnabled()')
@@ -2559,7 +2572,7 @@ typeconf 'fairygui::FUIInput'
     .supercls('cocos2d::ui::EditBox')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static fairygui::FUIInput *create()')
     .func(nil, 'FUIInput()')
     .func(nil, 'void setText(const std::string &value)')
@@ -2579,7 +2592,7 @@ typeconf 'fairygui::FUILabel'
     .supercls('cocos2d::Label')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'FUILabel()')
     .func(nil, 'static fairygui::FUILabel *create()')
     .func(nil, 'const std::string &getText()')
@@ -2596,7 +2609,7 @@ typeconf 'fairygui::FUIRichText'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'FUIRichText()')
     .func(nil, 'static fairygui::FUIRichText *create()')
     .func(nil, 'const cocos2d::Size &getDimensions()')
@@ -2615,13 +2628,13 @@ typeconf 'fairygui::FUIRichText'
     .func(nil, 'fairygui::HtmlObject *getControl(const std::string &name)')
     .func(nil, 'const char *hitTestLink(const cocos2d::Vec2 &worldPoint)')
     .callback {
-        FUNCS =  {
-            'void setObjectFactory(@local const std::function<HtmlObject *(HtmlElement *)> &value)'
+        funcs =  {
+            'void setObjectFactory(@localvar const std::function<HtmlObject *(HtmlElement *)> &value)'
         },
-        TAG_MAKER = 'ObjectFactory',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'ObjectFactory',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('textFormat', nil, nil)
     .prop('overflow', nil, nil)
@@ -2633,7 +2646,7 @@ typeconf 'fairygui::FUISprite'
     .supercls('cocos2d::Sprite')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'FUISprite()')
     .func(nil, 'static fairygui::FUISprite *create()')
     .func(nil, 'void clearContent()')
@@ -2659,7 +2672,7 @@ typeconf 'fairygui::HtmlObject'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'HtmlObject()')
     .func(nil, 'fairygui::HtmlElement *getElement()')
     .func(nil, 'fairygui::GObject *getUI()')
@@ -2679,7 +2692,7 @@ typeconf 'fairygui::HtmlElement::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('TEXT', 'fairygui::HtmlElement::Type::TEXT')
     .enum('IMAGE', 'fairygui::HtmlElement::Type::IMAGE')
     .enum('LINK', 'fairygui::HtmlElement::Type::LINK')
@@ -2691,7 +2704,7 @@ typeconf 'fairygui::HtmlElement'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'HtmlElement(fairygui::HtmlElement::Type type)')
     .func(nil, 'int getInt(const std::string &attrName, @optional int defValue)')
     .func(nil, 'std::string getString(const std::string &attrName, @optional const std::string &defValue)')

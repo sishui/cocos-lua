@@ -29,9 +29,6 @@ function FGUI:createUI(pkg, name)
     self.fguiNode.root:addChild(self.fgui)
 
     local layout = self.fgui:resolve('#layout')
-    if layout then
-        layout.selectedPage = runtime.isPad() and 'iPad' or 'iPhone'
-    end
 end
 
 -- extend fairygui
@@ -40,12 +37,12 @@ function GButton:playSound()
     self:dispatchEvent(UIEventType.Click)
 end
 
-function GLoader:load(url)
-    if url and #url > 0 then
-        self._loadingURL = url
-        self.assetRef = loader.load(url, function (success)
-            if self._loadingURL == url and success then
-                self.url = filesystem.localCachePath(url)
+function GLoader:load(uri)
+    if uri and #uri > 0 then
+        self._loadingURI = uri
+        self.assetRef = loader.load(uri, function (success)
+            if self._loadingURI == uri and success then
+                self.url = filesystem.localPath(uri)
             end
         end)
     end

@@ -2,22 +2,23 @@
 
 dofile "autobuild/wechat-types.lua"
 
-NAME = "wechat"
-PATH = "../../frameworks/plugins/wechat"
-HEADERS = [[
+name = "wechat"
+path = "../../frameworks/plugins/wechat"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "cclua/xlua.h"
     #include "WeChat.h"
 ]]
-CHUNK = nil
+chunk = nil
+luaopen = nil
 
 
 typeconf 'cclua::plugin::WeChat::ShareType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .ifdef('*', '#ifdef CCLUA_BUILD_WECHAT')
     .enum('NONE', 'cclua::plugin::WeChat::ShareType::NONE')
     .enum('TEXT', 'cclua::plugin::WeChat::ShareType::TEXT')
@@ -30,7 +31,7 @@ typeconf 'cclua::plugin::WeChat::ProgramType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .ifdef('*', '#ifdef CCLUA_BUILD_WECHAT')
     .enum('RELEASE', 'cclua::plugin::WeChat::ProgramType::RELEASE')
     .enum('TEST', 'cclua::plugin::WeChat::ProgramType::TEST')
@@ -40,7 +41,7 @@ typeconf 'cclua::plugin::WeChat'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require([[cclua::runtime::registerFeature("wechat", true);]])
+    .luaopen([[cclua::runtime::registerFeature("wechat", true);]])
     .ifdef('*', '#ifdef CCLUA_BUILD_WECHAT')
     .ifdef('pay', '#ifdef CCLUA_OS_ANDROID')
     .func(nil, 'static void pay(const std::string &partnerId, const std::string &prepayId, const std::string &noncestr, const std::string &timestamp, const std::string &packageValue, const std::string &sign)')
@@ -51,14 +52,15 @@ typeconf 'cclua::plugin::WeChat'
     .func(nil, 'static void stopAuth()')
     .func(nil, 'static void share(cclua::plugin::WeChat::ShareType type, cocos2d::ValueMap &value)')
     .func(nil, 'static void open(const std::string &username, @optional const std::string path, @optional cclua::plugin::WeChat::ProgramType type)')
+    .func(nil, 'static void openCustomerService(const std::string &corpid, const std::string &url)')
     .func(nil, 'static void dispatch(const std::string &event, const cocos2d::Value &data)')
     .callback {
-        FUNCS =  {
-            'static void setDispatcher(@local const std::function<void (const std::string &, const cocos2d::Value &)> &dispatcher)'
+        funcs =  {
+            'static void setDispatcher(@localvar const std::function<void (const std::string &, const cocos2d::Value &)> &dispatcher)'
         },
-        TAG_MAKER = 'Dispatcher',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'Dispatcher',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('installed', nil, nil)

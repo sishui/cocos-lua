@@ -2,16 +2,17 @@
 
 dofile "autobuild/conv-types.lua"
 
-NAME = "conv"
-PATH = "../../frameworks/libxgame/src/lua-bindings"
-HEADERS = [[
+name = "conv"
+path = "../../frameworks/libxgame/src/lua-bindings"
+headers = [[
     #include "cclua/xlua.h"
     #include "cocos2d.h"
     #include "ui/CocosGUI.h"
     #include "network/WebSocket.h"
     #include "navmesh/CCNavMesh.h"
 ]]
-CHUNK = nil
+chunk = nil
+luaopen = nil
 
 typeconv 'cocos2d::Vec2'
     .var('x', 'float x')

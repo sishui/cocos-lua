@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.6)
 
 add_library(xgame "")
 
+include(src/box2d/CMakeLists.txt)
 include(src/cjson/CMakeLists.txt)
 include(src/lua-bindings/CMakeLists.txt)
 include(src/lua/CMakeLists.txt)
@@ -62,6 +63,12 @@ if(CCLUA_BUILD_FAIRYGUI)
     target_compile_definitions(xgame PUBLIC CCLUA_BUILD_FAIRYGUI)
 endif()
 
+if(CCLUA_BUILD_BOX2D)
+    target_link_libraries(xgame box2d)
+    target_sources(xgame PRIVATE ${BOX2D_SRC} ${BOX2D_HEADER})
+    target_compile_definitions(xgame PUBLIC CCLUA_BUILD_BOX2D)
+endif()
+
 if(CCLUA_BUILD_COCOSSTUDIO)
     target_compile_definitions(xgame PUBLIC CCLUA_BUILD_COCOSSTUDIO)
 endif()
@@ -76,6 +83,7 @@ target_link_libraries(xgame cocos2d)
 target_compile_definitions(xgame PUBLIC STDC_HEADERS)
 target_compile_definitions(xgame PUBLIC $<$<CONFIG:Debug>:OLUA_DEBUG>)
 target_compile_definitions(xgame PUBLIC OLUA_USER_H="cclua/luauser.h")
+target_compile_definitions(xgame PUBLIC CCLUA_VERSION="${CCLUA_VERSION}")
 
 if(CCLUA_BUILD_SPINE)
     target_compile_definitions(xgame PUBLIC CCLUA_BUILD_SPINE)
@@ -92,6 +100,10 @@ if(CCLUA_FEATURE_IDFA)
     find_library(AD_SUPPORT_LIBRARY AdSupport)
     target_link_libraries(xgame ${AD_SUPPORT_LIBRARY})
     target_compile_definitions(xgame PUBLIC CCLUA_FEATURE_IDFA)
+endif()
+
+if(CCLUA_FEATURE_INTCOLOR)
+    target_compile_definitions(xgame PUBLIC CCLUA_FEATURE_INTCOLOR)
 endif()
 
 if(APPLE)
@@ -118,7 +130,7 @@ target_include_directories(xgame
 set_target_properties(xgame PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-    FOLDER "Internal"
+    FOLDER "cclua"
 )
 
 if(XCODE OR VS)

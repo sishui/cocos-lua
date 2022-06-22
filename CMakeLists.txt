@@ -41,6 +41,7 @@ option(CCLUA_BUILD_LAME "Build with lame support" ON)
 option(CCLUA_BUILD_QRCODE "Build with qrcode support" ON)
 option(CCLUA_BUILD_FAIRYGUI "Build with fairygui support" ON)
 option(CCLUA_BUILD_DRAGONBONES "Build with dragonbones support" OFF)
+option(CCLUA_BUILD_BOX2D "Build with box2d support" ON)
 option(CCLUA_BUILD_SWF "Build with swf support" OFF)
 option(CCLUA_BUILD_JPUSH "Build with jpush support" OFF)
 option(CCLUA_BUILD_JAUTH "Build with jauth support" OFF)
@@ -51,6 +52,7 @@ option(CCLUA_BUILD_APPLE_AUTH "Build with apple auth support" OFF)
 option(CCLUA_BUILD_APPLE_IAP "Build with apple iap support" OFF)
 option(CCLUA_FEATURE_MSAA "Support MSAA" OFF)
 option(CCLUA_FEATURE_IDFA "Support IDFA" OFF)
+option(CCLUA_FEATURE_INTCOLOR "Support integer color" ON)
 
 include(config.cmake)
 
@@ -183,11 +185,34 @@ target_link_libraries(${APP_NAME} luaopenssl)
 if(CCLUA_BUILD_FAIRYGUI)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/frameworks/libfairygui)
     target_link_libraries(${APP_NAME} fairygui)
+    set_target_properties(fairygui PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        FOLDER "cclua"
+    )
+    if(XCODE OR VS)
+        cocos_mark_code_files("fairygui" GROUPBASE "${CMAKE_CURRENT_SOURCE_DIR}/Classes")
+    endif()
 endif()
 
 if(CCLUA_BUILD_DRAGONBONES)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/frameworks/libdragonbones)
     target_link_libraries(${APP_NAME} dragonbones)
+endif()
+
+if(CCLUA_BUILD_BOX2D)
+    set(BOX2D_BUILD_UNIT_TESTS OFF)
+    set(BOX2D_BUILD_TESTBED OFF)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/frameworks/box2d)
+    target_link_libraries(${APP_NAME} box2d)
+    set_target_properties(box2d PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        FOLDER "cclua"
+    )
+    if(XCODE OR VS)
+        cocos_mark_code_files("box2d" GROUPBASE "${CMAKE_CURRENT_SOURCE_DIR}/box2d")
+    endif()
 endif()
 
 if(CCLUA_BUILD_SWF)
@@ -255,14 +280,30 @@ target_include_directories(${APP_NAME}
 
 # suspend warnings
 if(APPLE)
-    target_compile_options(cocos2d PRIVATE -Wno-reorder)
-    target_compile_options(cocos2d PRIVATE -Wno-deprecated-declarations)
-    target_compile_options(cocos2d PRIVATE -Wno-shorten-64-to-32)
+    target_compile_options(cocos2d
+      PRIVATE
+        -Wno-reorder
+        -Wno-deprecated-declarations
+        -Wno-shorten-64-to-32
+        -Wno-comma
+    )
     if(CCLUA_BUILD_FAIRYGUI)
-        target_compile_options(fairygui PRIVATE -Wno-reorder)
+        target_compile_options(fairygui
+          PRIVATE
+            -Wno-reorder
+        )
     endif()
     if(CCLUA_BUILD_DRAGONBONES)
-        target_compile_options(dragonbones PRIVATE -Wno-shorten-64-to-32)
+        target_compile_options(dragonbones
+          PRIVATE
+            -Wno-shorten-64-to-32
+        )
+    endif()
+    if(CCLUA_BUILD_BOX2D)
+        target_compile_options(box2d
+          PRIVATE
+            -Wno-shorten-64-to-32
+        )
     endif()
 endif()
 
@@ -282,13 +323,7 @@ if(APPLE)
         set_xcode_property(${APP_NAME} INFOPLIST_FILE "${RUNTIME_SRC_ROOT}/proj.ios_mac/ios/Info.plist")
         set_xcode_property(${APP_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
         set_xcode_property(${APP_NAME} CODE_SIGN_ENTITLEMENTS "${RUNTIME_SRC_ROOT}/proj.ios_mac/ios/app.entitlements")
-    endif()
-
-    if(IOS)
-        set(BUGLY_UPLOAD_COMMAND sh ${RUNTIME_SRC_ROOT}/proj.ios_mac/ios/bugly.sh)
-        set(BUGLY_UPLOAD_ARGS ${APP_PACKAGE_NAME} ${BUGLY_APPID} ${BUGLY_SECRET})
-        add_custom_command(TARGET ${APP_NAME} POST_BUILD
-            COMMAND ${BUGLY_UPLOAD_COMMAND} ${BUGLY_UPLOAD_ARGS})
+        set(CMAKE_XCODE_ATTRIBUTE_ARCHS "arm64")
     endif()
 
     # For code-signing, set the DEVELOPMENT_TEAM:
@@ -301,6 +336,7 @@ if(APPLE)
     set_xcode_property(${APP_NAME} CURRENT_PROJECT_VERSION "${APP_BUILD}")
     set_xcode_property(${APP_NAME} MARKETING_VERSION "${APP_VERSION}")
     set_xcode_property(${APP_NAME} TARGETED_DEVICE_FAMILY "1,2")
+    # set_xcode_property(${APP_NAME} GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
     # set_xcode_property(${APP_NAME} DEBUG_INFORMATION_FORMAT "DWARF")
 
     if(NOT DEFINED CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET)
@@ -330,4 +366,49 @@ endif()
 if(LINUX OR WINDOWS)
     cocos_get_resource_path(APP_RES_DIR ${APP_NAME})
     cocos_copy_target_res(${APP_NAME} LINK_TO ${APP_RES_DIR} FOLDERS ${GAME_RES_FOLDER})
+endif()
+
+# Debug
+if(APPLE)
+    function(set_xcode_debug TARGET)
+        set_xcode_property(${TARGET} GCC_GENERATE_DEBUGGING_SYMBOLS[variant=Debug] "YES")
+        set_xcode_property(${TARGET} GCC_GENERATE_DEBUGGING_SYMBOLS[variant=MinSizeRel] "NO")
+        set_xcode_property(${TARGET} GCC_GENERATE_DEBUGGING_SYMBOLS[variant=RelWithDebInfo] "YES")
+        set_xcode_property(${TARGET} GCC_GENERATE_DEBUGGING_SYMBOLS[variant=Release] "NO")
+    endfunction()
+
+    set_xcode_debug(${APP_NAME})
+    set_xcode_debug(cocos2d)
+    if(CCLUA_BUILD_FAIRYGUI)
+        set_xcode_debug(fairygui)
+    endif()
+    if(CCLUA_BUILD_LPEG)
+        set_xcode_debug(lpeg)
+    endif()
+    set_xcode_debug(luaopenssl)
+    if(CCLUA_BUILD_LUASOCKET)
+        set_xcode_debug(luasocket)
+    endif()
+    if(CCLUA_BUILD_PBC)
+        set_xcode_debug(pbc)
+    endif()
+    if(CCLUA_BUILD_APPLE_AUTH OR CCLUA_BUILD_APPLE_IAP)
+        set_xcode_debug(plugin_apple)
+    endif()
+    if(CCLUA_BUILD_JANALYTICS OR CCLUA_BUILD_JAUTH OR CCLUA_BUILD_JAUTH)
+        set_xcode_debug(plugin_jiguang)
+    endif()
+    if(CCLUA_BUILD_TALKINGDATA)
+        set_xcode_debug(plugin_talkingdata)
+    endif()
+    if(CCLUA_BUILD_WECHAT)
+        set_xcode_debug(plugin_wechat)
+    endif()
+    if(CCLUA_BUILD_SPROTO)
+        set_xcode_debug(sproto)
+    endif()
+    if(CCLUA_BUILD_SWF)
+        set_xcode_debug(swf)
+    endif()
+    set_xcode_debug(xgame)
 endif()

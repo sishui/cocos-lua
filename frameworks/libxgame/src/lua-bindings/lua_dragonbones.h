@@ -10,7 +10,9 @@
 #include "cocos2d.h"
 #include "CCDragonBonesHeaders.h"
 
-int luaopen_dragonbones(lua_State *L);
+OLUA_BEGIN_DECLS
+OLUA_LIB int luaopen_dragonbones(lua_State *L);
+OLUA_END_DECLS
 
 // dragonBones::Rectangle
 int olua_push_dragonBones_Rectangle(lua_State *L, const dragonBones::Rectangle *value);
@@ -18,6 +20,6 @@ void olua_check_dragonBones_Rectangle(lua_State *L, int idx, dragonBones::Rectan
 bool olua_is_dragonBones_Rectangle(lua_State *L, int idx);
 void olua_pack_dragonBones_Rectangle(lua_State *L, int idx, dragonBones::Rectangle *value);
 int olua_unpack_dragonBones_Rectangle(lua_State *L, const dragonBones::Rectangle *value);
-bool olua_ispack_dragonBones_Rectangle(lua_State *L, int idx);
+bool olua_canpack_dragonBones_Rectangle(lua_State *L, int idx);
 
 #endif

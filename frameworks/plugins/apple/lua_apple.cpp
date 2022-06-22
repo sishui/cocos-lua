@@ -22,7 +22,7 @@ static int _cclua_plugin_AppleAuth_auth(lua_State *L)
 
     std::function<void(const cocos2d::ValueMap &)> arg1;       /** callback */
 
-    olua_check_std_function(L, 1, &arg1);
+    olua_check_callback(L, 1, &arg1, "std.function");
 
     void *cb_store = (void *)olua_pushclassobj(L, "cclua.plugin.AppleAuth");
     std::string cb_tag = "auth";
@@ -41,13 +41,15 @@ static int _cclua_plugin_AppleAuth_auth(lua_State *L)
 
             olua_callback(L, cb_store, cb_name.c_str(), 1);
 
+            olua_removecallback(L, cb_store, cb_name.c_str(), OLUA_TAG_WHOLE);
+
             //pop stack value
             olua_pop_objpool(L, last);
             lua_settop(L, top);
         }
     };
 
-    // static void auth(@local const std::function<void (const cocos2d::ValueMap &)> &callback)
+    // static void auth(@localvar const std::function<void (const cocos2d::ValueMap &)> &callback)
     cclua::plugin::AppleAuth::auth(arg1);
 
     olua_endinvoke(L);
@@ -68,7 +70,8 @@ static int _cclua_plugin_AppleAuth_canMakeAuth(lua_State *L)
     return num_ret;
 }
 
-static int luaopen_cclua_plugin_AppleAuth(lua_State *L)
+OLUA_BEGIN_DECLS
+OLUA_LIB int luaopen_cclua_plugin_AppleAuth(lua_State *L)
 {
     oluacls_class(L, "cclua.plugin.AppleAuth", nullptr);
     oluacls_func(L, "__olua_move", _cclua_plugin_AppleAuth___olua_move);
@@ -80,6 +83,7 @@ static int luaopen_cclua_plugin_AppleAuth(lua_State *L)
 
     return 1;
 }
+OLUA_END_DECLS
 #endif
 
 #ifdef CCLUA_BUILD_APPLE_IAP
@@ -155,6 +159,18 @@ static int _cclua_plugin_AppleIAP_getPendingTransactions(lua_State *L)
     return num_ret;
 }
 
+static int _cclua_plugin_AppleIAP_init(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    // static void init()
+    cclua::plugin::AppleIAP::init();
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
 static int _cclua_plugin_AppleIAP_purchase1(lua_State *L)
 {
     olua_startinvoke(L);
@@ -218,7 +234,7 @@ static int _cclua_plugin_AppleIAP_requestProducts(lua_State *L)
 
     std::set<std::string> arg1;       /** products */
 
-    olua_check_std_set<std::string>(L, 1, &arg1, [L](std::string *value) {
+    olua_check_array<std::string>(L, 1, &arg1, [L](std::string *value) {
         olua_check_std_string(L, -1, value);
     });
 
@@ -248,7 +264,7 @@ static int _cclua_plugin_AppleIAP_setDispatcher(lua_State *L)
 
     std::function<void(const std::string &, const cocos2d::Value &)> arg1;       /** dispatcher */
 
-    olua_check_std_function(L, 1, &arg1);
+    olua_check_callback(L, 1, &arg1, "std.function");
 
     void *cb_store = (void *)olua_pushclassobj(L, "cclua.plugin.AppleIAP");
     std::string cb_tag = "Dispatcher";
@@ -274,7 +290,7 @@ static int _cclua_plugin_AppleIAP_setDispatcher(lua_State *L)
         }
     };
 
-    // static void setDispatcher(@local const std::function<void (const std::string &, const cocos2d::Value &)> &dispatcher)
+    // static void setDispatcher(@localvar const std::function<void (const std::string &, const cocos2d::Value &)> &dispatcher)
     cclua::plugin::AppleIAP::setDispatcher(arg1);
 
     olua_endinvoke(L);
@@ -282,7 +298,8 @@ static int _cclua_plugin_AppleIAP_setDispatcher(lua_State *L)
     return 0;
 }
 
-static int luaopen_cclua_plugin_AppleIAP(lua_State *L)
+OLUA_BEGIN_DECLS
+OLUA_LIB int luaopen_cclua_plugin_AppleIAP(lua_State *L)
 {
     oluacls_class(L, "cclua.plugin.AppleIAP", nullptr);
     oluacls_func(L, "__olua_move", _cclua_plugin_AppleIAP___olua_move);
@@ -290,6 +307,7 @@ static int luaopen_cclua_plugin_AppleIAP(lua_State *L)
     oluacls_func(L, "dispatch", _cclua_plugin_AppleIAP_dispatch);
     oluacls_func(L, "finishTransaction", _cclua_plugin_AppleIAP_finishTransaction);
     oluacls_func(L, "getPendingTransactions", _cclua_plugin_AppleIAP_getPendingTransactions);
+    oluacls_func(L, "init", _cclua_plugin_AppleIAP_init);
     oluacls_func(L, "purchase", _cclua_plugin_AppleIAP_purchase);
     oluacls_func(L, "requestProducts", _cclua_plugin_AppleIAP_requestProducts);
     oluacls_func(L, "restoreCompletedTransactions", _cclua_plugin_AppleIAP_restoreCompletedTransactions);
@@ -301,9 +319,11 @@ static int luaopen_cclua_plugin_AppleIAP(lua_State *L)
 
     return 1;
 }
+OLUA_END_DECLS
 #endif
 
-int luaopen_apple(lua_State *L)
+OLUA_BEGIN_DECLS
+OLUA_LIB int luaopen_apple(lua_State *L)
 {
 #ifdef CCLUA_BUILD_APPLE_AUTH
     olua_require(L, "cclua.plugin.AppleAuth", luaopen_cclua_plugin_AppleAuth);
@@ -311,5 +331,7 @@ int luaopen_apple(lua_State *L)
 #ifdef CCLUA_BUILD_APPLE_IAP
     olua_require(L, "cclua.plugin.AppleIAP", luaopen_cclua_plugin_AppleIAP);
 #endif
+
     return 0;
 }
+OLUA_END_DECLS

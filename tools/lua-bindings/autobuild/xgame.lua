@@ -2,9 +2,9 @@
 
 dofile "autobuild/xgame-types.lua"
 
-NAME = "xgame"
-PATH = "../../frameworks/libxgame/src/lua-bindings"
-HEADERS = [[
+name = "xgame"
+path = "../../frameworks/libxgame/src/lua-bindings"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "cclua/filesystem.h"
@@ -17,7 +17,7 @@ HEADERS = [[
     #include "cclua/window.h"
     #include "olua/olua.hpp"
 ]]
-CHUNK = [[
+chunk = [[
     int olua_unpack_cclua_window_Bounds(lua_State *L, const cclua::window::Bounds *value)
     {
         if (value) {
@@ -34,19 +34,14 @@ CHUNK = [[
         return 4;
     }
 ]]
-
-typeconv 'cclua::downloader::FileTask'
-    .var('url', 'std::string url')
-    .var('path', 'std::string path')
-    .var('md5', '@optional std::string md5')
-    .var('state', '@optional cclua::downloader::FileState state')
+luaopen = nil
 
 
 typeconf 'cclua::SceneNoCamera'
     .supercls('cocos2d::Scene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cclua::SceneNoCamera *create()')
     .func(nil, 'static cclua::SceneNoCamera *createWithSize(const cocos2d::Size &size)')
     .func(nil, 'static cclua::SceneNoCamera *createWithPhysics()')
@@ -56,7 +51,7 @@ typeconf 'cclua::Permission'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('AUDIO', 'cclua::Permission::AUDIO')
     .enum('CAMERA', 'cclua::Permission::CAMERA')
     .enum('PHOTO', 'cclua::Permission::PHOTO')
@@ -66,7 +61,7 @@ typeconf 'cclua::PermissionStatus'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NOT_DETERMINED', 'cclua::PermissionStatus::NOT_DETERMINED')
     .enum('RESTRICTED', 'cclua::PermissionStatus::RESTRICTED')
     .enum('DENIED', 'cclua::PermissionStatus::DENIED')
@@ -76,7 +71,7 @@ typeconf 'cclua::runtime'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func('testCrash', [[
         {
             cclua::runtime::log("test native crash!!!!");
@@ -105,12 +100,11 @@ typeconf 'cclua::runtime'
     .func(nil, 'static const std::string getManifestVersion()')
     .func(nil, 'static void setManifestVersion(const std::string &version)')
     .func(nil, 'static const std::string getNetworkStatus()')
-    .func(nil, 'static bool hasProperty(const std::string &key)')
-    .func(nil, 'static std::string getProperty(const std::string &key)')
-    .func(nil, 'static void setProperty(const std::string &key, const std::string &value)')
+    .func(nil, 'static std::string getEnv(const std::string &key)')
+    .func(nil, 'static void setEnv(const std::string &key, const std::string &value, @optional bool save)')
     .func(nil, 'static const std::string getPaste()')
     .func(nil, 'static void setPaste(const std::string &text)')
-    .func(nil, 'static cocos2d::RenderTexture *capture(cocos2d::Node *node, float width, float height, @optional cocos2d::backend::PixelFormat format, @optional cocos2d::backend::PixelFormat depthStencilFormat)')
+    .func(nil, 'static cocos2d::Sprite *capture(cocos2d::Node *node, float width, float height, @optional float scale, @optional cocos2d::backend::PixelFormat format, @optional cocos2d::backend::PixelFormat depthStencilFormat)')
     .func(nil, 'static uint32_t getMaxFrameRate()')
     .func(nil, 'static uint32_t getFrameRate()')
     .func(nil, 'static void setFrameRate(uint32_t frameRate)')
@@ -120,6 +114,7 @@ typeconf 'cclua::runtime'
     .func(nil, 'static bool canOpenURL(const std::string &uri)')
     .func(nil, 'static void setLogPath(const std::string &path)')
     .func(nil, 'static const std::string getLogPath()')
+    .func(nil, 'static void showLog()')
     .func(nil, 'static void setSampleCount(unsigned int samples)')
     .func(nil, 'static unsigned int getSampleCount()')
     .func(nil, 'static bool support(const std::string &api)')
@@ -142,40 +137,40 @@ typeconf 'cclua::runtime'
     .func(nil, 'static void purgeCachedData()')
     .func(nil, 'static void exit()')
     .callback {
-        FUNCS =  {
-            'static void setDispatcher(@local const std::function<void (const std::string &, const std::string &)> &dispatcher)'
+        funcs =  {
+            'static void setDispatcher(@localvar const std::function<void (const std::string &, const std::string &)> &dispatcher)'
         },
-        TAG_MAKER = 'Dispatcher',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'Dispatcher',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'static void openURL(const std::string &uri, @local @optional const std::function<void (bool)> callback)'
+        funcs =  {
+            'static void openURL(const std::string &uri, @localvar @optional const std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'openURL',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'openURL',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
-            'static void requestPermission(cclua::Permission permission, @local const std::function<void (cclua::PermissionStatus)> callback)'
+        funcs =  {
+            'static void requestPermission(cclua::Permission permission, @localvar const std::function<void (cclua::PermissionStatus)> callback)'
         },
-        TAG_MAKER = 'requestPermission',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'requestPermission',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
-            'static void alert(const std::string &title, const std::string &message, const std::string &ok, const std::string &no, @local const std::function<void (bool)> callback)'
+        funcs =  {
+            'static void alert(const std::string &title, const std::string &message, const std::string &ok, const std::string &no, @localvar const std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'alert',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'alert',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .prop('restarting', nil, nil)
     .prop('debug', nil, nil)
@@ -208,119 +203,119 @@ typeconf 'cclua::runtime'
     .prop('displayStats', nil, nil)
     .prop('runningScene', nil, nil)
     .insert('getProgramCache', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('getFileUtils', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('getSpriteFrameCache', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('getTextureCache', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('getScheduler', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('getActionManager', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('getEventDispatcher', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('getRunningScene', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('pushScene', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('replaceScene', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('popScene', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('popToRootScene', {
-        BEFORE = [[
+        before = [[
             olua_push_cppobj<cocos2d::Director>(L, cocos2d::Director::getInstance());
             int director = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
 
 typeconf 'cclua::filesystem'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static const std::string getWritablePath()')
     .func(nil, 'static const std::string getCacheDirectory()')
     .func(nil, 'static const std::string getDocumentDirectory()')
@@ -351,25 +346,25 @@ typeconf 'cclua::preferences'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
-    .func(nil, 'static bool getBoolean(const char *key, @optional bool defaultValue)')
-    .func(nil, 'static void setBoolean(const char *key, bool value)')
-    .func(nil, 'static float getFloat(const char *key, @optional float defaultValue)')
-    .func(nil, 'static void setFloat(const char *key, float value)')
-    .func(nil, 'static double getDouble(const char *key, @optional double defaultValue)')
-    .func(nil, 'static void setDouble(const char *key, double value)')
-    .func(nil, 'static int getInteger(const char *key, @optional int defaultValue)')
-    .func(nil, 'static void setInteger(const char *key, int value)')
-    .func(nil, 'static std::string getString(const char *key, @optional const char *defaultValue)')
-    .func(nil, 'static void setString(const char *key, const char *value)')
-    .func(nil, 'static void deleteKey(const char *key)')
+    .luaopen(nil)
+    .func(nil, 'static bool getBoolean(const std::string &key, @optional bool defaultValue)')
+    .func(nil, 'static void setBoolean(const std::string &key, bool value)')
+    .func(nil, 'static float getFloat(const std::string &key, @optional float defaultValue)')
+    .func(nil, 'static void setFloat(const std::string &key, float value)')
+    .func(nil, 'static double getDouble(const std::string &key, @optional double defaultValue)')
+    .func(nil, 'static void setDouble(const std::string &key, double value)')
+    .func(nil, 'static int getInteger(const std::string &key, @optional int defaultValue)')
+    .func(nil, 'static void setInteger(const std::string &key, int value)')
+    .func(nil, 'static std::string getString(const std::string &key, @optional const std::string &defaultValue)')
+    .func(nil, 'static void setString(const std::string &key, const std::string &value)')
+    .func(nil, 'static void deleteKey(const std::string &key)')
     .func(nil, 'static void flush()')
 
 typeconf 'cclua::timer'
     .supercls(nil)
     .reg_luatype(true)
     .chunk([[#define makeTimerDelayTag(tag) ("delayTag." + tag)]])
-    .require(nil)
+    .luaopen(nil)
     .func('schedule', [[
         {
             float interval = (float)olua_checknumber(L, 1);
@@ -403,38 +398,38 @@ typeconf 'cclua::timer'
     ]])
     .func(nil, 'static std::string createTag()')
     .callback {
-        FUNCS =  {
-            'static void delayWithTag(float time, const std::string &tag, @local std::function<void ()> callback)'
+        funcs =  {
+            'static void delayWithTag(float time, const std::string &tag, @localvar std::function<void ()> callback)'
         },
-        TAG_MAKER = 'makeTimerDelayTag(#2)',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'makeTimerDelayTag(#2)',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'static void killDelay(const std::string &tag)'
         },
-        TAG_MAKER = 'makeTimerDelayTag(#1)',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeTimerDelayTag(#1)',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'static void delay(float time, @local const std::function<void ()> callback)'
+        funcs =  {
+            'static void delay(float time, @localvar const std::function<void ()> callback)'
         },
-        TAG_MAKER = 'delay',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'delay',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
 
 typeconf 'cclua::window'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, '@unpack static cclua::window::Bounds getVisibleBounds()')
     .func(nil, '@unpack static cocos2d::Size getVisibleSize()')
     .func(nil, '@unpack static cocos2d::Size getFrameSize()')
@@ -446,39 +441,38 @@ typeconf 'cclua::window'
     .prop('visibleSize', nil, nil)
     .prop('frameSize', nil, nil)
 
-typeconf 'cclua::downloader::FileState'
-    .supercls(nil)
-    .reg_luatype(true)
-    .chunk(nil)
-    .require(nil)
-    .enum('IOERROR', 'cclua::downloader::FileState::IOERROR')
-    .enum('LOADED', 'cclua::downloader::FileState::LOADED')
-    .enum('PENDING', 'cclua::downloader::FileState::PENDING')
-    .enum('INVALID', 'cclua::downloader::FileState::INVALID')
-
 typeconf 'cclua::downloader'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
-    .func(nil, 'static void load(const cclua::downloader::FileTask &task)')
+    .luaopen(nil)
+    .func(nil, 'static void load(const std::string &uri, const std::string &path, @optional const std::string &md5)')
     .func(nil, 'static void init()')
     .func(nil, 'static void end()')
     .callback {
-        FUNCS =  {
-            'static void setDispatcher(@local const std::function<void (const cclua::downloader::FileTask &)> callback)'
+        funcs =  {
+            'static void setDispatcher(@localvar const std::function<void (const std::string &, const std::string &)> &dispatcher)'
         },
-        TAG_MAKER = 'Dispatcher',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'Dispatcher',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
+    }
+    .callback {
+        funcs =  {
+            'static void setURIResolver(@localvar const std::function<std::string (const std::string &)> &resolver)'
+        },
+        tag_maker = 'URIResolver',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
 
 typeconf 'cclua::MaskLayout'
     .supercls('cocos2d::ui::Layout')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cclua::MaskLayout *create()')
     .func(nil, 'MaskLayout()')
     .func(nil, 'cocos2d::DrawNode *getClippingNode()')

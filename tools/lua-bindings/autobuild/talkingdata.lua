@@ -2,22 +2,23 @@
 
 dofile "autobuild/talkingdata-types.lua"
 
-NAME = "talkingdata"
-PATH = "../../frameworks/plugins/talkingdata"
-HEADERS = [[
+name = "talkingdata"
+path = "../../frameworks/plugins/talkingdata"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "cclua/xlua.h"
     #include "TalkingData.h"
 ]]
-CHUNK = nil
+chunk = nil
+luaopen = nil
 
 
 typeconf 'cclua::plugin::TCAgent'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require([[cclua::runtime::registerFeature("talkingdata", true);]])
+    .luaopen([[cclua::runtime::registerFeature("talkingdata", true);]])
     .ifdef('*', '#ifdef CCLUA_BUILD_TALKINGDATA')
     .func(nil, 'static void setLogEnabled(bool value)')
     .func(nil, 'static void init(const std::string &appkey, const std::string &channel)')

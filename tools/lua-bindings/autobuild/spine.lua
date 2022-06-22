@@ -2,9 +2,9 @@
 
 dofile "autobuild/spine-types.lua"
 
-NAME = "spine"
-PATH = "../../frameworks/libxgame/src/lua-bindings"
-HEADERS = [[
+name = "spine"
+path = "../../frameworks/libxgame/src/lua-bindings"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "cclua/xlua.h"
@@ -12,7 +12,7 @@ HEADERS = [[
     #include "cocos2d.h"
     #include "spine/spine-cocos2dx.h"
 ]]
-CHUNK = [[
+chunk = [[
     template <class T>
     void olua_insert_array(spine::Vector<T> *array, T value)
     {
@@ -26,16 +26,6 @@ CHUNK = [[
         for (int i = 0, n = (int)vararray->size(); i < n; i++) {
             callback((*vararray)[i]);
         }
-    }
-
-    template <class T>
-    int olua_push_spine_Vector(lua_State *L, const spine::Vector<T> *array, const std::function<void(T)> &push) {
-        return olua_push_array<T, spine::Vector>(L, array, push);
-    }
-
-    template <class T>
-    void olua_check_spine_Vector(lua_State *L, int idx, spine::Vector<T> *array, const std::function<void(T *)> &check) {
-        olua_check_array<T, spine::Vector>(L, idx, array, check);
     }
 
     bool olua_is_spine_String(lua_State *L, int idx)
@@ -107,13 +97,14 @@ CHUNK = [[
         return 1;
     }
 ]]
+luaopen = nil
 
 
 typeconf 'spine::EventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Start', 'spine::EventType::EventType_Start')
     .enum('Interrupt', 'spine::EventType::EventType_Interrupt')
     .enum('End', 'spine::EventType::EventType_End')
@@ -125,7 +116,7 @@ typeconf 'spine::AttachmentType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Region', 'spine::AttachmentType::AttachmentType_Region')
     .enum('Boundingbox', 'spine::AttachmentType::AttachmentType_Boundingbox')
     .enum('Mesh', 'spine::AttachmentType::AttachmentType_Mesh')
@@ -138,7 +129,7 @@ typeconf 'spine::TransformMode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Normal', 'spine::TransformMode::TransformMode_Normal')
     .enum('OnlyTranslation', 'spine::TransformMode::TransformMode_OnlyTranslation')
     .enum('NoRotationOrReflection', 'spine::TransformMode::TransformMode_NoRotationOrReflection')
@@ -149,7 +140,7 @@ typeconf 'spine::BlendMode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Normal', 'spine::BlendMode::BlendMode_Normal')
     .enum('Additive', 'spine::BlendMode::BlendMode_Additive')
     .enum('Multiply', 'spine::BlendMode::BlendMode_Multiply')
@@ -159,7 +150,7 @@ typeconf 'spine::PositionMode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Fixed', 'spine::PositionMode::PositionMode_Fixed')
     .enum('Percent', 'spine::PositionMode::PositionMode_Percent')
 
@@ -167,7 +158,7 @@ typeconf 'spine::SpacingMode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Length', 'spine::SpacingMode::SpacingMode_Length')
     .enum('Fixed', 'spine::SpacingMode::SpacingMode_Fixed')
     .enum('Percent', 'spine::SpacingMode::SpacingMode_Percent')
@@ -177,7 +168,7 @@ typeconf 'spine::RotateMode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Tangent', 'spine::RotateMode::RotateMode_Tangent')
     .enum('Chain', 'spine::RotateMode::RotateMode_Chain')
     .enum('ChainScale', 'spine::RotateMode::RotateMode_ChainScale')
@@ -186,7 +177,7 @@ typeconf 'spine::MixBlend'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Setup', 'spine::MixBlend::MixBlend_Setup')
     .enum('First', 'spine::MixBlend::MixBlend_First')
     .enum('Replace', 'spine::MixBlend::MixBlend_Replace')
@@ -196,13 +187,13 @@ typeconf 'spine::SpineObject'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::Event'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'const spine::EventData &getData()')
     .func(nil, 'float getTime()')
     .func(nil, 'int getIntValue()')
@@ -227,7 +218,7 @@ typeconf 'spine::EventData'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'EventData(const spine::String &name)')
     .func(nil, 'const spine::String &getName()')
     .func(nil, 'int getIntValue()')
@@ -254,7 +245,7 @@ typeconf 'spine::Updatable'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void update()')
     .func(nil, 'bool isActive()')
     .func(nil, 'void setActive(bool inValue)')
@@ -264,13 +255,13 @@ typeconf 'spine::AnimationStateListener'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::AnimationState'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'AnimationState(spine::AnimationStateData *data)')
     .func(nil, 'void update(float delta)')
     .func(nil, 'void clearTracks()')
@@ -288,13 +279,13 @@ typeconf 'spine::AnimationState'
     .func(nil, 'void disableQueue()')
     .func(nil, 'void enableQueue()')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setListener(spine::AnimationStateListener listener)'
         },
-        TAG_MAKER = 'Listener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'Listener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('data', nil, nil)
     .prop('tracks', nil, nil)
@@ -304,7 +295,7 @@ typeconf 'spine::AnimationStateData'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'AnimationStateData(spine::SkeletonData *skeletonData)')
     .func(nil, 'spine::SkeletonData *getSkeletonData()')
     .func(nil, 'float getDefaultMix()')
@@ -318,7 +309,7 @@ typeconf 'spine::Animation'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Animation(const spine::String &name, Vector<spine::Timeline *> &timelines, float duration)')
     .func(nil, 'const spine::String &getName()')
     .func(nil, 'Vector<spine::Timeline *> &getTimelines()')
@@ -333,7 +324,7 @@ typeconf 'spine::ConstraintData'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ConstraintData(const spine::String &name)')
     .func(nil, 'const spine::String &getName()')
     .func(nil, 'size_t getOrder()')
@@ -348,7 +339,7 @@ typeconf 'spine::IkConstraintData'
     .supercls('spine::ConstraintData')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'IkConstraintData(const spine::String &name)')
     .func(nil, 'Vector<spine::BoneData *> &getBones()')
     .func(nil, 'spine::BoneData *getTarget()')
@@ -378,7 +369,7 @@ typeconf 'spine::BoneData'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'BoneData(int index, const spine::String &name, @optional spine::BoneData *parent)')
     .func(nil, 'int getIndex()')
     .func(nil, 'const spine::String &getName()')
@@ -423,7 +414,7 @@ typeconf 'spine::SlotData'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'int getIndex()')
     .func(nil, 'const spine::String &getName()')
     .func(nil, 'spine::Color &getColor()')
@@ -445,7 +436,7 @@ typeconf 'spine::IkConstraint'
     .supercls('spine::Updatable')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void apply()')
     .func(nil, 'int getOrder()')
     .func(nil, 'Vector<spine::Bone *> &getBones()')
@@ -474,7 +465,7 @@ typeconf 'spine::TransformConstraint'
     .supercls('spine::Updatable')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'int getOrder()')
     .func(nil, 'Vector<spine::Bone *> &getBones()')
     .func(nil, 'spine::Bone *getTarget()')
@@ -505,7 +496,7 @@ typeconf 'spine::TransformConstraintData'
     .supercls('spine::ConstraintData')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'TransformConstraintData(const spine::String &name)')
     .func(nil, 'Vector<spine::BoneData *> &getBones()')
     .func(nil, 'spine::BoneData *getTarget()')
@@ -544,7 +535,7 @@ typeconf 'spine::PathConstraintData'
     .supercls('spine::ConstraintData')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'PathConstraintData(const spine::String &name)')
     .func(nil, 'Vector<spine::BoneData *> &getBones()')
     .func(nil, 'spine::SlotData *getTarget()')
@@ -583,7 +574,7 @@ typeconf 'spine::SkeletonBounds'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'SkeletonBounds()')
     .func(nil, 'bool aabbcontainsPoint(float x, float y)')
     .func(nil, 'bool aabbintersectsSegment(float x1, float y1, float x2, float y2)')
@@ -599,13 +590,13 @@ typeconf 'spine::SkeletonClipping'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::Timeline'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'size_t getFrameEntries()')
     .func(nil, 'size_t getFrameCount()')
     .func(nil, 'Vector<float> &getFrames()')
@@ -621,7 +612,7 @@ typeconf 'spine::CurveTimeline'
     .supercls('spine::Timeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void setLinear(size_t frame)')
     .func(nil, 'void setStepped(size_t frame)')
     .func(nil, 'void setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2)')
@@ -633,21 +624,21 @@ typeconf 'spine::CurveTimeline1'
     .supercls('spine::CurveTimeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'float getCurveValue(float time)')
 
 typeconf 'spine::CurveTimeline2'
     .supercls('spine::CurveTimeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'float getCurveValue(float time)')
 
 typeconf 'spine::AttachmentTimeline'
     .supercls('spine::Timeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'AttachmentTimeline(size_t frameCount, int slotIndex)')
     .func(nil, 'Vector<spine::String> &getAttachmentNames()')
     .func(nil, 'int getSlotIndex()')
@@ -659,7 +650,7 @@ typeconf 'spine::RGBATimeline'
     .supercls('spine::CurveTimeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RGBATimeline(size_t frameCount, size_t bezierCount, int slotIndex)')
     .func(nil, 'int getSlotIndex()')
     .func(nil, 'void setSlotIndex(int inValue)')
@@ -669,7 +660,7 @@ typeconf 'spine::RGBTimeline'
     .supercls('spine::CurveTimeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RGBTimeline(size_t frameCount, size_t bezierCount, int slotIndex)')
     .func(nil, 'int getSlotIndex()')
     .func(nil, 'void setSlotIndex(int inValue)')
@@ -679,7 +670,7 @@ typeconf 'spine::AlphaTimeline'
     .supercls('spine::CurveTimeline1')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'AlphaTimeline(size_t frameCount, size_t bezierCount, int slotIndex)')
     .func(nil, 'int getSlotIndex()')
     .func(nil, 'void setSlotIndex(int inValue)')
@@ -689,7 +680,7 @@ typeconf 'spine::RGBA2Timeline'
     .supercls('spine::CurveTimeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RGBA2Timeline(size_t frameCount, size_t bezierCount, int slotIndex)')
     .func(nil, 'int getSlotIndex()')
     .func(nil, 'void setSlotIndex(int inValue)')
@@ -699,7 +690,7 @@ typeconf 'spine::RGB2Timeline'
     .supercls('spine::CurveTimeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RGB2Timeline(size_t frameCount, size_t bezierCount, int slotIndex)')
     .func(nil, 'int getSlotIndex()')
     .func(nil, 'void setSlotIndex(int inValue)')
@@ -709,7 +700,7 @@ typeconf 'spine::DeformTimeline'
     .supercls('spine::CurveTimeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'DeformTimeline(size_t frameCount, size_t bezierCount, int slotIndex, spine::VertexAttachment *attachment)')
     .func(nil, 'spine::VertexAttachment *getAttachment()')
     .func(nil, 'void setAttachment(spine::VertexAttachment *inValue)')
@@ -723,21 +714,21 @@ typeconf 'spine::DrawOrderTimeline'
     .supercls('spine::Timeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'DrawOrderTimeline(size_t frameCount)')
 
 typeconf 'spine::EventTimeline'
     .supercls('spine::Timeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'EventTimeline(size_t frameCount)')
 
 typeconf 'spine::IkConstraintTimeline'
     .supercls('spine::CurveTimeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'IkConstraintTimeline(size_t frameCount, size_t bezierCount, int ikConstraintIndex)')
     .func(nil, 'int getIkConstraintIndex()')
     .func(nil, 'void setIkConstraintIndex(int inValue)')
@@ -747,7 +738,7 @@ typeconf 'spine::PathConstraintMixTimeline'
     .supercls('spine::CurveTimeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'PathConstraintMixTimeline(size_t frameCount, size_t bezierCount, int pathConstraintIndex)')
     .func(nil, 'int getPathConstraintIndex()')
     .func(nil, 'void setPathConstraintIndex(int inValue)')
@@ -757,7 +748,7 @@ typeconf 'spine::PathConstraintPositionTimeline'
     .supercls('spine::CurveTimeline1')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('ENTRIES', 'spine::PathConstraintPositionTimeline::ENTRIES', 'const int')
     .func(nil, 'PathConstraintPositionTimeline(size_t frameCount, size_t bezierCount, int pathConstraintIndex)')
     .func(nil, 'int getPathConstraintIndex()')
@@ -768,7 +759,7 @@ typeconf 'spine::PathConstraintSpacingTimeline'
     .supercls('spine::CurveTimeline1')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'PathConstraintSpacingTimeline(size_t frameCount, size_t bezierCount, int pathConstraintIndex)')
     .func(nil, 'int getPathConstraintIndex()')
     .func(nil, 'void setPathConstraintIndex(int inValue)')
@@ -778,7 +769,7 @@ typeconf 'spine::TranslateTimeline'
     .supercls('spine::CurveTimeline2')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'TranslateTimeline(size_t frameCount, size_t bezierCount, int boneIndex)')
     .func(nil, 'int getBoneIndex()')
     .func(nil, 'void setBoneIndex(int inValue)')
@@ -788,7 +779,7 @@ typeconf 'spine::ShearTimeline'
     .supercls('spine::CurveTimeline2')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ShearTimeline(size_t frameCount, size_t bezierCount, int boneIndex)')
     .func(nil, 'int getBoneIndex()')
     .func(nil, 'void setBoneIndex(int inValue)')
@@ -798,7 +789,7 @@ typeconf 'spine::TransformConstraintTimeline'
     .supercls('spine::CurveTimeline')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'TransformConstraintTimeline(size_t frameCount, size_t bezierCount, int transformConstraintIndex)')
     .func(nil, 'int getTransformConstraintIndex()')
     .func(nil, 'void setTransformConstraintIndex(int inValue)')
@@ -808,7 +799,7 @@ typeconf 'spine::ScaleTimeline'
     .supercls('spine::CurveTimeline2')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ScaleTimeline(size_t frameCount, size_t bezierCount, int boneIndex)')
     .func(nil, 'int getBoneIndex()')
     .func(nil, 'void setBoneIndex(int inValue)')
@@ -818,7 +809,7 @@ typeconf 'spine::RotateTimeline'
     .supercls('spine::CurveTimeline1')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RotateTimeline(size_t frameCount, size_t bezierCount, int boneIndex)')
     .func(nil, 'int getBoneIndex()')
     .func(nil, 'void setBoneIndex(int inValue)')
@@ -828,13 +819,13 @@ typeconf 'spine::VertexEffect'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::SwirlVertexEffect'
     .supercls('spine::VertexEffect')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void setCenterX(float centerX)')
     .func(nil, 'float getCenterX()')
     .func(nil, 'void setCenterY(float centerY)')
@@ -858,7 +849,7 @@ typeconf 'spine::JitterVertexEffect'
     .supercls('spine::VertexEffect')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'JitterVertexEffect(float jitterX, float jitterY)')
     .func(nil, 'void setJitterX(float jitterX)')
     .func(nil, 'float getJitterX()')
@@ -871,13 +862,13 @@ typeconf 'spine::Polygon'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::Skin'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Skin(const spine::String &name)')
     .func(nil, 'void setAttachment(size_t slotIndex, const spine::String &name, spine::Attachment *attachment)')
     .func(nil, 'spine::Attachment *getAttachment(size_t slotIndex, const spine::String &name)')
@@ -895,13 +886,13 @@ typeconf 'spine::Atlas'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::Bone'
     .supercls('spine::Updatable')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static void setYDown(bool inValue)')
     .func(nil, 'static bool isYDown()')
     .func(nil, 'void updateWorldTransform()', 'void updateWorldTransform(float x, float y, float rotation, float scaleX, float scaleY, float shearX, float shearY)')
@@ -991,7 +982,7 @@ typeconf 'spine::Slot'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void setToSetupPose()')
     .func(nil, 'spine::Color &getColor()')
     .func(nil, 'spine::Color &getDarkColor()')
@@ -1014,7 +1005,7 @@ typeconf 'spine::Attachment'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'const spine::String &getName()')
     .func(nil, 'spine::Attachment *copy()')
     .func(nil, 'int getRefCount()')
@@ -1027,7 +1018,7 @@ typeconf 'spine::VertexAttachment'
     .supercls('spine::Attachment')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'int getId()')
     .func(nil, 'Vector<size_t> &getBones()')
     .func(nil, 'Vector<float> &getVertices()')
@@ -1046,7 +1037,7 @@ typeconf 'spine::ClippingAttachment'
     .supercls('spine::VertexAttachment')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ClippingAttachment(const spine::String &name)')
     .func(nil, 'spine::SlotData *getEndSlot()')
     .func(nil, 'void setEndSlot(spine::SlotData *inValue)')
@@ -1058,7 +1049,7 @@ typeconf 'spine::BoundingBoxAttachment'
     .supercls('spine::VertexAttachment')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'BoundingBoxAttachment(const spine::String &name)')
     .func(nil, 'spine::Color &getColor()')
     .prop('color', nil, nil)
@@ -1067,7 +1058,7 @@ typeconf 'spine::MeshAttachment'
     .supercls('spine::VertexAttachment')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'MeshAttachment(const spine::String &name)')
     .func(nil, 'void updateUVs()')
     .func(nil, 'int getHullLength()')
@@ -1134,7 +1125,7 @@ typeconf 'spine::PathAttachment'
     .supercls('spine::VertexAttachment')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'PathAttachment(const spine::String &name)')
     .func(nil, 'Vector<float> &getLengths()')
     .func(nil, 'bool isClosed()')
@@ -1151,7 +1142,7 @@ typeconf 'spine::PathConstraint'
     .supercls('spine::Updatable')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void apply()')
     .func(nil, 'int getOrder()')
     .func(nil, 'float getPosition()')
@@ -1180,7 +1171,7 @@ typeconf 'spine::PointAttachment'
     .supercls('spine::Attachment')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'PointAttachment(const spine::String &name)')
     .func(nil, 'float getX()')
     .func(nil, 'void setX(float inValue)')
@@ -1198,7 +1189,7 @@ typeconf 'spine::RegionAttachment'
     .supercls('spine::Attachment')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'RegionAttachment(const spine::String &name)')
     .func(nil, 'void updateOffset()')
     .func(nil, 'void setUVs(float u, float v, float u2, float v2, float degrees)')
@@ -1254,7 +1245,7 @@ typeconf 'spine::TrackEntry'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'TrackEntry()')
     .func(nil, 'int getTrackIndex()')
     .func(nil, 'spine::Animation *getAnimation()')
@@ -1301,13 +1292,13 @@ typeconf 'spine::TrackEntry'
     .func(nil, 'void resetRotationDirections()')
     .func(nil, 'float getTrackComplete()')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setListener(spine::AnimationStateListener listener)'
         },
-        TAG_MAKER = 'Listener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'Listener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('trackIndex', nil, nil)
     .prop('animation', nil, nil)
@@ -1340,7 +1331,7 @@ typeconf 'spine::SkeletonData'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func('__gc', [[
         {
             auto self = olua_toobj<spine::SkeletonData>(L, 1);
@@ -1483,7 +1474,7 @@ typeconf 'spine::Skeleton'
     .supercls('spine::SpineObject')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Skeleton(spine::SkeletonData *skeletonData)')
     .func(nil, 'void updateCache()')
     .func(nil, 'void printUpdateCache()')
@@ -1543,7 +1534,7 @@ typeconf 'spine::SkeletonRenderer'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static spine::SkeletonRenderer *create()')
     .func(nil, 'static spine::SkeletonRenderer *createWithSkeleton(spine::Skeleton *skeleton, @optional bool ownsSkeleton, @optional bool ownsSkeletonData)')
     .func(nil, 'static spine::SkeletonRenderer *createWithData(@addref(skeletonData ^) spine::SkeletonData *skeletonData, @optional bool ownsSkeletonData)')
@@ -1593,49 +1584,49 @@ typeconf 'spine::StartListener'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::InterruptListener'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::EndListener'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::DisposeListener'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::CompleteListener'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::EventListener'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::UpdateWorldTransformsListener'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'spine::SkeletonAnimation'
     .supercls('spine::SkeletonRenderer')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static spine::SkeletonAnimation *create()')
     .func(nil, 'static spine::SkeletonAnimation *createWithData(@addref(skeletonData ^) spine::SkeletonData *skeletonData, @optional bool ownsSkeletonData)')
     .func(nil, 'static spine::SkeletonAnimation *createWithJsonFile(const std::string &skeletonJsonFile, spine::Atlas *atlas, @optional float scale)', 'static spine::SkeletonAnimation *createWithJsonFile(const std::string &skeletonJsonFile, const std::string &atlasFile, @optional float scale)')
@@ -1657,129 +1648,129 @@ typeconf 'spine::SkeletonAnimation'
     .func(nil, 'void setUpdateOnlyIfVisible(bool status)')
     .func(nil, 'SkeletonAnimation()')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setStartListener(const spine::StartListener &listener)'
         },
-        TAG_MAKER = 'StartListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'StartListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setInterruptListener(const spine::InterruptListener &listener)'
         },
-        TAG_MAKER = 'InterruptListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'InterruptListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setEndListener(const spine::EndListener &listener)'
         },
-        TAG_MAKER = 'EndListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'EndListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setDisposeListener(const spine::DisposeListener &listener)'
         },
-        TAG_MAKER = 'DisposeListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'DisposeListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setCompleteListener(const spine::CompleteListener &listener)'
         },
-        TAG_MAKER = 'CompleteListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'CompleteListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setEventListener(const spine::EventListener &listener)'
         },
-        TAG_MAKER = 'EventListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'EventListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setTrackStartListener(spine::TrackEntry *entry, const spine::StartListener &listener)'
         },
-        TAG_MAKER = 'TrackStartListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'TrackStartListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setTrackInterruptListener(spine::TrackEntry *entry, const spine::InterruptListener &listener)'
         },
-        TAG_MAKER = 'TrackInterruptListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'TrackInterruptListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setTrackEndListener(spine::TrackEntry *entry, const spine::EndListener &listener)'
         },
-        TAG_MAKER = 'TrackEndListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'TrackEndListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setTrackDisposeListener(spine::TrackEntry *entry, const spine::DisposeListener &listener)'
         },
-        TAG_MAKER = 'TrackDisposeListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'TrackDisposeListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setTrackCompleteListener(spine::TrackEntry *entry, const spine::CompleteListener &listener)'
         },
-        TAG_MAKER = 'TrackCompleteListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'TrackCompleteListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void setTrackEventListener(spine::TrackEntry *entry, const spine::EventListener &listener)'
         },
-        TAG_MAKER = 'TrackEventListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'TrackEventListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setPreUpdateWorldTransformsListener(@local const spine::UpdateWorldTransformsListener &listener)'
+        funcs =  {
+            'void setPreUpdateWorldTransformsListener(@localvar const spine::UpdateWorldTransformsListener &listener)'
         },
-        TAG_MAKER = 'PreUpdateWorldTransformsListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'PreUpdateWorldTransformsListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setPostUpdateWorldTransformsListener(@local const spine::UpdateWorldTransformsListener &listener)'
+        funcs =  {
+            'void setPostUpdateWorldTransformsListener(@localvar const spine::UpdateWorldTransformsListener &listener)'
         },
-        TAG_MAKER = 'PostUpdateWorldTransformsListener',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'PostUpdateWorldTransformsListener',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('state', nil, nil)

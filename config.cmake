@@ -1,15 +1,18 @@
 # app package name
-set(APP_PACKAGE_NAME "com.codetypes.hellolua")
+set(APP_PACKAGE_NAME "com.codetypes.cclua")
 
 # app name
 set(APP_PRODUCT_NAME "cocoslua")
+
+# app runtime version
+set(CCLUA_VERSION "1.0.1")
 
 # app version and build
 set(APP_VERSION "1.0.0")
 set(APP_BUILD "100")
 
 # apple developer team
-set(APPLE_DEVELOPMENT_TEAM "2566X92242")
+set(APPLE_DEVELOPMENT_TEAM "GFJDX458W5")
 
 # bugly
 if(IOS)

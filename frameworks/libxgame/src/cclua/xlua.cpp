@@ -11,17 +11,6 @@ USING_NS_CCLUA;
 lua_State *xlua_invokingstate = NULL;
 static std::unordered_map<std::string, std::string> xlua_typemap;
 
-#if COCOS2D_VERSION >= 0x00040000
-extern bool CC_DLL cc_assert_script_compatible(const char *msg)
-{
-    if (xlua_invokingstate) {
-        lua_State *L = xlua_invokingstate;
-        xlua_invokingstate = NULL;
-        luaL_error(L, msg);
-    }
-    return false;
-}
-#else
 static bool inline throw_lua_error(const char *msg)
 {
     if (xlua_invokingstate) {
@@ -32,7 +21,7 @@ static bool inline throw_lua_error(const char *msg)
     return false;
 }
 
-#ifdef CCLUA_OS_WIN32
+#if COCOS2D_VERSION < 0x00040000 && defined(CCLUA_OS_WIN32)
 #include "base/CCScriptSupport.h"
 class AssertEngine : public ScriptEngineProtocol {
 public:
@@ -52,7 +41,6 @@ extern bool cc_assert_script_compatible(const char *msg)
 {
     return throw_lua_error(msg);
 }
-#endif
 #endif
 
 static int _coroutine_resume(lua_State *L)
@@ -272,10 +260,6 @@ lua_State *xlua_new()
 {
     lua_State *L = luaL_newstate();
     
-#if LUA_VERSION_NUM == 501
-    olua_initcompat(L);
-#endif
-    
     luaL_openlibs(L);
     olua_callfunc(L, _fixcoresume);
     olua_callfunc(L, _fixprint);
@@ -357,7 +341,7 @@ int xlua_ccobjgc(lua_State *L)
         const char *str = olua_objstring(L, 1);
         cclua::runtime::log("lua gc: %s(NAME=%s, RC=%d, TC=%d)", str,
             name && strlen(name) > 0 ? name : "''",
-            obj->getReferenceCount() - 1, olua_objcount(L));
+            (int)obj->getReferenceCount() - 1, (int)olua_objcount(L));
         lua_settop(L, top);
     }
     
@@ -406,14 +390,14 @@ int xlua_nonsupport(lua_State *L)
 }
 
 #ifdef OLUA_HAVE_MAINTHREAD
-lua_State *olua_mainthread(lua_State *L)
+OLUA_API lua_State *olua_mainthread(lua_State *L)
 {
     return runtime::luaVM();
 }
 #endif
 
 #ifdef OLUA_HAVE_CMPREF
-void olua_startcmpref(lua_State *L, int idx, const char *refname)
+OLUA_API void olua_startcmpref(lua_State *L, int idx, const char *refname)
 {
     olua_getreftable(L, idx, refname);                      // L: t
     lua_pushnil(L);                                         // L: t k
@@ -451,19 +435,19 @@ static bool should_delref(lua_State *L, int idx)
     return false;
 }
 
-void olua_endcmpref(lua_State *L, int idx, const char *refname)
+OLUA_API void olua_endcmpref(lua_State *L, int idx, const char *refname)
 {
     olua_visitrefs(L, idx, refname, should_delref);
 }
 #endif
 
 #ifdef OLUA_HAVE_LUATYPE
-void olua_registerluatype(lua_State *L, const char *type, const char *cls)
+OLUA_API void olua_registerluatype(lua_State *L, const char *type, const char *cls)
 {
     xlua_typemap[type] = cls;
 }
 
-const char *olua_getluatype(lua_State *L, const char *type)
+OLUA_API const char *olua_getluatype(lua_State *L, const char *type)
 {
     auto cls = xlua_typemap.find(type);
     return cls != xlua_typemap.end() ? cls->second.c_str() : nullptr;

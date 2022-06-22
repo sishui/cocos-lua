@@ -117,18 +117,17 @@ public:
     static void setManifestVersion(const std::string &version);
     static const std::string getNetworkStatus();
     
-    // property value
-    static bool hasProperty(const std::string &key);
-    static std::string getProperty(const std::string &key);
-    static void setProperty(const std::string &key, const std::string &value);
+    // environment value
+    static std::string getEnv(const std::string &key);
+    static void setEnv(const std::string &key, const std::string &value, bool save = false);
     
     static const std::string getPaste();
     static void setPaste(const std::string &text);
     
 #if COCOS2D_VERSION >= 0x00040000
-    static cocos2d::RenderTexture *capture(cocos2d::Node *node, float width, float height, cocos2d::backend::PixelFormat format = cocos2d::backend::PixelFormat::RGBA8888, cocos2d::backend::PixelFormat depthStencilFormat = cocos2d::backend::PixelFormat::D24S8);
+    static cocos2d::Sprite *capture(cocos2d::Node *node, float width, float height, float scale = 1, cocos2d::backend::PixelFormat format = cocos2d::backend::PixelFormat::RGBA8888, cocos2d::backend::PixelFormat depthStencilFormat = cocos2d::backend::PixelFormat::D24S8);
 #else
-    static cocos2d::RenderTexture *capture(cocos2d::Node *node, float width, float height, cocos2d::Texture2D::PixelFormat format = cocos2d::Texture2D::PixelFormat::RGBA8888, GLuint depthStencilFormat = 0x88f0);
+    static cocos2d::Sprite *capture(cocos2d::Node *node, float width, float height, float scale = 1, cocos2d::Texture2D::PixelFormat format = cocos2d::Texture2D::PixelFormat::RGBA8888, GLuint depthStencilFormat = 0x88f0);
 #endif
     
     static uint32_t getMaxFrameRate();
@@ -164,6 +163,7 @@ public:
     static void setLogPath(const std::string &path);
     static const std::string getLogPath();
     static void log(const char *format, ...);
+    static void showLog();
     
     // msaa antialias for vector graphics
     static void setSampleCount(unsigned int samples);

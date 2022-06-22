@@ -1,8 +1,8 @@
 module 'cocos2d_physics'
 
-path = "../../frameworks/libxgame/src/lua-bindings"
+path "../../frameworks/libxgame/src/lua-bindings"
 
-headers = [[
+headers [[
 #include "lua-bindings/lua_conv.h"
 #include "lua-bindings/lua_conv_manual.h"
 #include "lua-bindings/LuaCocosAdapter.h"
@@ -10,19 +10,19 @@ headers = [[
 #include "cocos2d.h"
 ]]
 
-make_luacls = function (cppname)
+luacls(function (cppname)
     cppname = string.gsub(cppname, "^cocos2d::", "cc.")
     cppname = string.gsub(cppname, "::", ".")
     return cppname
-end
+end)
 
 include "conf/exclude-type.lua"
 
 typeconv 'cocos2d::PhysicsMaterial'
 
-typeconv 'cocos2d::PhysicsRayCastCallbackFunc'
-typeconv 'cocos2d::PhysicsQueryRectCallbackFunc'
-typeconv 'cocos2d::PhysicsQueryPointCallbackFunc'
+typeconf 'cocos2d::PhysicsRayCastCallbackFunc'
+typeconf 'cocos2d::PhysicsQueryRectCallbackFunc'
+typeconf 'cocos2d::PhysicsQueryPointCallbackFunc'
 typeconf 'cocos2d::EventListenerPhysicsContact'
 typeconf 'cocos2d::EventListenerPhysicsContactWithGroup'
 typeconf 'cocos2d::EventListenerPhysicsContactWithBodies'
@@ -56,5 +56,5 @@ typeconf 'cocos2d::PhysicsShapeEdgeSegment'
 typeconf 'cocos2d::PhysicsRayCastInfo'
 
 typeconf 'cocos2d::PhysicsWorld'
-    .callback {name = 'setPreUpdateCallback', nullable = true}
-    .callback {name = 'setPostUpdateCallback', nullable = true}
+    .callback 'setPreUpdateCallback' .arg1 '@nullable'
+    .callback 'setPostUpdateCallback' .arg1 '@nullable'

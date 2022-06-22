@@ -46,6 +46,10 @@ target_include_directories(${LIBNAME}
 
 target_link_libraries(${LIBNAME} PRIVATE xgame cocos2d)
 
+if(APPLE)
+    set_xcode_property(${LIBNAME} CLANG_ENABLE_OBJC_ARC "YES")
+endif()
+
 if(IOS)
     find_library(LIBRESOLV resolv)
     target_link_libraries(${LIBNAME}
@@ -89,7 +93,7 @@ endif()
 set_target_properties(${LIBNAME} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-    FOLDER "Plugins"
+    FOLDER "cclua/plugins"
 )
 
 if(XCODE OR VS)

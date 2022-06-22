@@ -1,24 +1,24 @@
 module 'bugly'
 
-path = "../../frameworks/libxgame/src/bugly"
+path "../../frameworks/libxgame/src/bugly"
 
-headers = [[
+headers [[
 #include "lua-bindings/lua_conv.h"
 #include "lua-bindings/lua_conv_manual.h"
 #include "cclua/xlua.h"
 #include "bugly/CrashReport.h"
 ]]
 
-make_luacls = function (cppname)
+luacls(function (cppname)
     cppname = string.gsub(cppname, "^cclua::", "cclua.")
     cppname = string.gsub(cppname, "::", ".")
     return cppname
-end
+end)
 
 include "conf/exclude-type.lua"
 
 ifdef 'CCLUA_BUILD_BUGLY'
 typeconf "cclua::CrashReport::LogLevel"
 typeconf "cclua::CrashReport"
-    .require 'cclua::runtime::registerFeature("bugly", true);'
+    .luaopen 'cclua::runtime::registerFeature("bugly", true);'
 endif ''

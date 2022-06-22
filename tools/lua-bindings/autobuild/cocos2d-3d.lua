@@ -2,16 +2,17 @@
 
 dofile "autobuild/cocos2d-3d-types.lua"
 
-NAME = "cocos2d_3d"
-PATH = "../../frameworks/libxgame/src/lua-bindings"
-HEADERS = [[
+name = "cocos2d_3d"
+path = "../../frameworks/libxgame/src/lua-bindings"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "cclua/xlua.h"
     #include "cocos2d.h"
     #include "3d/CC3DProgramInfo.h"
 ]]
-CHUNK = nil
+chunk = nil
+luaopen = nil
 
 typeconv 'cocos2d::MeshVertexAttrib'
     .var('type', 'cocos2d::backend::VertexFormat type')
@@ -22,7 +23,7 @@ typeconf 'cocos2d::NTextureData::Usage'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('Unknown', 'cocos2d::NTextureData::Usage::Unknown')
     .enum('None', 'cocos2d::NTextureData::Usage::None')
     .enum('Diffuse', 'cocos2d::NTextureData::Usage::Diffuse')
@@ -39,7 +40,7 @@ typeconf 'cocos2d::shaderinfos::VertexKey'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('VERTEX_ATTRIB_POSITION', 'cocos2d::shaderinfos::VertexKey::VERTEX_ATTRIB_POSITION')
     .enum('VERTEX_ATTRIB_COLOR', 'cocos2d::shaderinfos::VertexKey::VERTEX_ATTRIB_COLOR')
     .enum('VERTEX_ATTRIB_TEX_COORD', 'cocos2d::shaderinfos::VertexKey::VERTEX_ATTRIB_TEX_COORD')
@@ -59,7 +60,7 @@ typeconf 'cocos2d::shaderinfos::Uniformkey'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('UNIFORM_AMBIENT_COLOR', 'cocos2d::shaderinfos::Uniformkey::UNIFORM_AMBIENT_COLOR')
     .enum('UNIFORM_P_MATRIX', 'cocos2d::shaderinfos::Uniformkey::UNIFORM_P_MATRIX')
     .enum('UNIFORM_MULTIVIEW_P_MATRIX', 'cocos2d::shaderinfos::Uniformkey::UNIFORM_MULTIVIEW_P_MATRIX')
@@ -81,7 +82,7 @@ typeconf 'cocos2d::NTextureData'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .var('id', 'std::string id')
     .var('filename', 'std::string filename')
     .var('type', 'cocos2d::NTextureData::Usage type')
@@ -92,7 +93,7 @@ typeconf 'cocos2d::Mesh'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Mesh *create(const std::vector<float> &positions, const std::vector<float> &normals, const std::vector<float> &texs, const std::vector<unsigned short> &indices)', 'static cocos2d::Mesh *create(const std::vector<float> &vertices, int perVertexSizeInFloat, const std::vector<unsigned short> &indices, const std::vector<MeshVertexAttrib> &attribs)')
     .func(nil, 'cocos2d::backend::Buffer *getVertexBuffer()')
     .func(nil, 'bool hasVertexAttrib(cocos2d::shaderinfos::VertexKey attrib)')
@@ -138,7 +139,7 @@ typeconf 'cocos2d::MeshSkin'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ssize_t getBoneCount()')
     .func(nil, 'cocos2d::Bone3D *getBoneByIndex(unsigned int index)')
     .func(nil, 'cocos2d::Bone3D *getBoneByName(const std::string &id)')
@@ -159,7 +160,7 @@ typeconf 'cocos2d::BillBoard::Mode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('VIEW_POINT_ORIENTED', 'cocos2d::BillBoard::Mode::VIEW_POINT_ORIENTED')
     .enum('VIEW_PLANE_ORIENTED', 'cocos2d::BillBoard::Mode::VIEW_PLANE_ORIENTED')
 
@@ -167,7 +168,7 @@ typeconf 'cocos2d::BillBoard'
     .supercls('cocos2d::Sprite')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::BillBoard *create(@optional cocos2d::BillBoard::Mode mode)', 'static cocos2d::BillBoard *create(const std::string &filename, @optional cocos2d::BillBoard::Mode mode)', 'static cocos2d::BillBoard *create(const std::string &filename, const cocos2d::Rect &rect, @optional cocos2d::BillBoard::Mode mode)')
     .func(nil, 'static cocos2d::BillBoard *createWithTexture(cocos2d::Texture2D *texture, @optional cocos2d::BillBoard::Mode mode)')
     .func(nil, 'void setMode(cocos2d::BillBoard::Mode mode)')
@@ -179,7 +180,7 @@ typeconf 'cocos2d::Sprite3DMaterial::MaterialType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('UNLIT', 'cocos2d::Sprite3DMaterial::MaterialType::UNLIT')
     .enum('UNLIT_NOTEX', 'cocos2d::Sprite3DMaterial::MaterialType::UNLIT_NOTEX')
     .enum('VERTEX_LIT', 'cocos2d::Sprite3DMaterial::MaterialType::VERTEX_LIT')
@@ -192,7 +193,7 @@ typeconf 'cocos2d::Sprite3DMaterial'
     .supercls('cocos2d::Material')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'cocos2d::Sprite3DMaterial::MaterialType getMaterialType()')
     .func(nil, 'static cocos2d::Sprite3DMaterial *createBuiltInMaterial(cocos2d::Sprite3DMaterial::MaterialType type, bool skinned)', 'static void createBuiltInMaterial()')
     .func(nil, 'static cocos2d::Sprite3DMaterial *createWithFilename(const std::string &path)')
@@ -206,7 +207,7 @@ typeconf 'cocos2d::Sprite3D'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Sprite3D *create()', 'static cocos2d::Sprite3D *create(const std::string &modelPath)', 'static cocos2d::Sprite3D *create(const std::string &modelPath, const std::string &texturePath)')
     .func(nil, 'void setTexture(const std::string &texFile)', 'void setTexture(cocos2d::Texture2D *texture)')
     .func(nil, 'cocos2d::Mesh *getMeshByIndex(int index)')
@@ -236,14 +237,14 @@ typeconf 'cocos2d::Sprite3D'
     .func(nil, 'void onAABBDirty()')
     .func(nil, 'void afterAsyncLoad(void *param)')
     .callback {
-        FUNCS =  {
-            'static void createAsync(const std::string &modelPath, @local const std::function<void (Sprite3D *, void *)> &callback, void *callbackparam)',
-            'static void createAsync(const std::string &modelPath, const std::string &texturePath, @local const std::function<void (Sprite3D *, void *)> &callback, void *callbackparam)'
+        funcs =  {
+            'static void createAsync(const std::string &modelPath, @localvar const std::function<void (Sprite3D *, void *)> &callback, void *callbackparam)',
+            'static void createAsync(const std::string &modelPath, const std::string &texturePath, @localvar const std::function<void (Sprite3D *, void *)> &callback, void *callbackparam)'
         },
-        TAG_MAKER = 'createAsync',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'createAsync',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('mesh', nil, nil)
     .prop('meshCount', nil, nil)
@@ -257,7 +258,7 @@ typeconf 'cocos2d::AttachNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::AttachNode *create(cocos2d::Bone3D *attachBone)')
     .func(nil, 'AttachNode()')
 
@@ -265,7 +266,7 @@ typeconf 'cocos2d::Bone3D'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'const cocos2d::Mat4 &getInverseBindPose()')
     .func(nil, 'void updateWorldMat()')
     .func(nil, 'const cocos2d::Mat4 &getWorldMat()')
@@ -292,7 +293,7 @@ typeconf 'cocos2d::Skeleton3D'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ssize_t getBoneCount()')
     .func(nil, 'cocos2d::Bone3D *getBoneByIndex(unsigned int index)')
     .func(nil, 'cocos2d::Bone3D *getBoneByName(const std::string &id)')

@@ -10,7 +10,9 @@
 #include "cocos2d.h"
 #include "editor-support/cocostudio/CocoStudio.h"
 
-int luaopen_cocos2d_studio(lua_State *L);
+OLUA_BEGIN_DECLS
+OLUA_LIB int luaopen_cocos2d_studio(lua_State *L);
+OLUA_END_DECLS
 
 // cocostudio::timeline::AnimationInfo
 int olua_push_cocostudio_timeline_AnimationInfo(lua_State *L, const cocostudio::timeline::AnimationInfo *value);
@@ -18,6 +20,6 @@ void olua_check_cocostudio_timeline_AnimationInfo(lua_State *L, int idx, cocostu
 bool olua_is_cocostudio_timeline_AnimationInfo(lua_State *L, int idx);
 void olua_pack_cocostudio_timeline_AnimationInfo(lua_State *L, int idx, cocostudio::timeline::AnimationInfo *value);
 int olua_unpack_cocostudio_timeline_AnimationInfo(lua_State *L, const cocostudio::timeline::AnimationInfo *value);
-bool olua_ispack_cocostudio_timeline_AnimationInfo(lua_State *L, int idx);
+bool olua_canpack_cocostudio_timeline_AnimationInfo(lua_State *L, int idx);
 
 #endif

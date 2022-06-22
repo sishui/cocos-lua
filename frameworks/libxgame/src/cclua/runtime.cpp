@@ -6,8 +6,10 @@
 #include "cclua/preferences.h"
 #include "cclua/RootScene.h"
 #include "cclua/timer.h"
+#include "cclua/window.h"
 #include "cclua/xlua.h"
 #include "lua-bindings/lua_bindings.h"
+#include "ui/CocosGUI.h"
 
 #if defined(CCLUA_OS_ANDROID) || defined(CCLUA_OS_IOS)
 #include "bugly/CrashReport.h"
@@ -21,8 +23,10 @@
 #include <deque>
 
 USING_NS_CC;
+USING_NS_CCLUA;
 
-NS_CCLUA_BEGIN
+#define CCLUA_ENV_PREFIX "cclua-env."
+
 static bool _restarting = false;
 static lua_State *_luaVM = nullptr;
 static std::vector<lua_CFunction> _luaLibs;
@@ -31,7 +35,7 @@ static std::vector<std::pair<std::string, std::string>> _suspendedEvents;
 static std::string _openURI;
 static std::unordered_map<std::string, bool> _supportedFeatures;
 static std::unordered_map<std::string, bool> _tracebackCaches;
-static std::unordered_map<std::string, std::string> _properties;
+static std::unordered_map<std::string, std::string> _envs;
 static int _sampleCount = 1;
 static std::unordered_map<int, runtime::RefCallback> _refCallbacks;
 static int _refCount = -1;
@@ -49,7 +53,7 @@ void runtime::parseLaunchArgs(int argc, char *argv[])
         runtime::log("launch args: %s", argv[i]);
     }
     for (int i = 0; i < argc; i++) {
-        if (strequal(argv[i], "-workdir") && i < argc - 1) {
+        if (strequal(argv[i], "--workdir") && i < argc - 1) {
             _workdir = argv[++i];
         }
     }
@@ -248,7 +252,7 @@ void runtime::luaOpen(lua_CFunction libfunc)
 //
 const std::string runtime::getVersion()
 {
-    return "2.4.11";
+    return CCLUA_VERSION;
 }
 
 const uint64_t runtime::getCocosVersion()
@@ -306,20 +310,30 @@ const std::string runtime::getNetworkStatus()
     return __runtime_getNetworkStatus();
 }
 
-bool runtime::hasProperty(const std::string &key)
+std::string runtime::getEnv(const std::string &key)
 {
-    return _properties.find(key) != _properties.end();
+    if (_envs.find(key) != _envs.end()) {
+        return _envs[key];
+    }
+    return preferences::getString(CCLUA_ENV_PREFIX + key);
 }
 
-std::string runtime::getProperty(const std::string &key)
+void runtime::setEnv(const std::string &key, const std::string &value, bool save)
 {
-    return runtime::hasProperty(key) ? _properties[key] : "";
+    if (save) {
+        if (value == "") {
+            preferences::deleteKey(CCLUA_ENV_PREFIX + key);
+        } else {
+            preferences::setString(CCLUA_ENV_PREFIX + key, value);
+        }
+    }
+    if (value == "") {
+        _envs.erase(key);
+    } else {
+        _envs[key] = value;
+    }
 }
 
-void runtime::setProperty(const std::string &key, const std::string &value)
-{
-    _properties[key] = value;
-}
 
 const std::string runtime::getPaste()
 {
@@ -332,62 +346,56 @@ void runtime::setPaste(const std::string &text)
 }
 
 #if COCOS2D_VERSION >= 0x00040000
-RenderTexture *runtime::capture(Node *node, float width, float height, backend::PixelFormat format, backend::PixelFormat depthStencilFormat)
+Sprite *runtime::capture(Node *node, float width, float height, float scale, backend::PixelFormat format, backend::PixelFormat depthStencilFormat)
+#else
+Sprite *runtime::capture(Node *node, float width, float height, float scale, Texture2D::PixelFormat format, GLuint depthStencilFormat)
+#endif
 {
+    width *= scale;
+    height *= scale;
     auto director = Director::getInstance();
-    auto image = RenderTexture::create((int)width, (int)height, format, depthStencilFormat);
-    image->getSprite()->setIgnoreAnchorPointForPosition(true);
+    auto rt = RenderTexture::create((int)width, (int)height, format, depthStencilFormat);
+    auto image = rt->getSprite();
+    image->setIgnoreAnchorPointForPosition(true);
+    image->setScale(1.0f / scale);
+    image->setAnchorPoint(Vec2::ZERO);
     image->retain();
+    image->removeFromParent();
+    rt->retain();
     node->retain();
     
+#if COCOS2D_VERSION >= 0x00040000
     runtime::once(Director::EVENT_BEFORE_DRAW, [=]() {
-        bool savedVisible = node->isVisible();
-        Point savedPos = node->getPosition();
-        Point anchor;
-        if (!node->isIgnoreAnchorPointForPosition()) {
-            anchor = node->getAnchorPoint();
-        }
+#endif
+        bool lastVisible = node->isVisible();
+        Vec2 lastPosition = node->getPosition();
+        Vec2 lastAnchor = node->getAnchorPoint();
+        Vec2 lastScale = Vec2(node->getScaleX(), node->getScaleY());
         node->setVisible(true);
-        node->setPosition(Point(width * anchor.x, height * anchor.y));
-        image->begin();
+        node->setAnchorPoint(Vec2::ZERO);
+        node->setPosition(Vec2::ZERO);
+        node->setScale(node->getScaleX() * scale, node->getScaleY() * scale);
+        rt->begin();
         node->visit();
-        image->end();
-        node->setPosition(savedPos);
-        node->setVisible(savedVisible);
-    
+        rt->end();
+        node->setAnchorPoint(lastAnchor);
+        node->setScale(lastScale.x, lastScale.y);
+        node->setPosition(lastPosition);
+        node->setVisible(lastVisible);
+        
         runtime::once(Director::EVENT_AFTER_DRAW, [=]() {
+            rt->release();
             image->release();
             node->release();
         });
+#if COCOS2D_VERSION >= 0x00040000
     });
+#else
+    director->getRenderer()->render();
+#endif
     
     return image;
 }
-#else
-RenderTexture *runtime::capture(Node *node, float width, float height, Texture2D::PixelFormat format, GLuint depthStencilFormat)
-{
-    auto director = Director::getInstance();
-    auto image = RenderTexture::create((int)width, (int)height, format, depthStencilFormat);
-    image->getSprite()->setIgnoreAnchorPointForPosition(true);
-    director->setNextDeltaTimeZero(true);
-
-    bool savedVisible = node->isVisible();
-    Point savedPos = node->getPosition();
-    Point anchor;
-    if (!node->isIgnoreAnchorPointForPosition()) {
-        anchor = node->getAnchorPoint();
-    }
-    node->setVisible(true);
-    node->setPosition(Point(width * anchor.x, height * anchor.y));
-    image->begin();
-    node->visit();
-    image->end();
-    node->setPosition(savedPos);
-    node->setVisible(savedVisible);
-    director->getRenderer()->render();
-    return image;
-}
-#endif
 
 void runtime::setAudioSessionCatalog(const std::string &catalog)
 {
@@ -714,6 +722,53 @@ void runtime::log(const char *fmt, ...)
     }
 }
 
+void runtime::showLog()
+{
+    Size frameSize = window::getFrameSize();
+    window::setDesignSize(Size(750 * frameSize.width / frameSize.height, 750), ResolutionPolicy::NO_BORDER);
+    
+    Rect rect = window::getVisibleBounds();
+    Size size = window::getVisibleSize();
+    Scene *scene = Scene::create();
+    scene->setIgnoreAnchorPointForPosition(true);
+    
+    ui::Layout *view = ui::Layout::create();
+    view->setIgnoreAnchorPointForPosition(true);
+    view->setBackGroundColor(Color3B::BLACK);
+    view->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
+    view->setContentSize(size);
+    view->setPosition(rect.origin);
+    
+    cocos2d::Data log = filesystem::read(runtime::getLogPath());
+    ui::Text *label = ui::Text::create();
+    label->setFontSize(25);
+    label->setString((const char *)log.getBytes());
+    label->setTextColor(Color4B::WHITE);
+    label->setIgnoreAnchorPointForPosition(true);
+    label->setTouchEnabled(false);
+    
+    ui::ScrollView *scroll = ui::ScrollView::create();
+    scroll->setIgnoreAnchorPointForPosition(true);
+    scroll->addChild(label);
+    scroll->setContentSize(size);
+    scroll->setInnerContainerSize(label->getContentSize());
+    view->addChild(scroll);
+    
+    ui::Button *btn = ui::Button::create();
+    btn->setContentSize(Size(120, 80));
+    btn->setTitleText("Restart");
+    btn->getTitleLabel()->setSystemFontSize(40);
+    btn->setIgnoreAnchorPointForPosition(true);
+    btn->setPosition(Vec2(size.width - 150, 0));
+    btn->addClickEventListener([](Ref *target) {
+        runtime::restart();
+    });
+    view->addChild(btn);
+    view->setAnchorPoint(Vec2(0.5f, 0.5f));
+    view->setScale(0.9f, 0.9f);
+    runtime::getRunningScene()->addChild(view);
+}
+
 //
 // msaa antialias
 //
@@ -964,5 +1019,3 @@ void RuntimeContext::applicationWillTerminate()
     director->mainLoop();
 #endif
 }
-
-NS_CCLUA_END

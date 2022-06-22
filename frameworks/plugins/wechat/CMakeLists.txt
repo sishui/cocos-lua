@@ -32,10 +32,14 @@ target_include_directories(${LIBNAME}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-target_link_libraries(${LIBNAME} PRIVATE xgame)
+target_link_libraries(${LIBNAME} PRIVATE xgame cocos2d)
 
 if(IOS)
     target_link_libraries(${LIBNAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ios/libWeChatSDK.a)
+endif()
+
+if(APPLE)
+    set_xcode_property(${LIBNAME} CLANG_ENABLE_OBJC_ARC "YES")
 endif()
 
 if(ANDROID OR IOS)
@@ -45,7 +49,7 @@ endif()
 set_target_properties(${LIBNAME} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-    FOLDER "Plugins"
+    FOLDER "cclua/plugins"
 )
 
 if(XCODE OR VS)

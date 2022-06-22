@@ -2,16 +2,16 @@
 
 dofile "autobuild/cocos2d-studio-types.lua"
 
-NAME = "cocos2d_studio"
-PATH = "../../frameworks/libxgame/src/lua-bindings"
-HEADERS = [[
+name = "cocos2d_studio"
+path = "../../frameworks/libxgame/src/lua-bindings"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "cclua/xlua.h"
     #include "cocos2d.h"
     #include "editor-support/cocostudio/CocoStudio.h"
 ]]
-CHUNK = [[
+chunk = [[
     static std::string makeFrameEndCallbackTag(lua_Integer index, const std::string &key)
     {
         if (index < 0) {
@@ -27,6 +27,7 @@ CHUNK = [[
         return makeFrameEndCallbackTag((lua_Integer)info.endIndex, animationName);
     }
 ]]
+luaopen = nil
 
 typeconv 'cocostudio::timeline::AnimationInfo'
     .var('name', 'std::string name')
@@ -38,7 +39,7 @@ typeconf 'cocos2d::CSLoader'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::CSLoader *getInstance()')
     .func(nil, 'static void destroyInstance()')
     .func(nil, 'CSLoader()')
@@ -56,26 +57,26 @@ typeconf 'cocos2d::CSLoader'
     .func(nil, 'bool bindCallback(const std::string &callbackName, const std::string &callbackType, cocos2d::ui::Widget *sender, cocos2d::Node *handler)')
     .func(nil, 'cocos2d::Node *createNodeWithFlatBuffersForSimulator(const std::string &filename)')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'static cocos2d::Node *createNode(const std::string &filename)',
-            'static cocos2d::Node *createNode(const std::string &filename, @local const std::function<void (cocos2d::Ref *)> &callback)',
+            'static cocos2d::Node *createNode(const std::string &filename, @localvar const std::function<void (cocos2d::Ref *)> &callback)',
             'static cocos2d::Node *createNode(const cocos2d::Data &data)',
-            'static cocos2d::Node *createNode(const cocos2d::Data &data, @local const std::function<void (cocos2d::Ref *)> &callback)'
+            'static cocos2d::Node *createNode(const cocos2d::Data &data, @localvar const std::function<void (cocos2d::Ref *)> &callback)'
         },
-        TAG_MAKER = 'createNode',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'function',
+        tag_maker = 'createNode',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'function',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'static cocos2d::Node *createNodeWithVisibleSize(const std::string &filename)',
-            'static cocos2d::Node *createNodeWithVisibleSize(const std::string &filename, @local const std::function<void (cocos2d::Ref *)> &callback)'
+            'static cocos2d::Node *createNodeWithVisibleSize(const std::string &filename, @localvar const std::function<void (cocos2d::Ref *)> &callback)'
         },
-        TAG_MAKER = 'createNodeWithVisibleSize',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'function',
+        tag_maker = 'createNodeWithVisibleSize',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'function',
     }
     .prop('instance', nil, nil)
     .prop('recordJsonPath', nil, nil)
@@ -85,7 +86,7 @@ typeconf 'cocostudio::MovementEventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('START', 'cocostudio::MovementEventType::START')
     .enum('COMPLETE', 'cocostudio::MovementEventType::COMPLETE')
     .enum('LOOP_COMPLETE', 'cocostudio::MovementEventType::LOOP_COMPLETE')
@@ -94,7 +95,7 @@ typeconf 'cocostudio::DisplayType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('CS_DISPLAY_SPRITE', 'cocostudio::DisplayType::CS_DISPLAY_SPRITE')
     .enum('CS_DISPLAY_ARMATURE', 'cocostudio::DisplayType::CS_DISPLAY_ARMATURE')
     .enum('CS_DISPLAY_PARTICLE', 'cocostudio::DisplayType::CS_DISPLAY_PARTICLE')
@@ -104,7 +105,7 @@ typeconf 'cocostudio::ActionFrame'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionFrame()')
     .func(nil, 'void setFrameIndex(int index)')
     .func(nil, 'int getFrameIndex()')
@@ -125,7 +126,7 @@ typeconf 'cocostudio::ActionFadeFrame'
     .supercls('cocostudio::ActionFrame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionFadeFrame()')
     .func(nil, 'void setOpacity(int opacity)')
     .func(nil, 'int getOpacity()')
@@ -135,7 +136,7 @@ typeconf 'cocostudio::ActionFrameEasing'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionFrameEasing()')
     .func(nil, 'float bounceTime(float t)')
     .func(nil, 'float easeValue(float t)')
@@ -144,7 +145,7 @@ typeconf 'cocostudio::ActionMoveFrame'
     .supercls('cocostudio::ActionFrame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionMoveFrame()')
     .func(nil, 'void setPosition(cocos2d::Vec2 pos)')
     .func(nil, 'cocos2d::Vec2 getPosition()')
@@ -154,7 +155,7 @@ typeconf 'cocostudio::ActionRotationFrame'
     .supercls('cocostudio::ActionFrame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionRotationFrame()')
     .func(nil, 'void setRotation(float rotation)')
     .func(nil, 'float getRotation()')
@@ -164,7 +165,7 @@ typeconf 'cocostudio::ActionScaleFrame'
     .supercls('cocostudio::ActionFrame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionScaleFrame()')
     .func(nil, 'void setScaleX(float scaleX)')
     .func(nil, 'float getScaleX()')
@@ -177,7 +178,7 @@ typeconf 'cocostudio::ActionTintFrame'
     .supercls('cocostudio::ActionFrame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionTintFrame()')
     .func(nil, 'void setColor(cocos2d::Color3B ccolor)')
     .func(nil, 'cocos2d::Color3B getColor()')
@@ -187,7 +188,7 @@ typeconf 'cocostudio::AnimationData'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::AnimationData *create()')
     .func(nil, 'AnimationData()')
     .func(nil, 'void addMovement(cocostudio::MovementData *movData)')
@@ -202,7 +203,7 @@ typeconf 'cocostudio::Armature'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::Armature *create()', 'static cocostudio::Armature *create(const std::string &name)', 'static cocostudio::Armature *create(const std::string &name, cocostudio::Bone *parentBone)')
     .func(nil, 'Armature()')
     .func(nil, '@using bool init()', 'bool init(const std::string &name)', 'bool init(const std::string &name, cocostudio::Bone *parentBone)')
@@ -241,7 +242,7 @@ typeconf 'cocostudio::ProcessBase'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ProcessBase()')
     .func(nil, 'void play(int durationTo, int durationTween, int loop, int tweenEasing)')
     .func(nil, 'void pause()')
@@ -271,7 +272,7 @@ typeconf 'cocostudio::ActionManagerEx'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionManagerEx()')
     .func(nil, 'static cocostudio::ActionManagerEx *getInstance()')
     .func(nil, 'static void destroyInstance()')
@@ -287,7 +288,7 @@ typeconf 'cocostudio::ActionNode'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionNode()')
     .func(nil, 'void setUnitTime(float fTime)')
     .func(nil, 'float getUnitTime()')
@@ -316,7 +317,7 @@ typeconf 'cocostudio::ActionObject'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionObject()')
     .func(nil, 'void setName(const char *name)')
     .func(nil, 'const char *getName()')
@@ -346,7 +347,7 @@ typeconf 'cocostudio::ArmatureAnimation'
     .supercls('cocostudio::ProcessBase')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::ArmatureAnimation *create(cocostudio::Armature *armature)')
     .func(nil, 'ArmatureAnimation()')
     .func(nil, 'bool init(cocostudio::Armature *armature)')
@@ -365,22 +366,22 @@ typeconf 'cocostudio::ArmatureAnimation'
     .func(nil, 'cocos2d::Ref *getUserObject()')
     .func(nil, 'void setUserObject(cocos2d::Ref *userObject)')
     .callback {
-        FUNCS =  {
-            'void setMovementEventCallFunc(@nullable @local std::function<void (cocostudio::Armature *, cocostudio::MovementEventType, const std::string &)> listener)'
+        funcs =  {
+            'void setMovementEventCallFunc(@localvar @nullable std::function<void (cocostudio::Armature *, cocostudio::MovementEventType, const std::string &)> listener)'
         },
-        TAG_MAKER = 'MovementEventCallFunc',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'MovementEventCallFunc',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setFrameEventCallFunc(@nullable @local std::function<void (cocostudio::Bone *, const std::string &, int, int)> listener)'
+        funcs =  {
+            'void setFrameEventCallFunc(@localvar @nullable std::function<void (cocostudio::Bone *, const std::string &, int, int)> listener)'
         },
-        TAG_MAKER = 'FrameEventCallFunc',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'FrameEventCallFunc',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('speedScale', nil, nil)
     .prop('movementCount', nil, nil)
@@ -392,7 +393,7 @@ typeconf 'cocostudio::ArmatureData'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::ArmatureData *create()')
     .func(nil, 'ArmatureData()')
     .func(nil, 'bool init()')
@@ -406,7 +407,7 @@ typeconf 'cocostudio::ArmatureDataManager'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::ArmatureDataManager *getInstance()')
     .func(nil, 'static void destroyInstance()')
     .func(nil, 'bool init()')
@@ -436,7 +437,7 @@ typeconf 'cocostudio::DisplayData'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::DisplayData *create()')
     .func(nil, 'static std::string changeDisplayToTexture(const std::string &displayName)')
     .func(nil, 'DisplayData()')
@@ -448,7 +449,7 @@ typeconf 'cocostudio::ArmatureDisplayData'
     .supercls('cocostudio::DisplayData')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::ArmatureDisplayData *create()')
     .func(nil, 'ArmatureDisplayData()')
 
@@ -456,13 +457,13 @@ typeconf 'cocostudio::ArmatureMovementDispatcher'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocostudio::BaseData'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::BaseData *create()')
     .func(nil, 'BaseData()')
     .func(nil, 'void copy(const cocostudio::BaseData *node)')
@@ -488,7 +489,7 @@ typeconf 'cocostudio::BaseTriggerAction'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'bool init()')
     .func(nil, 'void done()')
     .func(nil, 'void removeAll()')
@@ -497,7 +498,7 @@ typeconf 'cocostudio::BaseTriggerCondition'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'bool init()')
     .func(nil, 'bool detect()')
     .func(nil, 'void removeAll()')
@@ -506,7 +507,7 @@ typeconf 'cocostudio::BatchNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::BatchNode *create()')
     .func(nil, 'BatchNode()')
 
@@ -514,7 +515,7 @@ typeconf 'cocostudio::Bone'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::Bone *create()', 'static cocostudio::Bone *create(const std::string &name)')
     .func(nil, 'Bone()')
     .func(nil, '@using bool init()', 'bool init(const std::string &name)')
@@ -569,23 +570,23 @@ typeconf 'cocostudio::Bone'
     .prop('tweenData', nil, nil)
     .prop('worldInfo', nil, nil)
     .insert('removeFromParent', {
-        BEFORE = [[
+        before = [[
             if (!self->getParent()) {
                 return 0;
             }
             olua_push_cppobj<cocos2d::Node>(L, self->getParent());
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
 
 typeconf 'cocostudio::BoneData'
     .supercls('cocostudio::BaseData')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::BoneData *create()')
     .func(nil, 'BoneData()')
     .func(nil, 'bool init()')
@@ -600,13 +601,13 @@ typeconf 'cocostudio::CocoLoader'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocostudio::ColliderBody'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ColliderBody(cocostudio::ContourData *contourData)')
     .func(nil, 'cocostudio::ContourData *getContourData()')
     .func(nil, 'const std::vector<cocos2d::Vec2> &getCalculatedVertexList()')
@@ -617,7 +618,7 @@ typeconf 'cocostudio::ColliderDetector'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::ColliderDetector *create()', 'static cocostudio::ColliderDetector *create(cocostudio::Bone *bone)')
     .func(nil, 'ColliderDetector()')
     .func(nil, 'bool init()', 'bool init(cocostudio::Bone *bone)')
@@ -639,13 +640,13 @@ typeconf 'cocostudio::ColliderFilter'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocostudio::ComAttribute'
     .supercls('cocos2d::Component')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('COMPONENT_NAME', 'cocostudio::ComAttribute::COMPONENT_NAME', 'const std::string')
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'ComAttribute()')
@@ -664,7 +665,7 @@ typeconf 'cocostudio::ComAudio'
     .supercls('cocos2d::Component')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('COMPONENT_NAME', 'cocostudio::ComAudio::COMPONENT_NAME', 'const std::string')
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'ComAudio()')
@@ -707,7 +708,7 @@ typeconf 'cocostudio::ComController'
     .supercls('cocos2d::Component')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('COMPONENT_NAME', 'cocostudio::ComController::COMPONENT_NAME', 'const std::string')
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'ComController()')
@@ -717,7 +718,7 @@ typeconf 'cocostudio::ComRender'
     .supercls('cocos2d::Component')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('COMPONENT_NAME', 'cocostudio::ComRender::COMPONENT_NAME', 'const std::string')
     .func(nil, 'static cocos2d::Ref *createInstance()')
     .func(nil, 'static cocostudio::ComRender *create()', 'static cocostudio::ComRender *create(cocos2d::Node *node, const char *comName)')
@@ -730,7 +731,7 @@ typeconf 'cocostudio::ContourData'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::ContourData *create()')
     .func(nil, 'ContourData()')
     .func(nil, 'bool init()')
@@ -741,7 +742,7 @@ typeconf 'cocostudio::DataReaderHelper'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::DataReaderHelper *getInstance()')
     .func(nil, 'static void setPositionReadScale(float scale)')
     .func(nil, 'static float getPositionReadScale()')
@@ -757,7 +758,7 @@ typeconf 'cocostudio::DecorativeDisplay'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::DecorativeDisplay *create()')
     .func(nil, 'DecorativeDisplay()')
     .func(nil, 'bool init()')
@@ -775,7 +776,7 @@ typeconf 'cocostudio::DisplayFactory'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static void addDisplay(cocostudio::Bone *bone, cocostudio::DecorativeDisplay *decoDisplay, cocostudio::DisplayData *displayData)')
     .func(nil, 'static void createDisplay(cocostudio::Bone *bone, cocostudio::DecorativeDisplay *decoDisplay)')
     .func(nil, 'static void updateDisplay(cocostudio::Bone *bone, float dt, bool dirty)')
@@ -793,7 +794,7 @@ typeconf 'cocostudio::DisplayManager'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::DisplayManager *create(cocostudio::Bone *bone)')
     .func(nil, 'DisplayManager()')
     .func(nil, 'bool init(cocostudio::Bone *bone)')
@@ -834,7 +835,7 @@ typeconf 'cocostudio::FrameData'
     .supercls('cocostudio::BaseData')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::FrameData *create()')
     .func(nil, 'FrameData()')
     .var('frameID', 'int frameID')
@@ -853,7 +854,7 @@ typeconf 'cocostudio::GUIReader'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::GUIReader *getInstance()')
     .func(nil, 'static void destroyInstance()')
     .func(nil, 'cocos2d::ui::Widget *widgetFromJsonFile(const char *fileName)')
@@ -870,7 +871,7 @@ typeconf 'cocostudio::InputDelegate'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'InputDelegate()')
     .func(nil, 'bool isTouchEnabled()')
     .func(nil, 'void setTouchEnabled(bool value)')
@@ -903,7 +904,7 @@ typeconf 'cocostudio::MovementBoneData'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::MovementBoneData *create()')
     .func(nil, 'MovementBoneData()')
     .func(nil, 'bool init()')
@@ -919,7 +920,7 @@ typeconf 'cocostudio::MovementData'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::MovementData *create()')
     .func(nil, 'MovementData()')
     .func(nil, 'void addMovementBoneData(cocostudio::MovementBoneData *movBoneData)')
@@ -937,7 +938,7 @@ typeconf 'cocostudio::ParticleDisplayData'
     .supercls('cocostudio::DisplayData')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::ParticleDisplayData *create()')
     .func(nil, 'ParticleDisplayData()')
 
@@ -945,7 +946,7 @@ typeconf 'cocostudio::SceneReader::AttachComponentType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('EMPTY_NODE', 'cocostudio::SceneReader::AttachComponentType::EMPTY_NODE')
     .enum('RENDER_NODE', 'cocostudio::SceneReader::AttachComponentType::RENDER_NODE')
     .enum('DEFAULT', 'cocostudio::SceneReader::AttachComponentType::DEFAULT')
@@ -954,7 +955,7 @@ typeconf 'cocostudio::SceneReader'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::SceneReader *getInstance()')
     .func(nil, 'static void destroyInstance()')
     .func(nil, 'static const char *sceneReaderVersion()')
@@ -963,13 +964,13 @@ typeconf 'cocostudio::SceneReader'
     .func(nil, 'cocostudio::SceneReader::AttachComponentType getAttachComponentType()')
     .func(nil, 'SceneReader()')
     .callback {
-        FUNCS =  {
-            'void setTarget(@nullable @local const std::function<void (cocos2d::Ref *, void *)> &selector)'
+        funcs =  {
+            'void setTarget(@localvar @nullable const std::function<void (cocos2d::Ref *, void *)> &selector)'
         },
-        TAG_MAKER = 'Target',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'Target',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('instance', nil, nil)
     .prop('attachComponentType', nil, nil)
@@ -978,7 +979,7 @@ typeconf 'cocostudio::Skin'
     .supercls('cocos2d::Sprite')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::Skin *create()', 'static cocostudio::Skin *create(const std::string &pszFileName)')
     .func(nil, 'static cocostudio::Skin *createWithSpriteFrameName(const std::string &pszSpriteFrameName)')
     .func(nil, 'Skin()')
@@ -998,7 +999,7 @@ typeconf 'cocostudio::SpriteDisplayData'
     .supercls('cocostudio::DisplayData')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::SpriteDisplayData *create()')
     .func(nil, 'SpriteDisplayData()')
     .var('skinData', 'cocostudio::BaseData skinData')
@@ -1007,7 +1008,7 @@ typeconf 'cocostudio::SpriteFrameCacheHelper'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::SpriteFrameCacheHelper *getInstance()')
     .func(nil, 'static void purge()')
     .func(nil, 'void addSpriteFrameFromFile(const std::string &plistPath, const std::string &imagePath)')
@@ -1018,7 +1019,7 @@ typeconf 'cocostudio::TextureData'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::TextureData *create()')
     .func(nil, 'TextureData()')
     .func(nil, 'bool init()')
@@ -1035,7 +1036,7 @@ typeconf 'cocostudio::Tween'
     .supercls('cocostudio::ProcessBase')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::Tween *create(cocostudio::Bone *bone)')
     .func(nil, 'Tween()')
     .func(nil, 'bool init(cocostudio::Bone *bone)')
@@ -1053,7 +1054,7 @@ typeconf 'cocostudio::timeline::InnerActionType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('LoopAction', 'cocostudio::timeline::InnerActionType::LoopAction')
     .enum('NoLoopAction', 'cocostudio::timeline::InnerActionType::NoLoopAction')
     .enum('SingleFrame', 'cocostudio::timeline::InnerActionType::SingleFrame')
@@ -1062,7 +1063,7 @@ typeconf 'cocostudio::timeline::Frame'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void setFrameIndex(unsigned int frameIndex)')
     .func(nil, 'unsigned int getFrameIndex()')
     .func(nil, 'void setTimeline(@addref(timeline ^) cocostudio::timeline::Timeline *timeline)')
@@ -1091,7 +1092,7 @@ typeconf 'cocostudio::timeline::AlphaFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::AlphaFrame *create()')
     .func(nil, 'AlphaFrame()')
     .func(nil, 'void setAlpha(uint8_t alpha)')
@@ -1102,7 +1103,7 @@ typeconf 'cocostudio::timeline::AnchorPointFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::AnchorPointFrame *create()')
     .func(nil, 'AnchorPointFrame()')
     .func(nil, 'void setAnchorPoint(const cocos2d::Point &point)')
@@ -1113,7 +1114,7 @@ typeconf 'cocostudio::timeline::BlendFuncFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::BlendFuncFrame *create()')
     .func(nil, 'BlendFuncFrame()')
     .func(nil, 'cocos2d::BlendFunc getBlendFunc()')
@@ -1124,7 +1125,7 @@ typeconf 'cocostudio::timeline::ColorFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::ColorFrame *create()')
     .func(nil, 'ColorFrame()')
     .func(nil, 'void setColor(const cocos2d::Color3B &color)')
@@ -1135,7 +1136,7 @@ typeconf 'cocostudio::timeline::EventFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::EventFrame *create()')
     .func(nil, 'void init()')
     .func(nil, 'EventFrame()')
@@ -1147,7 +1148,7 @@ typeconf 'cocostudio::timeline::InnerActionFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('AnimationAllName', 'cocostudio::timeline::InnerActionFrame::AnimationAllName', 'const std::string')
     .func(nil, 'static cocostudio::timeline::InnerActionFrame *create()')
     .func(nil, 'InnerActionFrame()')
@@ -1170,7 +1171,7 @@ typeconf 'cocostudio::timeline::PlayableFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('PLAYABLE_EXTENTION', 'cocostudio::timeline::PlayableFrame::PLAYABLE_EXTENTION', 'const std::string')
     .func(nil, 'static cocostudio::timeline::PlayableFrame *create()')
     .func(nil, 'PlayableFrame()')
@@ -1182,7 +1183,7 @@ typeconf 'cocostudio::timeline::PositionFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::PositionFrame *create()')
     .func(nil, 'PositionFrame()')
     .func(nil, 'void setPosition(const cocos2d::Point &position)')
@@ -1199,7 +1200,7 @@ typeconf 'cocostudio::timeline::RotationFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::RotationFrame *create()')
     .func(nil, 'RotationFrame()')
     .func(nil, 'void setRotation(float rotation)')
@@ -1210,7 +1211,7 @@ typeconf 'cocostudio::timeline::SkewFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::SkewFrame *create()')
     .func(nil, 'SkewFrame()')
     .func(nil, 'void setSkewX(float skewx)')
@@ -1224,7 +1225,7 @@ typeconf 'cocostudio::timeline::RotationSkewFrame'
     .supercls('cocostudio::timeline::SkewFrame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::RotationSkewFrame *create()')
     .func(nil, 'RotationSkewFrame()')
 
@@ -1232,7 +1233,7 @@ typeconf 'cocostudio::timeline::ScaleFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::ScaleFrame *create()')
     .func(nil, 'ScaleFrame()')
     .func(nil, 'void setScale(float scale)')
@@ -1247,7 +1248,7 @@ typeconf 'cocostudio::timeline::TextureFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::TextureFrame *create()')
     .func(nil, 'TextureFrame()')
     .func(nil, 'void setTextureName(std::string textureName)')
@@ -1258,7 +1259,7 @@ typeconf 'cocostudio::timeline::VisibleFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::VisibleFrame *create()')
     .func(nil, 'VisibleFrame()')
     .func(nil, 'void setVisible(bool visible)')
@@ -1269,7 +1270,7 @@ typeconf 'cocostudio::timeline::ZOrderFrame'
     .supercls('cocostudio::timeline::Frame')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::ZOrderFrame *create()')
     .func(nil, 'ZOrderFrame()')
     .func(nil, 'void setZOrder(int zorder)')
@@ -1280,7 +1281,7 @@ typeconf 'cocostudio::timeline::ActionTimelineCache'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::ActionTimelineCache *getInstance()')
     .func(nil, 'static void destroyInstance()')
     .func(nil, 'void purge()')
@@ -1302,7 +1303,7 @@ typeconf 'cocostudio::timeline::ActionTimelineData'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::ActionTimelineData *create(int actionTag)')
     .func(nil, 'void setActionTag(int actionTag)')
     .func(nil, 'int getActionTag()')
@@ -1314,7 +1315,7 @@ typeconf 'cocostudio::timeline::ActionTimelineNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::ActionTimelineNode *create(cocos2d::Node *root, cocostudio::timeline::ActionTimeline *action)')
     .func(nil, 'ActionTimelineNode()')
     .func(nil, '@using bool init()', 'bool init(cocos2d::Node *root, cocostudio::timeline::ActionTimeline *action)')
@@ -1329,7 +1330,7 @@ typeconf 'cocostudio::timeline::BoneNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::BoneNode *create()', 'static cocostudio::timeline::BoneNode *create(int length)')
     .func(nil, '@addref(bones |) const cocos2d::Vector<BoneNode *> &getChildBones()')
     .func(nil, '@addref(rootSkeletonNode ^) cocostudio::timeline::SkeletonNode *getRootSkeletonNode()')
@@ -1369,7 +1370,7 @@ typeconf 'cocostudio::timeline::SkeletonNode'
     .supercls('cocostudio::timeline::BoneNode')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::SkeletonNode *create()')
     .func(nil, '@addref(boneNodes |) cocostudio::timeline::BoneNode *getBoneNode(const std::string &boneName)')
     .func(nil, '@addref(boneNodes |) const cocos2d::Map<std::string, BoneNode *> &getAllSubBonesMap()')
@@ -1382,7 +1383,7 @@ typeconf 'cocostudio::timeline::Timeline'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::Timeline *create()')
     .func(nil, 'Timeline()')
     .func(nil, 'void gotoFrame(int frameIndex)')
@@ -1407,7 +1408,7 @@ typeconf 'cocostudio::timeline::ActionTimeline'
     .supercls('cocos2d::Action')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocostudio::timeline::ActionTimeline *create()')
     .func(nil, 'ActionTimeline()')
     .func(nil, 'void play(std::string animationName, bool loop)')
@@ -1433,85 +1434,85 @@ typeconf 'cocostudio::timeline::ActionTimeline'
     .func(nil, 'const cocostudio::timeline::AnimationInfo &getAnimationInfo(const std::string &animationName)')
     .func(nil, 'void start()')
     .callback {
-        FUNCS =  {
-            'void setAnimationEndCallFunc(const std::string animationName, @local std::function<void ()> func)'
+        funcs =  {
+            'void setAnimationEndCallFunc(const std::string animationName, @localvar std::function<void ()> func)'
         },
-        TAG_MAKER = 'makeFrameEndCallbackTag(#0, #1)',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeFrameEndCallbackTag(#0, #1)',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setFrameEventCallFunc(@nullable @local std::function<void (cocostudio::timeline::Frame *)> listener)'
+        funcs =  {
+            'void setFrameEventCallFunc(@localvar @nullable std::function<void (cocostudio::timeline::Frame *)> listener)'
         },
-        TAG_MAKER = 'frameEventCallFunc',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'frameEventCallFunc',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void clearFrameEventCallFunc()'
         },
-        TAG_MAKER = 'frameEventCallFunc',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'frameEventCallFunc',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setLastFrameCallFunc(@nullable @local std::function<void ()> listener)'
+        funcs =  {
+            'void setLastFrameCallFunc(@localvar @nullable std::function<void ()> listener)'
         },
-        TAG_MAKER = 'lastFrameCallFunc',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'lastFrameCallFunc',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void clearLastFrameCallFunc()'
         },
-        TAG_MAKER = 'lastFrameCallFunc',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'lastFrameCallFunc',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void addFrameEndCallFunc(int frameIndex, const std::string &funcKey, @local std::function<void ()> func)'
+        funcs =  {
+            'void addFrameEndCallFunc(int frameIndex, const std::string &funcKey, @localvar std::function<void ()> func)'
         },
-        TAG_MAKER = 'makeFrameEndCallbackTag(#1, #2)',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeFrameEndCallbackTag(#1, #2)',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void removeFrameEndCallFunc(int frameIndex, const std::string &funcKey)'
         },
-        TAG_MAKER = 'makeFrameEndCallbackTag(#1, #2)',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeFrameEndCallbackTag(#1, #2)',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void removeFrameEndCallFuncs(int frameIndex)'
         },
-        TAG_MAKER = 'makeFrameEndCallbackTag(#1, "")',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeFrameEndCallbackTag(#1, "")',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void clearFrameEndCallFuncs()'
         },
-        TAG_MAKER = 'makeFrameEndCallbackTag(-1, "")',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeFrameEndCallbackTag(-1, "")',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('playing', nil, nil)
     .prop('timeSpeed', nil, nil)
@@ -1521,7 +1522,7 @@ typeconf 'cocostudio::timeline::ActionTimeline'
     .prop('currentFrame', nil, nil)
     .prop('timelines', nil, nil)
     .insert('addAnimationInfo', {
-        BEFORE = [[
+        before = [[
             if (olua_getfield(L, 2, "clipEndCallBack") == LUA_TFUNCTION) {
                 void *cb_store = (void *)self;
                 std::string cb_tag = makeFrameEndCallbackTag(arg1.endIndex, arg1.name);
@@ -1541,33 +1542,33 @@ typeconf 'cocostudio::timeline::ActionTimeline'
                 };
             }
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('removeAnimationInfo', {
-        BEFORE = [[
+        before = [[
             auto info = self->getAnimationInfo(arg1);
             std::string cb_tag = makeFrameEndCallbackTag(info.endIndex, arg1);
             void *cb_store = (void *)self;
             olua_removecallback(L, cb_store, cb_tag.c_str(), OLUA_TAG_SUBSTARTWITH);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('setFrameEventCallFunc', {
-        BEFORE = nil,
-        AFTER = nil,
-        CALLBACK_BEFORE = [[
+        before = nil,
+        after = nil,
+        cbefore = [[
             if (arg1->getTimeline() && arg1->getTimeline()->getActionTimeline()) {
                 olua_push_cppobj<cocostudio::timeline::ActionTimeline>(L, arg1->getTimeline()->getActionTimeline());
                 olua_push_cppobj<cocostudio::timeline::Timeline>(L, arg1->getTimeline());
                 olua_push_cppobj<cocostudio::timeline::Frame>(L, arg1);
-                olua_addref(L, -3, "timelines", -2, OLUA_MODE_MULTIPLE);
-                olua_addref(L, -2, "frames", -1, OLUA_MODE_MULTIPLE);
+                olua_addref(L, -3, "timelines", -2, OLUA_FLAG_MULTIPLE);
+                olua_addref(L, -2, "frames", -1, OLUA_FLAG_MULTIPLE);
                 lua_pop(L, 3);
             }
         ]],
-        CALLBACK_AFTER = nil,
+        cafter = nil,
     })

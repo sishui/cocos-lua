@@ -2,9 +2,9 @@
 
 dofile "autobuild/cocos2d-types.lua"
 
-NAME = "cocos2d"
-PATH = "../../frameworks/libxgame/src/lua-bindings"
-HEADERS = [[
+name = "cocos2d"
+path = "../../frameworks/libxgame/src/lua-bindings"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "lua-bindings/LuaCocosAdapter.h"
@@ -15,19 +15,20 @@ HEADERS = [[
     #include "navmesh/CCNavMesh.h"
     #include "cclua/xlua.h"
 ]]
-CHUNK = [[
+chunk = [[
     static const std::string makeScheduleCallbackTag(const std::string &key)
     {
         return "schedule." + key;
     }
 ]]
+luaopen = nil
 
 
 typeconf 'cocos2d::Mat4'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Mat4()', 'Mat4(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44)')
     .func(nil, 'static void createLookAt(const cocos2d::Vec3 &eyePosition, const cocos2d::Vec3 &targetPosition, const cocos2d::Vec3 &up, cocos2d::Mat4 *dst)', 'static void createLookAt(float eyePositionX, float eyePositionY, float eyePositionZ, float targetCenterX, float targetCenterY, float targetCenterZ, float upX, float upY, float upZ, cocos2d::Mat4 *dst)')
     .func(nil, 'static void createPerspective(float fieldOfView, float aspectRatio, float zNearPlane, float zFarPlane, cocos2d::Mat4 *dst)')
@@ -69,7 +70,7 @@ typeconf 'cocos2d::RenderTargetFlag'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('COLOR', 'cocos2d::RenderTargetFlag::COLOR')
     .enum('DEPTH', 'cocos2d::RenderTargetFlag::DEPTH')
     .enum('STENCIL', 'cocos2d::RenderTargetFlag::STENCIL')
@@ -79,7 +80,7 @@ typeconf 'cocos2d::ClearFlag'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::ClearFlag::NONE')
     .enum('COLOR', 'cocos2d::ClearFlag::COLOR')
     .enum('DEPTH', 'cocos2d::ClearFlag::DEPTH')
@@ -90,7 +91,7 @@ typeconf 'cocos2d::MATRIX_STACK_TYPE'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('MATRIX_STACK_MODELVIEW', 'cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW')
     .enum('MATRIX_STACK_PROJECTION', 'cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION')
     .enum('MATRIX_STACK_TEXTURE', 'cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_TEXTURE')
@@ -99,7 +100,7 @@ typeconf 'cocos2d::Director::Projection'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('_2D', 'cocos2d::Director::Projection::_2D')
     .enum('_3D', 'cocos2d::Director::Projection::_3D')
     .enum('CUSTOM', 'cocos2d::Director::Projection::CUSTOM')
@@ -109,7 +110,7 @@ typeconf 'cocos2d::UserDefault'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'bool getBoolForKey(const char *key)', 'bool getBoolForKey(const char *key, bool defaultValue)')
     .func(nil, 'int getIntegerForKey(const char *key)', 'int getIntegerForKey(const char *key, int defaultValue)')
     .func(nil, 'float getFloatForKey(const char *key)', 'float getFloatForKey(const char *key, float defaultValue)')
@@ -136,7 +137,7 @@ typeconf 'cocos2d::Ref'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func('__gc', [[
         {
             return xlua_ccobjgc(L);
@@ -149,7 +150,7 @@ typeconf 'cocos2d::Console'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Console()')
     .func(nil, 'bool listenOnTCP(int port)')
     .func(nil, 'bool listenOnFileDescriptor(int fd)')
@@ -168,7 +169,7 @@ typeconf 'cocos2d::Acceleration'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .var('x', '@optional double x')
     .var('y', '@optional double y')
     .var('z', '@optional double z')
@@ -178,7 +179,7 @@ typeconf 'cocos2d::Director'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Director *getInstance()')
     .func(nil, 'Director()')
     .func(nil, 'bool init()')
@@ -290,7 +291,7 @@ typeconf 'cocos2d::ccSchedulerFunc'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::Scheduler'
     .supercls('cocos2d::Ref')
@@ -310,7 +311,7 @@ typeconf 'cocos2d::Scheduler'
             return false;
         }
     ]])
-    .require(nil)
+    .luaopen(nil)
     .const('PRIORITY_SYSTEM', 'cocos2d::Scheduler::PRIORITY_SYSTEM', 'const int')
     .const('PRIORITY_NON_SYSTEM_MIN', 'cocos2d::Scheduler::PRIORITY_NON_SYSTEM_MIN', 'const int')
     .func('scheduleUpdate', [[
@@ -344,41 +345,41 @@ typeconf 'cocos2d::Scheduler'
     .func(nil, 'void resumeTargets(const std::set<void *> &targetsToResume)')
     .func(nil, 'void removeAllFunctionsToBePerformedInCocosThread()')
     .callback {
-        FUNCS =  {
-            'void schedule(@local const cocos2d::ccSchedulerFunc &callback, void *target, float interval, unsigned int repeat, float delay, bool paused, const std::string &key)',
-            'void schedule(@local const cocos2d::ccSchedulerFunc &callback, void *target, float interval, bool paused, const std::string &key)'
+        funcs =  {
+            'void schedule(@localvar const cocos2d::ccSchedulerFunc &callback, void *target, float interval, unsigned int repeat, float delay, bool paused, const std::string &key)',
+            'void schedule(@localvar const cocos2d::ccSchedulerFunc &callback, void *target, float interval, bool paused, const std::string &key)'
         },
-        TAG_MAKER = 'makeScheduleCallbackTag(#-1)',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = 2,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeScheduleCallbackTag(#-1)',
+        tag_mode = 'replace',
+        tag_store = 2,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void unschedule(const std::string &key, void *target)'
         },
-        TAG_MAKER = 'makeScheduleCallbackTag(#1)',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = 2,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeScheduleCallbackTag(#1)',
+        tag_mode = 'subequal',
+        tag_store = 2,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void unscheduleAllForTarget(void *target)'
         },
-        TAG_MAKER = 'makeScheduleCallbackTag("")',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = 1,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeScheduleCallbackTag("")',
+        tag_mode = 'substartwith',
+        tag_store = 1,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void unscheduleAll()'
         },
-        TAG_MAKER = 'makeScheduleCallbackTag("")',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeScheduleCallbackTag("")',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('timeScale', nil, nil)
 
@@ -403,7 +404,7 @@ typeconf 'cocos2d::EventDispatcher'
             }
         }
     ]])
-    .require(nil)
+    .luaopen(nil)
     .func('addEventListener', [[
         {
             lua_settop(L, 2);
@@ -428,17 +429,17 @@ typeconf 'cocos2d::EventDispatcher'
     .func(nil, 'bool hasEventListener(const cocos2d::EventListener::ListenerID &listenerID)')
     .func(nil, 'EventDispatcher()')
     .callback {
-        FUNCS =  {
-            '@addref(listeners |) cocos2d::EventListenerCustom *addCustomEventListener(const std::string &eventName, @local const std::function<void (EventCustom *)> &callback)'
+        funcs =  {
+            '@addref(listeners |) cocos2d::EventListenerCustom *addCustomEventListener(const std::string &eventName, @localvar const std::function<void (EventCustom *)> &callback)'
         },
-        TAG_MAKER = '(#1)',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = "return",
-        TAG_SCOPE = 'object',
+        tag_maker = '(#1)',
+        tag_mode = 'new',
+        tag_store = -1,
+        tag_scope = 'object',
     }
     .prop('enabled', nil, nil)
     .insert('removeEventListenersForTarget', {
-        BEFORE = [[
+        before = [[
             bool recursive = false;
             auto node = olua_checkobj<cocos2d::Node>(L, 2);
             if (lua_gettop(L) >= 3) {
@@ -446,16 +447,16 @@ typeconf 'cocos2d::EventDispatcher'
             }
             doRemoveEventListenersForTarget(L, node, recursive, "listeners");
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
 
 typeconf 'cocos2d::EventListener::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('UNKNOWN', 'cocos2d::EventListener::Type::UNKNOWN')
     .enum('TOUCH_ONE_BY_ONE', 'cocos2d::EventListener::Type::TOUCH_ONE_BY_ONE')
     .enum('TOUCH_ALL_AT_ONCE', 'cocos2d::EventListener::Type::TOUCH_ALL_AT_ONCE')
@@ -470,7 +471,7 @@ typeconf 'cocos2d::EventListener'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'bool checkAvailable()')
     .func(nil, 'cocos2d::EventListener *clone()')
     .func(nil, 'void setEnabled(bool enabled)')
@@ -482,121 +483,121 @@ typeconf 'cocos2d::EventListenerTouchOneByOne::ccTouchBeganCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::EventListenerTouchOneByOne::ccTouchCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::EventListenerTouchOneByOne'
     .supercls('cocos2d::EventListener')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('LISTENER_ID', 'cocos2d::EventListenerTouchOneByOne::LISTENER_ID', 'const std::string')
     .func(nil, 'static cocos2d::EventListenerTouchOneByOne *create()')
     .func(nil, 'void setSwallowTouches(bool needSwallow)')
     .func(nil, 'bool isSwallowTouches()')
     .func(nil, 'EventListenerTouchOneByOne()')
-    .var('onTouchBegan', '@nullable @local cocos2d::EventListenerTouchOneByOne::ccTouchBeganCallback onTouchBegan')
-    .var('onTouchMoved', '@nullable @local cocos2d::EventListenerTouchOneByOne::ccTouchCallback onTouchMoved')
-    .var('onTouchEnded', '@nullable @local cocos2d::EventListenerTouchOneByOne::ccTouchCallback onTouchEnded')
-    .var('onTouchCancelled', '@nullable @local cocos2d::EventListenerTouchOneByOne::ccTouchCallback onTouchCancelled')
+    .var('onTouchBegan', '@nullable @localvar cocos2d::EventListenerTouchOneByOne::ccTouchBeganCallback onTouchBegan')
+    .var('onTouchMoved', '@nullable @localvar cocos2d::EventListenerTouchOneByOne::ccTouchCallback onTouchMoved')
+    .var('onTouchEnded', '@nullable @localvar cocos2d::EventListenerTouchOneByOne::ccTouchCallback onTouchEnded')
+    .var('onTouchCancelled', '@nullable @localvar cocos2d::EventListenerTouchOneByOne::ccTouchCallback onTouchCancelled')
     .prop('swallowTouches', nil, nil)
 
 typeconf 'cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::EventListenerTouchAllAtOnce'
     .supercls('cocos2d::EventListener')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('LISTENER_ID', 'cocos2d::EventListenerTouchAllAtOnce::LISTENER_ID', 'const std::string')
     .func(nil, 'static cocos2d::EventListenerTouchAllAtOnce *create()')
     .func(nil, 'EventListenerTouchAllAtOnce()')
-    .var('onTouchesBegan', '@nullable @local cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback onTouchesBegan')
-    .var('onTouchesMoved', '@nullable @local cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback onTouchesMoved')
-    .var('onTouchesEnded', '@nullable @local cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback onTouchesEnded')
-    .var('onTouchesCancelled', '@nullable @local cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback onTouchesCancelled')
+    .var('onTouchesBegan', '@nullable @localvar cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback onTouchesBegan')
+    .var('onTouchesMoved', '@nullable @localvar cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback onTouchesMoved')
+    .var('onTouchesEnded', '@nullable @localvar cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback onTouchesEnded')
+    .var('onTouchesCancelled', '@nullable @localvar cocos2d::EventListenerTouchAllAtOnce::ccTouchesCallback onTouchesCancelled')
 
 typeconf 'cocos2d::EventListenerCustom'
     .supercls('cocos2d::EventListener')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'EventListenerCustom()')
     .callback {
-        FUNCS =  {
-            'static cocos2d::EventListenerCustom *create(const std::string &eventName, @local const std::function<void (EventCustom *)> &callback)'
+        funcs =  {
+            'static cocos2d::EventListenerCustom *create(const std::string &eventName, @localvar const std::function<void (EventCustom *)> &callback)'
         },
-        TAG_MAKER = 'listener',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = "return",
-        TAG_SCOPE = 'object',
+        tag_maker = 'listener',
+        tag_mode = 'replace',
+        tag_store = -1,
+        tag_scope = 'object',
     }
 
 typeconf 'cocos2d::EventListenerKeyboard'
     .supercls('cocos2d::EventListener')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('LISTENER_ID', 'cocos2d::EventListenerKeyboard::LISTENER_ID', 'const std::string')
     .func(nil, 'static cocos2d::EventListenerKeyboard *create()')
     .func(nil, 'EventListenerKeyboard()')
-    .var('onKeyPressed', '@nullable @local std::function<void (EventKeyboard::KeyCode, cocos2d::Event *)> onKeyPressed')
-    .var('onKeyReleased', '@nullable @local std::function<void (EventKeyboard::KeyCode, cocos2d::Event *)> onKeyReleased')
+    .var('onKeyPressed', '@nullable @localvar std::function<void (EventKeyboard::KeyCode, cocos2d::Event *)> onKeyPressed')
+    .var('onKeyReleased', '@nullable @localvar std::function<void (EventKeyboard::KeyCode, cocos2d::Event *)> onKeyReleased')
 
 typeconf 'cocos2d::EventListenerAcceleration'
     .supercls('cocos2d::EventListener')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('LISTENER_ID', 'cocos2d::EventListenerAcceleration::LISTENER_ID', 'const std::string')
     .func(nil, 'EventListenerAcceleration()')
     .callback {
-        FUNCS =  {
-            'static cocos2d::EventListenerAcceleration *create(@local const std::function<void (Acceleration *, Event *)> &callback)'
+        funcs =  {
+            'static cocos2d::EventListenerAcceleration *create(@localvar const std::function<void (Acceleration *, Event *)> &callback)'
         },
-        TAG_MAKER = 'listener',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = "return",
-        TAG_SCOPE = 'object',
+        tag_maker = 'listener',
+        tag_mode = 'replace',
+        tag_store = -1,
+        tag_scope = 'object',
     }
 
 typeconf 'cocos2d::EventListenerFocus'
     .supercls('cocos2d::EventListener')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('LISTENER_ID', 'cocos2d::EventListenerFocus::LISTENER_ID', 'const std::string')
     .func(nil, 'static cocos2d::EventListenerFocus *create()')
     .func(nil, 'EventListenerFocus()')
-    .var('onFocusChanged', '@nullable @local std::function<void (ui::Widget *, ui::Widget *)> onFocusChanged')
+    .var('onFocusChanged', '@nullable @localvar std::function<void (ui::Widget *, ui::Widget *)> onFocusChanged')
 
 typeconf 'cocos2d::EventListenerMouse'
     .supercls('cocos2d::EventListener')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('LISTENER_ID', 'cocos2d::EventListenerMouse::LISTENER_ID', 'const std::string')
     .func(nil, 'static cocos2d::EventListenerMouse *create()')
     .func(nil, 'EventListenerMouse()')
-    .var('onMouseDown', '@nullable @local std::function<void (cocos2d::EventMouse *)> onMouseDown')
-    .var('onMouseUp', '@nullable @local std::function<void (cocos2d::EventMouse *)> onMouseUp')
-    .var('onMouseMove', '@nullable @local std::function<void (cocos2d::EventMouse *)> onMouseMove')
-    .var('onMouseScroll', '@nullable @local std::function<void (cocos2d::EventMouse *)> onMouseScroll')
+    .var('onMouseDown', '@nullable @localvar std::function<void (cocos2d::EventMouse *)> onMouseDown')
+    .var('onMouseUp', '@nullable @localvar std::function<void (cocos2d::EventMouse *)> onMouseUp')
+    .var('onMouseMove', '@nullable @localvar std::function<void (cocos2d::EventMouse *)> onMouseMove')
+    .var('onMouseScroll', '@nullable @localvar std::function<void (cocos2d::EventMouse *)> onMouseScroll')
 
 typeconf 'cocos2d::Event::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('TOUCH', 'cocos2d::Event::Type::TOUCH')
     .enum('KEYBOARD', 'cocos2d::Event::Type::KEYBOARD')
     .enum('ACCELERATION', 'cocos2d::Event::Type::ACCELERATION')
@@ -609,7 +610,7 @@ typeconf 'cocos2d::Event'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Event(cocos2d::Event::Type type)')
     .func(nil, 'cocos2d::Event::Type getType()')
     .func(nil, 'void stopPropagation()')
@@ -623,7 +624,7 @@ typeconf 'cocos2d::EventCustom'
     .supercls('cocos2d::Event')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'EventCustom(const std::string &eventName)')
     .func(nil, 'void setUserData(void *data)')
     .func(nil, 'void *getUserData()')
@@ -635,21 +636,21 @@ typeconf 'cocos2d::EventListenerController'
     .supercls('cocos2d::EventListener')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('LISTENER_ID', 'cocos2d::EventListenerController::LISTENER_ID', 'const std::string')
     .func(nil, 'static cocos2d::EventListenerController *create()')
-    .var('onConnected', '@nullable @local std::function<void (cocos2d::Controller *, cocos2d::Event *)> onConnected')
-    .var('onDisconnected', '@nullable @local std::function<void (cocos2d::Controller *, cocos2d::Event *)> onDisconnected')
-    .var('onKeyDown', '@nullable @local std::function<void (cocos2d::Controller *, int, cocos2d::Event *)> onKeyDown')
-    .var('onKeyUp', '@nullable @local std::function<void (cocos2d::Controller *, int, cocos2d::Event *)> onKeyUp')
-    .var('onKeyRepeat', '@nullable @local std::function<void (cocos2d::Controller *, int, cocos2d::Event *)> onKeyRepeat')
-    .var('onAxisEvent', '@nullable @local std::function<void (cocos2d::Controller *, int, cocos2d::Event *)> onAxisEvent')
+    .var('onConnected', '@nullable @localvar std::function<void (cocos2d::Controller *, cocos2d::Event *)> onConnected')
+    .var('onDisconnected', '@nullable @localvar std::function<void (cocos2d::Controller *, cocos2d::Event *)> onDisconnected')
+    .var('onKeyDown', '@nullable @localvar std::function<void (cocos2d::Controller *, int, cocos2d::Event *)> onKeyDown')
+    .var('onKeyUp', '@nullable @localvar std::function<void (cocos2d::Controller *, int, cocos2d::Event *)> onKeyUp')
+    .var('onKeyRepeat', '@nullable @localvar std::function<void (cocos2d::Controller *, int, cocos2d::Event *)> onKeyRepeat')
+    .var('onAxisEvent', '@nullable @localvar std::function<void (cocos2d::Controller *, int, cocos2d::Event *)> onAxisEvent')
 
 typeconf 'cocos2d::EventTouch::EventCode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('BEGAN', 'cocos2d::EventTouch::EventCode::BEGAN')
     .enum('MOVED', 'cocos2d::EventTouch::EventCode::MOVED')
     .enum('ENDED', 'cocos2d::EventTouch::EventCode::ENDED')
@@ -659,7 +660,7 @@ typeconf 'cocos2d::EventTouch'
     .supercls('cocos2d::Event')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('MAX_TOUCHES', 'cocos2d::EventTouch::MAX_TOUCHES', 'const int')
     .func(nil, 'EventTouch()')
     .func(nil, 'cocos2d::EventTouch::EventCode getEventCode()')
@@ -673,27 +674,27 @@ typeconf 'cocos2d::EventKeyboard'
     .supercls('cocos2d::Event')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'EventKeyboard(cocos2d::EventKeyboard::KeyCode keyCode, bool isPressed)')
 
 typeconf 'cocos2d::EventAcceleration'
     .supercls('cocos2d::Event')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::EventFocus'
     .supercls('cocos2d::Event')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'EventFocus(cocos2d::ui::Widget *widgetLoseFocus, cocos2d::ui::Widget *widgetGetFocus)')
 
 typeconf 'cocos2d::EventMouse::MouseEventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('MOUSE_NONE', 'cocos2d::EventMouse::MouseEventType::MOUSE_NONE')
     .enum('MOUSE_DOWN', 'cocos2d::EventMouse::MouseEventType::MOUSE_DOWN')
     .enum('MOUSE_UP', 'cocos2d::EventMouse::MouseEventType::MOUSE_UP')
@@ -704,7 +705,7 @@ typeconf 'cocos2d::EventMouse::MouseButton'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('BUTTON_UNSET', 'cocos2d::EventMouse::MouseButton::BUTTON_UNSET')
     .enum('BUTTON_LEFT', 'cocos2d::EventMouse::MouseButton::BUTTON_LEFT')
     .enum('BUTTON_RIGHT', 'cocos2d::EventMouse::MouseButton::BUTTON_RIGHT')
@@ -719,7 +720,7 @@ typeconf 'cocos2d::EventMouse'
     .supercls('cocos2d::Event')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'EventMouse(cocos2d::EventMouse::MouseEventType mouseEventCode)')
     .func(nil, 'void setScrollData(float scrollX, float scrollY)')
     .func(nil, 'float getScrollX()')
@@ -753,7 +754,7 @@ typeconf 'cocos2d::EventKeyboard::KeyCode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('KEY_NONE', 'cocos2d::EventKeyboard::KeyCode::KEY_NONE')
     .enum('KEY_PAUSE', 'cocos2d::EventKeyboard::KeyCode::KEY_PAUSE')
     .enum('KEY_SCROLL_LOCK', 'cocos2d::EventKeyboard::KeyCode::KEY_SCROLL_LOCK')
@@ -929,7 +930,7 @@ typeconf 'cocos2d::Touch::DispatchMode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ALL_AT_ONCE', 'cocos2d::Touch::DispatchMode::ALL_AT_ONCE')
     .enum('ONE_BY_ONE', 'cocos2d::Touch::DispatchMode::ONE_BY_ONE')
 
@@ -937,7 +938,7 @@ typeconf 'cocos2d::EventController::ControllerEventType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('CONNECTION', 'cocos2d::EventController::ControllerEventType::CONNECTION')
     .enum('BUTTON_STATUS_CHANGED', 'cocos2d::EventController::ControllerEventType::BUTTON_STATUS_CHANGED')
     .enum('AXIS_STATUS_CHANGED', 'cocos2d::EventController::ControllerEventType::AXIS_STATUS_CHANGED')
@@ -946,7 +947,7 @@ typeconf 'cocos2d::EventController'
     .supercls('cocos2d::Event')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'EventController(cocos2d::EventController::ControllerEventType type, cocos2d::Controller *controller, int keyCode)', 'EventController(cocos2d::EventController::ControllerEventType type, cocos2d::Controller *controller, bool isConnected)')
     .func(nil, 'cocos2d::EventController::ControllerEventType getControllerEventType()')
     .func(nil, 'cocos2d::Controller *getController()')
@@ -963,7 +964,7 @@ typeconf 'cocos2d::Touch'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'Touch()')
     .func(nil, 'cocos2d::Vec2 getLocation()')
     .func(nil, 'cocos2d::Vec2 getPreviousLocation()')
@@ -991,7 +992,7 @@ typeconf 'cocos2d::Controller::Key'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('KEY_NONE', 'cocos2d::Controller::Key::KEY_NONE')
     .enum('JOYSTICK_LEFT_X', 'cocos2d::Controller::Key::JOYSTICK_LEFT_X')
     .enum('JOYSTICK_LEFT_Y', 'cocos2d::Controller::Key::JOYSTICK_LEFT_Y')
@@ -1023,7 +1024,7 @@ typeconf 'cocos2d::Controller'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('TAG_UNSET', 'cocos2d::Controller::TAG_UNSET', 'const int')
     .func(nil, 'static const std::vector<Controller *> &getAllController()')
     .func(nil, 'static cocos2d::Controller *getControllerByTag(int tag)')
@@ -1046,7 +1047,7 @@ typeconf 'cocos2d::AudioProfile'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'AudioProfile()')
     .var('name', 'std::string name')
     .var('maxInstances', 'unsigned int maxInstances')
@@ -1056,7 +1057,7 @@ typeconf 'cocos2d::AudioEngine::AudioState'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ERROR', 'cocos2d::AudioEngine::AudioState::ERROR')
     .enum('INITIALIZING', 'cocos2d::AudioEngine::AudioState::INITIALIZING')
     .enum('PLAYING', 'cocos2d::AudioEngine::AudioState::PLAYING')
@@ -1093,7 +1094,7 @@ typeconf 'cocos2d::AudioEngine'
             }
         }
     ]])
-    .require(nil)
+    .luaopen(nil)
     .const('INVALID_AUDIO_ID', 'cocos2d::AudioEngine::INVALID_AUDIO_ID', 'const int')
     .const('TIME_UNKNOWN', 'cocos2d::AudioEngine::TIME_UNKNOWN', 'const float')
     .func(nil, 'static bool lazyInit()')
@@ -1120,57 +1121,57 @@ typeconf 'cocos2d::AudioEngine'
     .func(nil, 'static void setEnabled(bool isEnabled)')
     .func(nil, 'static bool isEnabled()')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'static void stop(int audioID)'
         },
-        TAG_MAKER = 'makeAudioEngineFinishCallbackTag(#1)',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeAudioEngineFinishCallbackTag(#1)',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'static void stopAll()'
         },
-        TAG_MAKER = 'makeAudioEngineFinishCallbackTag(-1)',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeAudioEngineFinishCallbackTag(-1)',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'static void uncacheAll()'
         },
-        TAG_MAKER = 'makeAudioEngineFinishCallbackTag(-1)',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeAudioEngineFinishCallbackTag(-1)',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'static void setFinishCallback(int audioID, @nullable @local const std::function<void (int, const std::string &)> &callback)'
+        funcs =  {
+            'static void setFinishCallback(int audioID, @localvar @nullable const std::function<void (int, const std::string &)> &callback)'
         },
-        TAG_MAKER = 'makeAudioEngineFinishCallbackTag(#1)',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'makeAudioEngineFinishCallbackTag(#1)',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'static void preload(const std::string &filePath)',
-            'static void preload(const std::string &filePath, @local std::function<void (bool)> callback)'
+            'static void preload(const std::string &filePath, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'preload',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'preload',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .prop('defaultProfile', nil, nil)
     .prop('maxAudioInstance', nil, nil)
     .prop('playingAudioCount', nil, nil)
     .prop('enabled', nil, nil)
     .insert('uncache', {
-        BEFORE = [[
+        before = [[
             std::string path = olua_checkstring(L, 1);
             std::list<int> ids = cocos2d::LuaAudioEngine::getAudioIDs(path);
             void *cb_store = olua_pushclassobj<cocos2d::AudioEngine>(L);
@@ -1179,16 +1180,16 @@ typeconf 'cocos2d::AudioEngine'
                 olua_removecallback(L, cb_store, tag.c_str(), OLUA_TAG_SUBEQUAL);
             }
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
 
 typeconf 'cocos2d::ApplicationProtocol::Platform'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('OS_WINDOWS', 'cocos2d::ApplicationProtocol::Platform::OS_WINDOWS')
     .enum('OS_LINUX', 'cocos2d::ApplicationProtocol::Platform::OS_LINUX')
     .enum('OS_MAC', 'cocos2d::ApplicationProtocol::Platform::OS_MAC')
@@ -1200,7 +1201,7 @@ typeconf 'cocos2d::LanguageType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ENGLISH', 'cocos2d::LanguageType::ENGLISH')
     .enum('CHINESE', 'cocos2d::LanguageType::CHINESE')
     .enum('FRENCH', 'cocos2d::LanguageType::FRENCH')
@@ -1226,7 +1227,7 @@ typeconf 'cocos2d::ApplicationProtocol'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'bool applicationDidFinishLaunching()')
     .func(nil, 'void applicationDidEnterBackground()')
     .func(nil, 'void applicationWillEnterForeground()')
@@ -1246,7 +1247,7 @@ typeconf 'cocos2d::Application'
     .supercls('cocos2d::ApplicationProtocol')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'int run()')
     .func(nil, 'static cocos2d::Application *getInstance()')
     .prop('instance', nil, nil)
@@ -1255,7 +1256,7 @@ typeconf 'cocos2d::Device'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static int getDPI()')
     .func(nil, 'static void setAccelerometerEnabled(bool isEnabled)')
     .func(nil, 'static void setAccelerometerInterval(float interval)')
@@ -1267,7 +1268,7 @@ typeconf 'cocos2d::ResizableBuffer'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void resize(size_t size)')
     .func(nil, 'void *buffer()')
 
@@ -1275,7 +1276,7 @@ typeconf 'cocos2d::FileUtils::Status'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('OK', 'cocos2d::FileUtils::Status::OK')
     .enum('NotExists', 'cocos2d::FileUtils::Status::NotExists')
     .enum('OpenFailed', 'cocos2d::FileUtils::Status::OpenFailed')
@@ -1289,7 +1290,7 @@ typeconf 'cocos2d::FileUtils'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func('getFileDataFromZip', [[
         {
             cocos2d::FileUtils *self = olua_toobj<cocos2d::FileUtils>(L, 1);
@@ -1337,154 +1338,154 @@ typeconf 'cocos2d::FileUtils'
     .func(nil, 'const std::unordered_map<std::string, std::string> getFullPathCache()')
     .func(nil, 'std::string getNewFilename(const std::string &filename)')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'std::string getStringFromFile(const std::string &filename)',
-            'void getStringFromFile(const std::string &path, @local std::function<void (std::string)> callback)'
+            'void getStringFromFile(const std::string &path, @localvar std::function<void (std::string)> callback)'
         },
-        TAG_MAKER = 'StringFromFile',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'StringFromFile',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'cocos2d::Data getDataFromFile(const std::string &filename)',
-            'void getDataFromFile(const std::string &filename, @local std::function<void (cocos2d::Data)> callback)'
+            'void getDataFromFile(const std::string &filename, @localvar std::function<void (cocos2d::Data)> callback)'
         },
-        TAG_MAKER = 'DataFromFile',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'DataFromFile',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool writeStringToFile(const std::string &dataStr, const std::string &fullPath)',
-            'void writeStringToFile(std::string dataStr, const std::string &fullPath, @local std::function<void (bool)> callback)'
+            'void writeStringToFile(std::string dataStr, const std::string &fullPath, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'writeStringToFile',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'writeStringToFile',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool writeDataToFile(const cocos2d::Data &data, const std::string &fullPath)',
-            'void writeDataToFile(cocos2d::Data data, const std::string &fullPath, @local std::function<void (bool)> callback)'
+            'void writeDataToFile(cocos2d::Data data, const std::string &fullPath, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'writeDataToFile',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'writeDataToFile',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool writeValueMapToFile(const cocos2d::ValueMap &dict, const std::string &fullPath)',
-            'void writeValueMapToFile(cocos2d::ValueMap dict, const std::string &fullPath, @local std::function<void (bool)> callback)'
+            'void writeValueMapToFile(cocos2d::ValueMap dict, const std::string &fullPath, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'writeValueMapToFile',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'writeValueMapToFile',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool writeValueVectorToFile(const cocos2d::ValueVector &vecData, const std::string &fullPath)',
-            'void writeValueVectorToFile(cocos2d::ValueVector vecData, const std::string &fullPath, @local std::function<void (bool)> callback)'
+            'void writeValueVectorToFile(cocos2d::ValueVector vecData, const std::string &fullPath, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'writeValueVectorToFile',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'writeValueVectorToFile',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool isFileExist(const std::string &filename)',
-            'void isFileExist(const std::string &filename, @local std::function<void (bool)> callback)'
+            'void isFileExist(const std::string &filename, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'isFileExist',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'isFileExist',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool isDirectoryExist(const std::string &dirPath)',
-            'void isDirectoryExist(const std::string &fullPath, @local std::function<void (bool)> callback)'
+            'void isDirectoryExist(const std::string &fullPath, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'isDirectoryExist',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'isDirectoryExist',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool createDirectory(const std::string &dirPath)',
-            'void createDirectory(const std::string &dirPath, @local std::function<void (bool)> callback)'
+            'void createDirectory(const std::string &dirPath, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'createDirectory',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'createDirectory',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool removeDirectory(const std::string &dirPath)',
-            'void removeDirectory(const std::string &dirPath, @local std::function<void (bool)> callback)'
+            'void removeDirectory(const std::string &dirPath, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'removeDirectory',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'removeDirectory',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool removeFile(const std::string &filepath)',
-            'void removeFile(const std::string &filepath, @local std::function<void (bool)> callback)'
+            'void removeFile(const std::string &filepath, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'removeFile',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'removeFile',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool renameFile(const std::string &path, const std::string &oldname, const std::string &name)',
-            'void renameFile(const std::string &path, const std::string &oldname, const std::string &name, @local std::function<void (bool)> callback)',
+            'void renameFile(const std::string &path, const std::string &oldname, const std::string &name, @localvar std::function<void (bool)> callback)',
             'bool renameFile(const std::string &oldfullpath, const std::string &newfullpath)',
-            'void renameFile(const std::string &oldfullpath, const std::string &newfullpath, @local std::function<void (bool)> callback)'
+            'void renameFile(const std::string &oldfullpath, const std::string &newfullpath, @localvar std::function<void (bool)> callback)'
         },
-        TAG_MAKER = 'renameFile',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'renameFile',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'long getFileSize(const std::string &filepath)',
-            'void getFileSize(const std::string &filepath, @local std::function<void (long)> callback)'
+            'void getFileSize(const std::string &filepath, @localvar std::function<void (long)> callback)'
         },
-        TAG_MAKER = 'FileSize',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'FileSize',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
-            'void listFilesAsync(const std::string &dirPath, @local std::function<void (std::vector<std::string>)> callback)'
+        funcs =  {
+            'void listFilesAsync(const std::string &dirPath, @localvar std::function<void (std::vector<std::string>)> callback)'
         },
-        TAG_MAKER = 'listFilesAsync',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'listFilesAsync',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
-            'void listFilesRecursivelyAsync(const std::string &dirPath, @local std::function<void (std::vector<std::string>)> callback)'
+        funcs =  {
+            'void listFilesRecursivelyAsync(const std::string &dirPath, @localvar std::function<void (std::vector<std::string>)> callback)'
         },
-        TAG_MAKER = 'listFilesRecursivelyAsync',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'listFilesRecursivelyAsync',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .prop('instance', nil, nil)
     .prop('searchResolutionsOrder', nil, nil)
@@ -1499,7 +1500,7 @@ typeconf 'ResolutionPolicy'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('EXACT_FIT', 'ResolutionPolicy::EXACT_FIT')
     .enum('NO_BORDER', 'ResolutionPolicy::NO_BORDER')
     .enum('SHOW_ALL', 'ResolutionPolicy::SHOW_ALL')
@@ -1511,7 +1512,7 @@ typeconf 'cocos2d::GLView'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void end()')
     .func(nil, 'bool isOpenGLReady()')
     .func(nil, 'void swapBuffers()')
@@ -1572,13 +1573,13 @@ typeconf 'cocos2d::GLViewImpl'
     .supercls('cocos2d::GLView')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::Image::Format'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('JPG', 'cocos2d::Image::Format::JPG')
     .enum('PNG', 'cocos2d::Image::Format::PNG')
     .enum('WEBP', 'cocos2d::Image::Format::WEBP')
@@ -1601,7 +1602,7 @@ typeconf 'cocos2d::Image'
         };
         NS_CC_END
     ]])
-    .require(nil)
+    .luaopen(nil)
     .func('getPNGPremultipliedAlphaEnabled', [[
         {
             lua_pushboolean(L, cocos2d::LuaImage::getPNGPremultipliedAlphaEnabled());
@@ -1644,7 +1645,7 @@ typeconf 'cocos2d::Properties::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::Properties::Type::NONE')
     .enum('STRING', 'cocos2d::Properties::Type::STRING')
     .enum('NUMBER', 'cocos2d::Properties::Type::NUMBER')
@@ -1657,7 +1658,7 @@ typeconf 'cocos2d::Properties'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Properties *createNonRefCounted(const std::string &url)')
     .func(nil, 'const char *getNextProperty()')
     .func(nil, 'cocos2d::Properties *getNextNamespace()')
@@ -1684,7 +1685,7 @@ typeconf 'cocos2d::Material'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Material *createWithFilename(const std::string &path)')
     .func(nil, 'static cocos2d::Material *createWithProgramState(cocos2d::backend::ProgramState *programState)')
     .func(nil, 'static cocos2d::Material *createWithProperties(cocos2d::Properties *materialProperties)')
@@ -1710,7 +1711,7 @@ typeconf 'cocos2d::Renderer'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('VBO_SIZE', 'cocos2d::Renderer::VBO_SIZE', 'const int')
     .const('INDEX_VBO_SIZE', 'cocos2d::Renderer::INDEX_VBO_SIZE', 'const int')
     .const('BATCH_TRIAGCOMMAND_RESERVED_SIZE', 'cocos2d::Renderer::BATCH_TRIAGCOMMAND_RESERVED_SIZE', 'const int')
@@ -1796,7 +1797,7 @@ typeconf 'cocos2d::RenderCommand::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('UNKNOWN_COMMAND', 'cocos2d::RenderCommand::Type::UNKNOWN_COMMAND')
     .enum('QUAD_COMMAND', 'cocos2d::RenderCommand::Type::QUAD_COMMAND')
     .enum('CUSTOM_COMMAND', 'cocos2d::RenderCommand::Type::CUSTOM_COMMAND')
@@ -1810,7 +1811,7 @@ typeconf 'cocos2d::CustomCommand::DrawType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('ARRAY', 'cocos2d::CustomCommand::DrawType::ARRAY')
     .enum('ELEMENT', 'cocos2d::CustomCommand::DrawType::ELEMENT')
 
@@ -1818,7 +1819,7 @@ typeconf 'cocos2d::PipelineDescriptor'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .var('programState', '@optional cocos2d::backend::ProgramState *programState')
     .var('blendDescriptor', 'cocos2d::backend::BlendDescriptor blendDescriptor')
 
@@ -1826,25 +1827,25 @@ typeconf 'cocos2d::Technique'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::Pass'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::RenderState'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::RenderCommand'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void init(float globalZOrder, const cocos2d::Mat4 &modelViewTransform, unsigned int flags)')
     .func(nil, 'float getGlobalOrder()')
     .func(nil, 'cocos2d::RenderCommand::Type getType()')
@@ -1870,7 +1871,7 @@ typeconf 'cocos2d::CustomCommand'
     .supercls('cocos2d::RenderCommand')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'CustomCommand()')
     .func(nil, '@using void init(float globalZOrder, const cocos2d::Mat4 &modelViewTransform, unsigned int flags)', 'void init(float globalZOrder)', 'void init(float globalZOrder, const cocos2d::BlendFunc &blendFunc)')
     .func(nil, 'void createVertexBuffer(std::size_t vertexSize, std::size_t capacity, cocos2d::CustomCommand::BufferUsage usage)')
@@ -1896,42 +1897,42 @@ typeconf 'cocos2d::CustomCommand'
     .func(nil, 'void setLineWidth(float lineWidth)')
     .func(nil, 'float getLineWidth()')
     .func(nil, 'cocos2d::CustomCommand::IndexFormat getIndexFormat()')
-    .var('func', '@nullable @local std::function<void ()> func')
+    .var('func', '@nullable @localvar std::function<void ()> func')
     .callback {
-        FUNCS =  {
-            'void setBeforeCallback(@local const std::function<void ()> &before)'
+        funcs =  {
+            'void setBeforeCallback(@localvar const std::function<void ()> &before)'
         },
-        TAG_MAKER = 'BeforeCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'BeforeCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setAfterCallback(@local const std::function<void ()> &after)'
+        funcs =  {
+            'void setAfterCallback(@localvar const std::function<void ()> &after)'
         },
-        TAG_MAKER = 'AfterCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'AfterCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@local const std::function<void ()> &getBeforeCallback()'
+        funcs =  {
+            '@localvar const std::function<void ()> &getBeforeCallback()'
         },
-        TAG_MAKER = 'BeforeCallback',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'BeforeCallback',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@local const std::function<void ()> &getAfterCallback()'
+        funcs =  {
+            '@localvar const std::function<void ()> &getAfterCallback()'
         },
-        TAG_MAKER = 'AfterCallback',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'AfterCallback',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('vertexCapacity', nil, nil)
     .prop('indexCapacity', nil, nil)
@@ -1951,7 +1952,7 @@ typeconf 'cocos2d::MeshCommand'
     .supercls('cocos2d::CustomCommand')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'MeshCommand()')
     .func(nil, '@using void init(float globalZOrder)', 'void init(float globalZOrder, const cocos2d::Mat4 &transform)')
 
@@ -1964,7 +1965,7 @@ typeconf 'cocos2d::TextureCache'
             return "addImageAsync." + key;
         }
     ]])
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static void setETC1AlphaFileSuffix(const std::string &suffix)')
     .func(nil, 'static std::string getETC1AlphaFileSuffix()')
     .func(nil, 'TextureCache()')
@@ -1981,32 +1982,32 @@ typeconf 'cocos2d::TextureCache'
     .func(nil, 'std::string getTextureFilePath(cocos2d::Texture2D *texture)')
     .func(nil, 'void renameTextureWithKey(const std::string &srcName, const std::string &dstName)')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void addImageAsync(const std::string &filepath, const std::function<void (Texture2D *)> &callback)',
             'void addImageAsync(const std::string &path, const std::function<void (Texture2D *)> &callback, const std::string &callbackKey)'
         },
-        TAG_MAKER = {'makeTextureCacheCallbackTag(#1)', 'makeTextureCacheCallbackTag(#-1)'},
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = {'makeTextureCacheCallbackTag(#1)', 'makeTextureCacheCallbackTag(#-1)'},
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void unbindImageAsync(const std::string &filename)'
         },
-        TAG_MAKER = 'makeTextureCacheCallbackTag(#1)',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeTextureCacheCallbackTag(#1)',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void unbindAllImageAsync()'
         },
-        TAG_MAKER = 'makeTextureCacheCallbackTag("")',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeTextureCacheCallbackTag("")',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('etC1AlphaFileSuffix', nil, nil)
     .prop('description', nil, nil)
@@ -2016,7 +2017,7 @@ typeconf 'cocos2d::Texture2D'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static void setDefaultAlphaPixelFormat(cocos2d::backend::PixelFormat format)')
     .func(nil, 'static cocos2d::backend::PixelFormat getDefaultAlphaPixelFormat()')
     .func(nil, 'Texture2D()')
@@ -2072,7 +2073,7 @@ typeconf 'cocos2d::TextureCube'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TextureCube *create(const std::string &positive_x, const std::string &negative_x, const std::string &positive_y, const std::string &negative_y, const std::string &positive_z, const std::string &negative_z)')
     .func(nil, 'void setTexParameters(const cocos2d::Texture2D::TexParams &)')
     .func(nil, 'cocos2d::backend::TextureBackend *getBackendTexture()')
@@ -2084,7 +2085,7 @@ typeconf 'cocos2d::TextureAtlas'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TextureAtlas *create(const std::string &file, ssize_t capacity)')
     .func(nil, 'static cocos2d::TextureAtlas *createWithTexture(cocos2d::Texture2D *texture, ssize_t capacity)')
     .func(nil, 'TextureAtlas()')
@@ -2115,7 +2116,7 @@ typeconf 'cocos2d::network::WebSocket::ErrorCode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('TIME_OUT', 'cocos2d::network::WebSocket::ErrorCode::TIME_OUT')
     .enum('CONNECTION_FAILURE', 'cocos2d::network::WebSocket::ErrorCode::CONNECTION_FAILURE')
     .enum('UNKNOWN', 'cocos2d::network::WebSocket::ErrorCode::UNKNOWN')
@@ -2124,7 +2125,7 @@ typeconf 'cocos2d::network::WebSocket::State'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('CONNECTING', 'cocos2d::network::WebSocket::State::CONNECTING')
     .enum('OPEN', 'cocos2d::network::WebSocket::State::OPEN')
     .enum('CLOSING', 'cocos2d::network::WebSocket::State::CLOSING')
@@ -2134,7 +2135,7 @@ typeconf 'cocos2d::network::WebSocket::Delegate'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void onOpen(cocos2d::network::WebSocket *ws)')
     .func(nil, 'void onMessage(cocos2d::network::WebSocket *ws, const cocos2d::network::WebSocket::Data &data)')
     .func(nil, 'void onClose(cocos2d::network::WebSocket *ws)')
@@ -2144,7 +2145,7 @@ typeconf 'cocos2d::network::WebSocket'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func('init', [[
         {
             std::vector<std::string> protocols;
@@ -2165,7 +2166,7 @@ typeconf 'cocos2d::network::WebSocket'
             }
 
             self->init(*delegate, url, protocols.size() > 0 ? &protocols : nullptr, cafile);
-            olua_addref(L, 1, "delegate", 2, OLUA_MODE_SINGLE);
+            olua_addref(L, 1, "delegate", 2, OLUA_FLAG_SINGLE);
 
             return 0;
         }
@@ -2186,18 +2187,18 @@ typeconf 'cocos2d::LuaWebSocketDelegate'
     .supercls('cocos2d::network::WebSocket::Delegate')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'LuaWebSocketDelegate()')
-    .var('onOpen', '@nullable @local std::function<void (network::WebSocket *)> onOpenCallback')
-    .var('onMessage', '@nullable @local std::function<void (network::WebSocket *, const network::WebSocket::Data &)> onMessageCallback')
-    .var('onClose', '@nullable @local std::function<void (network::WebSocket *)> onCloseCallback')
-    .var('onError', '@nullable @local std::function<void (network::WebSocket *, const network::WebSocket::ErrorCode &)> onErrorCallback')
+    .var('onOpen', '@nullable @localvar std::function<void (network::WebSocket *)> onOpenCallback')
+    .var('onMessage', '@nullable @localvar std::function<void (network::WebSocket *, const network::WebSocket::Data &)> onMessageCallback')
+    .var('onClose', '@nullable @localvar std::function<void (network::WebSocket *)> onCloseCallback')
+    .var('onError', '@nullable @localvar std::function<void (network::WebSocket *, const network::WebSocket::ErrorCode &)> onErrorCallback')
 
 typeconf 'cocos2d::ActionManager'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'ActionManager()')
     .func(nil, 'void addAction(cocos2d::Action *action, cocos2d::Node *target, bool paused)')
     .func(nil, 'void removeAllActions()')
@@ -2221,7 +2222,7 @@ typeconf 'cocos2d::Component'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Component *create()')
     .func(nil, 'bool init()')
     .func(nil, 'bool isEnabled()')
@@ -2245,14 +2246,14 @@ typeconf 'cocos2d::LuaComponent'
     .supercls('cocos2d::Component')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::LuaComponent *create()')
     .func(nil, 'LuaComponent()')
-    .var('onUpdate', '@nullable @local std::function<void (float)> onUpdateCallback')
-    .var('onEnter', '@nullable @local std::function<void ()> onEnterCallback')
-    .var('onExit', '@nullable @local std::function<void ()> onExitCallback')
-    .var('onAdd', '@nullable @local std::function<void ()> onAddCallback')
-    .var('onRemove', '@nullable @local std::function<void ()> onRemoveCallback')
+    .var('onUpdate', '@nullable @localvar std::function<void (float)> onUpdateCallback')
+    .var('onEnter', '@nullable @localvar std::function<void ()> onEnterCallback')
+    .var('onExit', '@nullable @localvar std::function<void ()> onExitCallback')
+    .var('onAdd', '@nullable @localvar std::function<void ()> onAddCallback')
+    .var('onRemove', '@nullable @localvar std::function<void ()> onRemoveCallback')
 
 typeconf 'cocos2d::Node'
     .supercls('cocos2d::Ref')
@@ -2270,22 +2271,26 @@ typeconf 'cocos2d::Node'
             return NULL;
         }
     ]])
-    .require(nil)
+    .luaopen(nil)
     .const('INVALID_TAG', 'cocos2d::Node::INVALID_TAG', 'const int')
     .func('__index', [[
         {
-            auto self = olua_toobj<cocos2d::Node>(L, 1);
-            if (olua_isstring(L, 2)) {
-                cocos2d::Node *child = self->getChildByName(olua_tostring(L, 2));
-                if (child) {
-                    olua_pushobj<cocos2d::Node>(L, child);
-                    olua_addref(L, 1, "children", -1, OLUA_MODE_MULTIPLE);
-                    return 1;
+            if(olua_isuserdata(L, 1)) {
+                if (olua_isstring(L, 2)) {
+                    auto self = olua_toobj<cocos2d::Node>(L, 1);
+                    cocos2d::Node *child = self->getChildByName(olua_tostring(L, 2));
+                    if (child) {
+                        olua_pushobj<cocos2d::Node>(L, child);
+                        olua_addref(L, 1, "children", -1, OLUA_FLAG_MULTIPLE);
+                        return 1;
+                    }
                 }
+                lua_settop(L, 2);
+                olua_getvariable(L, 1);
+                return 1;
+            } else {
+                return 0;
             }
-            lua_settop(L, 2);
-            olua_getvariable(L, 1);
-            return 1;
         }
     ]])
     .func('getBounds', [[
@@ -2487,123 +2492,123 @@ typeconf 'cocos2d::Node'
     .func(nil, 'void setPhysicsBody(@addref(physicsBody ^) cocos2d::PhysicsBody *physicsBody)')
     .func(nil, '@addref(physicsBody ^) cocos2d::PhysicsBody *getPhysicsBody()')
     .callback {
-        FUNCS =  {
-            'void setOnEnterCallback(@nullable @local const std::function<void ()> &callback)'
+        funcs =  {
+            'void setOnEnterCallback(@localvar @nullable const std::function<void ()> &callback)'
         },
-        TAG_MAKER = 'OnEnterCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnEnterCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@nullable @local const std::function<void ()> &getOnEnterCallback()'
+        funcs =  {
+            '@nullable @localvar const std::function<void ()> &getOnEnterCallback()'
         },
-        TAG_MAKER = 'OnEnterCallback',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnEnterCallback',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setOnExitCallback(@nullable @local const std::function<void ()> &callback)'
+        funcs =  {
+            'void setOnExitCallback(@localvar @nullable const std::function<void ()> &callback)'
         },
-        TAG_MAKER = 'OnExitCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnExitCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@nullable @local const std::function<void ()> &getOnExitCallback()'
+        funcs =  {
+            '@nullable @localvar const std::function<void ()> &getOnExitCallback()'
         },
-        TAG_MAKER = 'OnExitCallback',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnExitCallback',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setOnEnterTransitionDidFinishCallback(@nullable @local const std::function<void ()> &callback)'
+        funcs =  {
+            'void setOnEnterTransitionDidFinishCallback(@localvar @nullable const std::function<void ()> &callback)'
         },
-        TAG_MAKER = 'OnEnterTransitionDidFinishCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnEnterTransitionDidFinishCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@nullable @local const std::function<void ()> &getOnEnterTransitionDidFinishCallback()'
+        funcs =  {
+            '@nullable @localvar const std::function<void ()> &getOnEnterTransitionDidFinishCallback()'
         },
-        TAG_MAKER = 'OnEnterTransitionDidFinishCallback',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnEnterTransitionDidFinishCallback',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setOnExitTransitionDidStartCallback(@nullable @local const std::function<void ()> &callback)'
+        funcs =  {
+            'void setOnExitTransitionDidStartCallback(@localvar @nullable const std::function<void ()> &callback)'
         },
-        TAG_MAKER = 'OnExitTransitionDidStartCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnExitTransitionDidStartCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            '@nullable @local const std::function<void ()> &getOnExitTransitionDidStartCallback()'
+        funcs =  {
+            '@nullable @localvar const std::function<void ()> &getOnExitTransitionDidStartCallback()'
         },
-        TAG_MAKER = 'OnExitTransitionDidStartCallback',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'OnExitTransitionDidStartCallback',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void scheduleOnce(@local const std::function<void (float)> &callback, float delay, const std::string &key)'
+        funcs =  {
+            'void scheduleOnce(@localvar const std::function<void (float)> &callback, float delay, const std::string &key)'
         },
-        TAG_MAKER = 'makeScheduleCallbackTag(#-1)',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'makeScheduleCallbackTag(#-1)',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
-            'void schedule(@local const std::function<void (float)> &callback, const std::string &key)',
-            'void schedule(@local const std::function<void (float)> &callback, float interval, const std::string &key)',
-            'void schedule(@local const std::function<void (float)> &callback, float interval, unsigned int repeat, float delay, const std::string &key)'
+        funcs =  {
+            'void schedule(@localvar const std::function<void (float)> &callback, const std::string &key)',
+            'void schedule(@localvar const std::function<void (float)> &callback, float interval, const std::string &key)',
+            'void schedule(@localvar const std::function<void (float)> &callback, float interval, unsigned int repeat, float delay, const std::string &key)'
         },
-        TAG_MAKER = 'makeScheduleCallbackTag(#-1)',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeScheduleCallbackTag(#-1)',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void unschedule(const std::string &key)'
         },
-        TAG_MAKER = 'makeScheduleCallbackTag(#1)',
-        TAG_MODE = 'OLUA_TAG_SUBEQUAL',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeScheduleCallbackTag(#1)',
+        tag_mode = 'subequal',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void unscheduleAllCallbacks()'
         },
-        TAG_MAKER = 'makeScheduleCallbackTag("")',
-        TAG_MODE = 'OLUA_TAG_SUBSTARTWITH',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'makeScheduleCallbackTag("")',
+        tag_mode = 'substartwith',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void enumerateChildren(const std::string &name, @local std::function<bool (cocos2d::Node *)> callback)'
+        funcs =  {
+            'void enumerateChildren(const std::string &name, @localvar std::function<bool (cocos2d::Node *)> callback)'
         },
-        TAG_MAKER = 'enumerateChildren',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'function',
+        tag_maker = 'enumerateChildren',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'function',
     }
     .prop('x', 'float getPositionX()', 'void setPositionX(float x)')
     .prop('y', 'float getPositionY()', 'void setPositionY(float y)')
@@ -2743,71 +2748,71 @@ typeconf 'cocos2d::Node'
     .prop('programState', nil, nil)
     .prop('physicsBody', nil, nil)
     .insert('removeFromParent', {
-        BEFORE = [[
+        before = [[
             if (!self->getParent()) {
                 return 0;
             }
             olua_push_cppobj<cocos2d::Node>(L, self->getParent());
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('removeFromParentAndCleanup', {
-        BEFORE = [[
+        before = [[
             if (!self->getParent()) {
                 return 0;
             }
             olua_push_cppobj<cocos2d::Node>(L, self->getParent());
             int parent = lua_gettop(L);
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('onEnter', {
-        BEFORE = [[
+        before = [[
             if (!self->getParent()) {
                 luaL_error(L, "parent is nullptr");
             }
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
     .insert('onExit', {
-        BEFORE = [[
+        before = [[
             if (!self->getParent()) {
                 luaL_error(L, "parent is nullptr");
             }
         ]],
-        AFTER = nil,
-        CALLBACK_BEFORE = nil,
-        CALLBACK_AFTER = nil,
+        after = nil,
+        cbefore = nil,
+        cafter = nil,
     })
 
 typeconf 'cocos2d::LuaTweenNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void updateTweenAction(float value, const std::string &key)')
     .callback {
-        FUNCS =  {
-            'static cocos2d::LuaTweenNode *create(@local const std::function<void (float, const std::string &)> &callback)'
+        funcs =  {
+            'static cocos2d::LuaTweenNode *create(@localvar const std::function<void (float, const std::string &)> &callback)'
         },
-        TAG_MAKER = 'ActionTween',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = "return",
-        TAG_SCOPE = 'object',
+        tag_maker = 'ActionTween',
+        tag_mode = 'new',
+        tag_store = -1,
+        tag_scope = 'object',
     }
 
 typeconf 'cocos2d::AtlasNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::AtlasNode *create(const std::string &filename, int tileWidth, int tileHeight, int itemsToRender)')
     .func(nil, 'void updateAtlasValues()')
     .func(nil, 'cocos2d::Texture2D *getTexture()')
@@ -2830,7 +2835,7 @@ typeconf 'cocos2d::sImageTGA'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .var('status', 'int status')
     .var('type', 'unsigned char type')
     .var('pixelDepth', 'unsigned char pixelDepth')
@@ -2843,7 +2848,7 @@ typeconf 'cocos2d::TileMapAtlas'
     .supercls('cocos2d::AtlasNode')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TileMapAtlas *create(const std::string &tile, const std::string &mapFile, int tileWidth, int tileHeight)')
     .func(nil, 'TileMapAtlas()')
     .func(nil, 'bool initWithTileFile(const std::string &tile, const std::string &mapFile, int tileWidth, int tileHeight)')
@@ -2858,7 +2863,7 @@ typeconf 'cocos2d::ClippingNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ClippingNode *create()', 'static cocos2d::ClippingNode *create(cocos2d::Node *stencil)')
     .func(nil, 'cocos2d::Node *getStencil()')
     .func(nil, 'void setStencil(cocos2d::Node *stencil)')
@@ -2877,7 +2882,7 @@ typeconf 'cocos2d::MotionStreak'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::MotionStreak *create(float timeToFade, float minSeg, float strokeWidth, const cocos2d::Color3B &strokeColor, const std::string &imagePath)', 'static cocos2d::MotionStreak *create(float timeToFade, float minSeg, float strokeWidth, const cocos2d::Color3B &strokeColor, cocos2d::Texture2D *texture)')
     .func(nil, 'cocos2d::Texture2D *getTexture()')
     .func(nil, 'void setTexture(cocos2d::Texture2D *texture)')
@@ -2903,7 +2908,7 @@ typeconf 'cocos2d::ProtectedNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ProtectedNode *create()')
     .func(nil, 'void addProtectedChild(@addref(protectedChildren |) cocos2d::Node *child)', 'void addProtectedChild(@addref(protectedChildren |) cocos2d::Node *child, int localZOrder)', 'void addProtectedChild(@addref(protectedChildren |) cocos2d::Node *child, int localZOrder, int tag)')
     .func(nil, '@addref(protectedChildren |) cocos2d::Node *getProtectedChildByTag(int tag)')
@@ -2921,7 +2926,7 @@ typeconf 'cocos2d::DrawNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::DrawNode *create(@optional float defaultLineWidth)')
     .func(nil, 'void drawPoint(const cocos2d::Vec2 &point, const float pointSize, const cocos2d::Color4F &color)')
     .func(nil, 'void drawLine(const cocos2d::Vec2 &origin, const cocos2d::Vec2 &destination, const cocos2d::Color4F &color)')
@@ -2952,7 +2957,7 @@ typeconf 'cocos2d::ParallaxNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParallaxNode *create()')
     .func(nil, 'void addChild(@addref(chilren |) cocos2d::Node *child, int z, const cocos2d::Vec2 &parallaxRatio, const cocos2d::Vec2 &positionOffset)', '@using void addChild(@addref(chilren |) cocos2d::Node *child, int zOrder, int tag)', '@using void addChild(@addref(chilren |) cocos2d::Node *child, int zOrder, const std::string &name)', '@using void addChild(@addref(children |) cocos2d::Node *child)', '@using void addChild(@addref(children |) cocos2d::Node *child, int localZOrder)')
     .func(nil, 'ParallaxNode()')
@@ -2961,7 +2966,7 @@ typeconf 'cocos2d::TextHAlignment'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('LEFT', 'cocos2d::TextHAlignment::LEFT')
     .enum('CENTER', 'cocos2d::TextHAlignment::CENTER')
     .enum('RIGHT', 'cocos2d::TextHAlignment::RIGHT')
@@ -2970,7 +2975,7 @@ typeconf 'cocos2d::TextVAlignment'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('TOP', 'cocos2d::TextVAlignment::TOP')
     .enum('CENTER', 'cocos2d::TextVAlignment::CENTER')
     .enum('BOTTOM', 'cocos2d::TextVAlignment::BOTTOM')
@@ -2979,7 +2984,7 @@ typeconf 'cocos2d::GlyphCollection'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('DYNAMIC', 'cocos2d::GlyphCollection::DYNAMIC')
     .enum('NEHE', 'cocos2d::GlyphCollection::NEHE')
     .enum('ASCII', 'cocos2d::GlyphCollection::ASCII')
@@ -2989,7 +2994,7 @@ typeconf 'cocos2d::LabelEffect'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NORMAL', 'cocos2d::LabelEffect::NORMAL')
     .enum('OUTLINE', 'cocos2d::LabelEffect::OUTLINE')
     .enum('SHADOW', 'cocos2d::LabelEffect::SHADOW')
@@ -3004,7 +3009,7 @@ typeconf 'cocos2d::Label::LabelType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('TTF', 'cocos2d::Label::LabelType::TTF')
     .enum('BMFONT', 'cocos2d::Label::LabelType::BMFONT')
     .enum('CHARMAP', 'cocos2d::Label::LabelType::CHARMAP')
@@ -3014,7 +3019,7 @@ typeconf 'cocos2d::Label::Overflow'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::Label::Overflow::NONE')
     .enum('CLAMP', 'cocos2d::Label::Overflow::CLAMP')
     .enum('SHRINK', 'cocos2d::Label::Overflow::SHRINK')
@@ -3024,7 +3029,7 @@ typeconf 'cocos2d::Label'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Label *create()')
     .func(nil, 'static cocos2d::Label *createWithSystemFont(const std::string &text, const std::string &font, float fontSize, @optional const cocos2d::Size &dimensions, @optional cocos2d::TextHAlignment hAlignment, @optional cocos2d::TextVAlignment vAlignment)')
     .func(nil, 'static cocos2d::Label *createWithTTF(const std::string &text, const std::string &fontFilePath, float fontSize, @optional const cocos2d::Size &dimensions, @optional cocos2d::TextHAlignment hAlignment, @optional cocos2d::TextVAlignment vAlignment)', 'static cocos2d::Label *createWithTTF(const cocos2d::TTFConfig &ttfConfig, const std::string &text, @optional cocos2d::TextHAlignment hAlignment, @optional int maxLineWidth)')
@@ -3136,7 +3141,7 @@ typeconf 'cocos2d::LabelAtlas'
     .supercls('cocos2d::AtlasNode')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::LabelAtlas *create()', 'static cocos2d::LabelAtlas *create(const std::string &string, const std::string &charMapFile, int itemWidth, int itemHeight, int startCharMap)', 'static cocos2d::LabelAtlas *create(const std::string &string, const std::string &fntFile)')
     .func(nil, 'bool initWithString(const std::string &string, const std::string &charMapFile, int itemWidth, int itemHeight, int startCharMap)', 'bool initWithString(const std::string &string, const std::string &fntFile)', 'bool initWithString(const std::string &string, cocos2d::Texture2D *texture, int itemWidth, int itemHeight, int startCharMap)')
     .func(nil, 'void setString(const std::string &label)')
@@ -3148,7 +3153,7 @@ typeconf 'cocos2d::FontAtlas'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('CacheTextureWidth', 'cocos2d::FontAtlas::CacheTextureWidth', 'const int')
     .const('CacheTextureHeight', 'cocos2d::FontAtlas::CacheTextureHeight', 'const int')
     .func(nil, 'void addTexture(cocos2d::Texture2D *texture, int slot)')
@@ -3169,7 +3174,7 @@ typeconf 'cocos2d::ClippingRectangleNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ClippingRectangleNode *create(const cocos2d::Rect &clippingRegion)', 'static cocos2d::ClippingRectangleNode *create()')
     .func(nil, 'const cocos2d::Rect &getClippingRegion()')
     .func(nil, 'void setClippingRegion(const cocos2d::Rect &clippingRegion)')
@@ -3182,7 +3187,7 @@ typeconf 'cocos2d::RenderTexture'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::RenderTexture *create(int w, int h, cocos2d::backend::PixelFormat format, cocos2d::backend::PixelFormat depthStencilFormat)', 'static cocos2d::RenderTexture *create(int w, int h, cocos2d::backend::PixelFormat format)', 'static cocos2d::RenderTexture *create(int w, int h)')
     .func(nil, 'void begin()')
     .func(nil, 'void beginWithClear(float r, float g, float b, float a)', 'void beginWithClear(float r, float g, float b, float a, float depthValue)', 'void beginWithClear(float r, float g, float b, float a, float depthValue, int stencilValue)')
@@ -3209,33 +3214,33 @@ typeconf 'cocos2d::RenderTexture'
     .func(nil, 'RenderTexture()')
     .func(nil, 'bool initWithWidthAndHeight(int w, int h, cocos2d::backend::PixelFormat format)', 'bool initWithWidthAndHeight(int w, int h, cocos2d::backend::PixelFormat format, cocos2d::backend::PixelFormat depthStencilFormat)')
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool saveToFile(const std::string &filename, @optional bool isRGBA, @optional std::function<void (cocos2d::RenderTexture *, const std::string &)> callback)',
             'bool saveToFile(const std::string &filename, cocos2d::Image::Format format, @optional bool isRGBA, @optional std::function<void (cocos2d::RenderTexture *, const std::string &)> callback)'
         },
-        TAG_MAKER = 'saveToFile',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'saveToFile',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'bool saveToFileAsNonPMA(const std::string &filename, @optional bool isRGBA, @optional std::function<void (cocos2d::RenderTexture *, const std::string &)> callback)',
             'bool saveToFileAsNonPMA(const std::string &fileName, cocos2d::Image::Format format, bool isRGBA, std::function<void (cocos2d::RenderTexture *, const std::string &)> callback)'
         },
-        TAG_MAKER = 'saveToFile',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'saveToFile',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .callback {
-        FUNCS =  {
+        funcs =  {
             'void newImage(std::function<void (cocos2d::Image *)> imageCallback, @optional bool flipImage)'
         },
-        TAG_MAKER = 'newImage',
-        TAG_MODE = 'OLUA_TAG_NEW',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'once',
+        tag_maker = 'newImage',
+        tag_mode = 'new',
+        tag_store = 0,
+        tag_scope = 'once',
     }
     .prop('clearFlags', nil, nil)
     .prop('clearColor', nil, nil)
@@ -3250,7 +3255,7 @@ typeconf 'cocos2d::ProgressTimer::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('RADIAL', 'cocos2d::ProgressTimer::Type::RADIAL')
     .enum('BAR', 'cocos2d::ProgressTimer::Type::BAR')
 
@@ -3258,7 +3263,7 @@ typeconf 'cocos2d::ProgressTimer'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ProgressTimer *create(cocos2d::Sprite *sp)')
     .func(nil, 'cocos2d::ProgressTimer::Type getType()')
     .func(nil, 'float getPercentage()')
@@ -3285,7 +3290,7 @@ typeconf 'cocos2d::AnimationFrame'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::AnimationFrame *create(cocos2d::SpriteFrame *spriteFrame, float delayUnits, const cocos2d::ValueMap &userInfo)')
     .func(nil, 'cocos2d::SpriteFrame *getSpriteFrame()')
     .func(nil, 'void setSpriteFrame(cocos2d::SpriteFrame *frame)')
@@ -3304,7 +3309,7 @@ typeconf 'cocos2d::Animation'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Animation *create()', 'static cocos2d::Animation *create(const Vector<cocos2d::AnimationFrame *> &arrayOfAnimationFrameNames, float delayPerUnit, @optional unsigned int loops)')
     .func(nil, 'static cocos2d::Animation *createWithSpriteFrames(const Vector<cocos2d::SpriteFrame *> &arrayOfSpriteFrameNames, @optional float delay, @optional unsigned int loops)')
     .func(nil, 'void addSpriteFrame(cocos2d::SpriteFrame *frame)')
@@ -3336,7 +3341,7 @@ typeconf 'cocos2d::SpriteFrame'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::SpriteFrame *create(const std::string &filename, const cocos2d::Rect &rect)', 'static cocos2d::SpriteFrame *create(const std::string &filename, const cocos2d::Rect &rect, bool rotated, const cocos2d::Vec2 &offset, const cocos2d::Size &originalSize)')
     .func(nil, 'static cocos2d::SpriteFrame *createWithTexture(cocos2d::Texture2D *pobTexture, const cocos2d::Rect &rect)', 'static cocos2d::SpriteFrame *createWithTexture(cocos2d::Texture2D *pobTexture, const cocos2d::Rect &rect, bool rotated, const cocos2d::Vec2 &offset, const cocos2d::Size &originalSize)')
     .func(nil, 'const cocos2d::Rect &getRectInPixels()')
@@ -3381,7 +3386,7 @@ typeconf 'cocos2d::Sprite'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('INDEX_NOT_INITIALIZED', 'cocos2d::Sprite::INDEX_NOT_INITIALIZED', 'const int')
     .func(nil, 'static cocos2d::Sprite *create()', 'static cocos2d::Sprite *create(const std::string &filename)', 'static cocos2d::Sprite *create(const std::string &filename, const cocos2d::Rect &rect)')
     .func(nil, 'static cocos2d::Sprite *createWithTexture(cocos2d::Texture2D *texture)', 'static cocos2d::Sprite *createWithTexture(cocos2d::Texture2D *texture, const cocos2d::Rect &rect, @optional bool rotated)')
@@ -3449,7 +3454,7 @@ typeconf 'cocos2d::SpriteBatchNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::SpriteBatchNode *createWithTexture(cocos2d::Texture2D *tex, @optional ssize_t capacity)')
     .func(nil, 'static cocos2d::SpriteBatchNode *create(const std::string &fileImage, @optional ssize_t capacity)')
     .func(nil, 'cocos2d::TextureAtlas *getTextureAtlas()')
@@ -3483,7 +3488,7 @@ typeconf 'cocos2d::SpriteFrameCache'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::SpriteFrameCache *getInstance()')
     .func(nil, 'static void destroyInstance()')
     .func(nil, 'bool init()')
@@ -3505,7 +3510,7 @@ typeconf 'cocos2d::AnimationCache'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'AnimationCache()')
     .func(nil, 'static cocos2d::AnimationCache *getInstance()')
     .func(nil, 'static void destroyInstance()')
@@ -3521,7 +3526,7 @@ typeconf 'cocos2d::Scene'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Scene *create()')
     .func(nil, 'static cocos2d::Scene *createWithSize(const cocos2d::Size &size)')
     .func(nil, 'const std::vector<Camera *> &getCameras()')
@@ -3547,7 +3552,7 @@ typeconf 'cocos2d::Layer'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Layer *create()')
     .func(nil, 'bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event)')
     .func(nil, 'void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *unused_event)')
@@ -3566,7 +3571,7 @@ typeconf 'cocos2d::LayerColor'
     .supercls('cocos2d::Layer')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::LayerColor *create()', 'static cocos2d::LayerColor *create(const cocos2d::Color4B &color, float width, float height)', 'static cocos2d::LayerColor *create(const cocos2d::Color4B &color)')
     .func(nil, 'void changeWidth(float w)')
     .func(nil, 'void changeHeight(float h)')
@@ -3581,7 +3586,7 @@ typeconf 'cocos2d::LayerGradient'
     .supercls('cocos2d::LayerColor')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::LayerGradient *create()', 'static cocos2d::LayerGradient *create(const cocos2d::Color4B &start, const cocos2d::Color4B &end)', 'static cocos2d::LayerGradient *create(const cocos2d::Color4B &start, const cocos2d::Color4B &end, const cocos2d::Vec2 &v)')
     .func(nil, 'void setCompressedInterpolation(bool compressedInterpolation)')
     .func(nil, 'bool isCompressedInterpolation()')
@@ -3608,7 +3613,7 @@ typeconf 'cocos2d::LayerRadialGradient'
     .supercls('cocos2d::Layer')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::LayerRadialGradient *create(const cocos2d::Color4B &startColor, const cocos2d::Color4B &endColor, float radius, const cocos2d::Vec2 &center, float expand)', 'static cocos2d::LayerRadialGradient *create()')
     .func(nil, 'void setStartOpacity(uint8_t opacity)')
     .func(nil, 'uint8_t getStartOpacity()')
@@ -3645,7 +3650,7 @@ typeconf 'cocos2d::LayerMultiplex'
     .supercls('cocos2d::Layer')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::LayerMultiplex *create()')
     .func(nil, 'static cocos2d::LayerMultiplex *createWithArray(const Vector<cocos2d::Layer *> &arrayOfLayers)')
     .func(nil, 'static cocos2d::LayerMultiplex *createWithLayer(cocos2d::Layer *layer)')
@@ -3659,7 +3664,7 @@ typeconf 'cocos2d::TransitionScene::Orientation'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('LEFT_OVER', 'cocos2d::TransitionScene::Orientation::LEFT_OVER')
     .enum('RIGHT_OVER', 'cocos2d::TransitionScene::Orientation::RIGHT_OVER')
     .enum('UP_OVER', 'cocos2d::TransitionScene::Orientation::UP_OVER')
@@ -3669,7 +3674,7 @@ typeconf 'cocos2d::TransitionScene'
     .supercls('cocos2d::Scene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionScene *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'void finish()')
     .func(nil, 'void hideOutShowIn()')
@@ -3683,7 +3688,7 @@ typeconf 'cocos2d::TransitionSceneOriented'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionSceneOriented *create(float t, @addref(scenes |) cocos2d::Scene *scene, cocos2d::TransitionScene::Orientation orientation)')
     .func(nil, 'TransitionSceneOriented()')
 
@@ -3691,7 +3696,7 @@ typeconf 'cocos2d::TransitionRotoZoom'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionRotoZoom *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionRotoZoom()')
 
@@ -3699,7 +3704,7 @@ typeconf 'cocos2d::TransitionJumpZoom'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionJumpZoom *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionJumpZoom()')
 
@@ -3707,7 +3712,7 @@ typeconf 'cocos2d::TransitionMoveInL'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionMoveInL *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'cocos2d::ActionInterval *action()')
     .func(nil, 'cocos2d::ActionInterval *easeActionWithAction(@addref(action ^) cocos2d::ActionInterval *action)')
@@ -3717,7 +3722,7 @@ typeconf 'cocos2d::TransitionMoveInR'
     .supercls('cocos2d::TransitionMoveInL')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionMoveInR *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionMoveInR()')
 
@@ -3725,7 +3730,7 @@ typeconf 'cocos2d::TransitionMoveInT'
     .supercls('cocos2d::TransitionMoveInL')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionMoveInT *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionMoveInT()')
 
@@ -3733,7 +3738,7 @@ typeconf 'cocos2d::TransitionMoveInB'
     .supercls('cocos2d::TransitionMoveInL')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionMoveInB *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionMoveInB()')
 
@@ -3741,7 +3746,7 @@ typeconf 'cocos2d::TransitionSlideInL'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionSlideInL *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'cocos2d::ActionInterval *easeActionWithAction(@addref(action ^) cocos2d::ActionInterval *action)')
     .func(nil, 'cocos2d::ActionInterval *action()')
@@ -3751,7 +3756,7 @@ typeconf 'cocos2d::TransitionSlideInR'
     .supercls('cocos2d::TransitionSlideInL')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionSlideInR *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionSlideInR()')
 
@@ -3759,7 +3764,7 @@ typeconf 'cocos2d::TransitionSlideInB'
     .supercls('cocos2d::TransitionSlideInL')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionSlideInB *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionSlideInB()')
 
@@ -3767,7 +3772,7 @@ typeconf 'cocos2d::TransitionSlideInT'
     .supercls('cocos2d::TransitionSlideInL')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionSlideInT *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionSlideInT()')
 
@@ -3775,7 +3780,7 @@ typeconf 'cocos2d::TransitionShrinkGrow'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionShrinkGrow *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'cocos2d::ActionInterval *easeActionWithAction(@addref(action ^) cocos2d::ActionInterval *action)')
     .func(nil, 'TransitionShrinkGrow()')
@@ -3784,7 +3789,7 @@ typeconf 'cocos2d::TransitionFlipX'
     .supercls('cocos2d::TransitionSceneOriented')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionFlipX *create(float t, @addref(scenes |) cocos2d::Scene *s, cocos2d::TransitionScene::Orientation o)', 'static cocos2d::TransitionFlipX *create(float t, @addref(scenes |) cocos2d::Scene *s)')
     .func(nil, 'TransitionFlipX()')
 
@@ -3792,7 +3797,7 @@ typeconf 'cocos2d::TransitionFlipY'
     .supercls('cocos2d::TransitionSceneOriented')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionFlipY *create(float t, @addref(scenes |) cocos2d::Scene *s, cocos2d::TransitionScene::Orientation o)', 'static cocos2d::TransitionFlipY *create(float t, @addref(scenes |) cocos2d::Scene *s)')
     .func(nil, 'TransitionFlipY()')
 
@@ -3800,7 +3805,7 @@ typeconf 'cocos2d::TransitionFlipAngular'
     .supercls('cocos2d::TransitionSceneOriented')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionFlipAngular *create(float t, @addref(scenes |) cocos2d::Scene *s, cocos2d::TransitionScene::Orientation o)', 'static cocos2d::TransitionFlipAngular *create(float t, @addref(scenes |) cocos2d::Scene *s)')
     .func(nil, 'TransitionFlipAngular()')
 
@@ -3808,7 +3813,7 @@ typeconf 'cocos2d::TransitionZoomFlipX'
     .supercls('cocos2d::TransitionSceneOriented')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionZoomFlipX *create(float t, @addref(scenes |) cocos2d::Scene *s, cocos2d::TransitionScene::Orientation o)', 'static cocos2d::TransitionZoomFlipX *create(float t, @addref(scenes |) cocos2d::Scene *s)')
     .func(nil, 'TransitionZoomFlipX()')
 
@@ -3816,7 +3821,7 @@ typeconf 'cocos2d::TransitionZoomFlipY'
     .supercls('cocos2d::TransitionSceneOriented')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionZoomFlipY *create(float t, @addref(scenes |) cocos2d::Scene *s, cocos2d::TransitionScene::Orientation o)', 'static cocos2d::TransitionZoomFlipY *create(float t, @addref(scenes |) cocos2d::Scene *s)')
     .func(nil, 'TransitionZoomFlipY()')
 
@@ -3824,7 +3829,7 @@ typeconf 'cocos2d::TransitionZoomFlipAngular'
     .supercls('cocos2d::TransitionSceneOriented')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionZoomFlipAngular *create(float t, @addref(scenes |) cocos2d::Scene *s, cocos2d::TransitionScene::Orientation o)', 'static cocos2d::TransitionZoomFlipAngular *create(float t, @addref(scenes |) cocos2d::Scene *s)')
     .func(nil, 'TransitionZoomFlipAngular()')
 
@@ -3832,7 +3837,7 @@ typeconf 'cocos2d::TransitionFade'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionFade *create(float duration, @addref(scenes |) cocos2d::Scene *scene, const cocos2d::Color3B &color)', 'static cocos2d::TransitionFade *create(float duration, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionFade()')
 
@@ -3840,7 +3845,7 @@ typeconf 'cocos2d::TransitionCrossFade'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionCrossFade *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionCrossFade()')
 
@@ -3848,7 +3853,7 @@ typeconf 'cocos2d::TransitionTurnOffTiles'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionTurnOffTiles *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'cocos2d::ActionInterval *easeActionWithAction(@addref(action ^) cocos2d::ActionInterval *action)')
     .func(nil, 'TransitionTurnOffTiles()')
@@ -3857,7 +3862,7 @@ typeconf 'cocos2d::TransitionSplitCols'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionSplitCols *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'cocos2d::ActionInterval *action()')
     .func(nil, 'cocos2d::ActionInterval *easeActionWithAction(@addref(action ^) cocos2d::ActionInterval *action)')
@@ -3867,7 +3872,7 @@ typeconf 'cocos2d::TransitionSplitRows'
     .supercls('cocos2d::TransitionSplitCols')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionSplitRows *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionSplitRows()')
 
@@ -3875,7 +3880,7 @@ typeconf 'cocos2d::TransitionFadeTR'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionFadeTR *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'cocos2d::ActionInterval *actionWithSize(const cocos2d::Size &size)')
     .func(nil, 'cocos2d::ActionInterval *easeActionWithAction(@addref(action ^) cocos2d::ActionInterval *action)')
@@ -3885,7 +3890,7 @@ typeconf 'cocos2d::TransitionFadeBL'
     .supercls('cocos2d::TransitionFadeTR')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionFadeBL *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionFadeBL()')
 
@@ -3893,7 +3898,7 @@ typeconf 'cocos2d::TransitionFadeUp'
     .supercls('cocos2d::TransitionFadeTR')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionFadeUp *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionFadeUp()')
 
@@ -3901,7 +3906,7 @@ typeconf 'cocos2d::TransitionFadeDown'
     .supercls('cocos2d::TransitionFadeTR')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionFadeDown *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionFadeDown()')
 
@@ -3909,7 +3914,7 @@ typeconf 'cocos2d::TransitionPageTurn'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionPageTurn *create(float t, @addref(scenes |) cocos2d::Scene *scene, bool backwards)')
     .func(nil, 'cocos2d::ActionInterval *actionWithSize(const cocos2d::Size &vector)')
     .func(nil, 'TransitionPageTurn()')
@@ -3918,7 +3923,7 @@ typeconf 'cocos2d::TransitionProgress'
     .supercls('cocos2d::TransitionScene')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionProgress *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionProgress()')
 
@@ -3926,7 +3931,7 @@ typeconf 'cocos2d::TransitionProgressRadialCCW'
     .supercls('cocos2d::TransitionProgress')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionProgressRadialCCW *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionProgressRadialCCW()')
 
@@ -3934,7 +3939,7 @@ typeconf 'cocos2d::TransitionProgressRadialCW'
     .supercls('cocos2d::TransitionProgress')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionProgressRadialCW *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionProgressRadialCW()')
 
@@ -3942,7 +3947,7 @@ typeconf 'cocos2d::TransitionProgressHorizontal'
     .supercls('cocos2d::TransitionProgress')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionProgressHorizontal *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionProgressHorizontal()')
 
@@ -3950,7 +3955,7 @@ typeconf 'cocos2d::TransitionProgressVertical'
     .supercls('cocos2d::TransitionProgress')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionProgressVertical *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionProgressVertical()')
 
@@ -3958,7 +3963,7 @@ typeconf 'cocos2d::TransitionProgressInOut'
     .supercls('cocos2d::TransitionProgress')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionProgressInOut *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionProgressInOut()')
 
@@ -3966,7 +3971,7 @@ typeconf 'cocos2d::TransitionProgressOutIn'
     .supercls('cocos2d::TransitionProgress')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TransitionProgressOutIn *create(float t, @addref(scenes |) cocos2d::Scene *scene)')
     .func(nil, 'TransitionProgressOutIn()')
 
@@ -3974,7 +3979,7 @@ typeconf 'cocos2d::TextFieldDelegate'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'bool onTextFieldAttachWithIME(cocos2d::TextFieldTTF *sender)')
     .func(nil, 'bool onTextFieldDetachWithIME(cocos2d::TextFieldTTF *sender)')
     .func(nil, 'bool onTextFieldInsertText(cocos2d::TextFieldTTF *sender, const char *text, size_t nLen)')
@@ -3985,7 +3990,7 @@ typeconf 'cocos2d::TextFieldTTF'
     .supercls('cocos2d::Label')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'TextFieldTTF()')
     .func(nil, 'static cocos2d::TextFieldTTF *textFieldWithPlaceHolder(const std::string &placeholder, const cocos2d::Size &dimensions, cocos2d::TextHAlignment alignment, const std::string &fontName, float fontSize)', 'static cocos2d::TextFieldTTF *textFieldWithPlaceHolder(const std::string &placeholder, const std::string &fontName, float fontSize)')
     .func(nil, 'bool initWithPlaceHolder(const std::string &placeholder, const cocos2d::Size &dimensions, cocos2d::TextHAlignment alignment, const std::string &fontName, float fontSize)', 'bool initWithPlaceHolder(const std::string &placeholder, const std::string &fontName, float fontSize)')
@@ -4018,7 +4023,7 @@ typeconf 'cocos2d::LightType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('DIRECTIONAL', 'cocos2d::LightType::DIRECTIONAL')
     .enum('POINT', 'cocos2d::LightType::POINT')
     .enum('SPOT', 'cocos2d::LightType::SPOT')
@@ -4028,7 +4033,7 @@ typeconf 'cocos2d::LightFlag'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('LIGHT0', 'cocos2d::LightFlag::LIGHT0')
     .enum('LIGHT1', 'cocos2d::LightFlag::LIGHT1')
     .enum('LIGHT2', 'cocos2d::LightFlag::LIGHT2')
@@ -4050,7 +4055,7 @@ typeconf 'cocos2d::BaseLight'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'cocos2d::LightType getLightType()')
     .func(nil, 'float getIntensity()')
     .func(nil, 'void setIntensity(float intensity)')
@@ -4067,7 +4072,7 @@ typeconf 'cocos2d::DirectionLight'
     .supercls('cocos2d::BaseLight')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::DirectionLight *create(const cocos2d::Vec3 &direction, const cocos2d::Color3B &color)')
     .func(nil, 'void setDirection(const cocos2d::Vec3 &dir)')
     .func(nil, 'cocos2d::Vec3 getDirection()')
@@ -4080,7 +4085,7 @@ typeconf 'cocos2d::PointLight'
     .supercls('cocos2d::BaseLight')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PointLight *create(const cocos2d::Vec3 &position, const cocos2d::Color3B &color, float range)')
     .func(nil, 'float getRange()')
     .func(nil, 'void setRange(float range)')
@@ -4091,7 +4096,7 @@ typeconf 'cocos2d::SpotLight'
     .supercls('cocos2d::BaseLight')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::SpotLight *create(const cocos2d::Vec3 &direction, const cocos2d::Vec3 &position, const cocos2d::Color3B &color, float innerAngle, float outerAngle, float range)')
     .func(nil, 'void setDirection(const cocos2d::Vec3 &dir)')
     .func(nil, 'cocos2d::Vec3 getDirection()')
@@ -4117,7 +4122,7 @@ typeconf 'cocos2d::AmbientLight'
     .supercls('cocos2d::BaseLight')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::AmbientLight *create(const cocos2d::Color3B &color)')
     .func(nil, 'AmbientLight()')
 
@@ -4125,7 +4130,7 @@ typeconf 'cocos2d::CameraFlag'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('DEFAULT', 'cocos2d::CameraFlag::DEFAULT')
     .enum('USER1', 'cocos2d::CameraFlag::USER1')
     .enum('USER2', 'cocos2d::CameraFlag::USER2')
@@ -4140,7 +4145,7 @@ typeconf 'cocos2d::Camera::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('PERSPECTIVE', 'cocos2d::Camera::Type::PERSPECTIVE')
     .enum('ORTHOGRAPHIC', 'cocos2d::Camera::Type::ORTHOGRAPHIC')
 
@@ -4148,7 +4153,7 @@ typeconf 'cocos2d::Camera'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::Camera *createPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane)')
     .func(nil, 'static cocos2d::Camera *createOrthographic(float zoomX, float zoomY, float nearPlane, float farPlane)')
     .func(nil, 'static cocos2d::Camera *create()')
@@ -4206,7 +4211,7 @@ typeconf 'cocos2d::CameraBackgroundBrush::BrushType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::CameraBackgroundBrush::BrushType::NONE')
     .enum('DEPTH', 'cocos2d::CameraBackgroundBrush::BrushType::DEPTH')
     .enum('COLOR', 'cocos2d::CameraBackgroundBrush::BrushType::COLOR')
@@ -4216,7 +4221,7 @@ typeconf 'cocos2d::CameraBackgroundBrush'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'cocos2d::CameraBackgroundBrush::BrushType getBrushType()')
     .func(nil, 'static cocos2d::CameraBackgroundBrush *createNoneBrush()')
     .func(nil, 'static cocos2d::CameraBackgroundDepthBrush *createDepthBrush(@optional float depth)')
@@ -4233,7 +4238,7 @@ typeconf 'cocos2d::CameraBackgroundDepthBrush'
     .supercls('cocos2d::CameraBackgroundBrush')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::CameraBackgroundDepthBrush *create(float depth)')
     .func(nil, 'void setDepth(float depth)')
     .func(nil, 'CameraBackgroundDepthBrush()')
@@ -4242,7 +4247,7 @@ typeconf 'cocos2d::CameraBackgroundColorBrush'
     .supercls('cocos2d::CameraBackgroundDepthBrush')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::CameraBackgroundColorBrush *create(const cocos2d::Color4F &color, float depth)')
     .func(nil, 'void setColor(const cocos2d::Color4F &color)')
     .func(nil, 'CameraBackgroundColorBrush()')
@@ -4251,7 +4256,7 @@ typeconf 'cocos2d::CameraBackgroundSkyBoxBrush'
     .supercls('cocos2d::CameraBackgroundBrush')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::CameraBackgroundSkyBoxBrush *create(const std::string &positive_x, const std::string &negative_x, const std::string &positive_y, const std::string &negative_y, const std::string &positive_z, const std::string &negative_z)', 'static cocos2d::CameraBackgroundSkyBoxBrush *create()')
     .func(nil, 'void setTexture(cocos2d::TextureCube *texture)')
     .func(nil, 'bool isActived()')
@@ -4264,7 +4269,7 @@ typeconf 'cocos2d::ParticleBatchNode'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleBatchNode *createWithTexture(cocos2d::Texture2D *tex, @optional int capacity)')
     .func(nil, 'static cocos2d::ParticleBatchNode *create(const std::string &fileImage, @optional int capacity)')
     .func(nil, 'void insertChild(cocos2d::ParticleSystem *system, int index)')
@@ -4287,7 +4292,7 @@ typeconf 'cocos2d::ParticleSystem::Mode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('GRAVITY', 'cocos2d::ParticleSystem::Mode::GRAVITY')
     .enum('RADIUS', 'cocos2d::ParticleSystem::Mode::RADIUS')
 
@@ -4295,7 +4300,7 @@ typeconf 'cocos2d::ParticleSystem::PositionType'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('FREE', 'cocos2d::ParticleSystem::PositionType::FREE')
     .enum('RELATIVE', 'cocos2d::ParticleSystem::PositionType::RELATIVE')
     .enum('GROUPED', 'cocos2d::ParticleSystem::PositionType::GROUPED')
@@ -4304,7 +4309,7 @@ typeconf 'cocos2d::ParticleSystem'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleSystem *create(const std::string &plistFile)')
     .func(nil, 'static cocos2d::ParticleSystem *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'static Vector<cocos2d::ParticleSystem *> &getAllParticleSystems()')
@@ -4470,7 +4475,7 @@ typeconf 'cocos2d::ParticleSystemQuad'
     .supercls('cocos2d::ParticleSystem')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleSystemQuad *create()', 'static cocos2d::ParticleSystemQuad *create(const std::string &filename)', 'static cocos2d::ParticleSystemQuad *create(cocos2d::ValueMap &dictionary)')
     .func(nil, 'static cocos2d::ParticleSystemQuad *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'void setDisplayFrame(cocos2d::SpriteFrame *spriteFrame)')
@@ -4482,7 +4487,7 @@ typeconf 'cocos2d::ParticleExplosion'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleExplosion *create()')
     .func(nil, 'static cocos2d::ParticleExplosion *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleExplosion()')
@@ -4491,7 +4496,7 @@ typeconf 'cocos2d::ParticleFire'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleFire *create()')
     .func(nil, 'static cocos2d::ParticleFire *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleFire()')
@@ -4500,7 +4505,7 @@ typeconf 'cocos2d::ParticleFireworks'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleFireworks *create()')
     .func(nil, 'static cocos2d::ParticleFireworks *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleFireworks()')
@@ -4509,7 +4514,7 @@ typeconf 'cocos2d::ParticleFlower'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleFlower *create()')
     .func(nil, 'static cocos2d::ParticleFlower *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleFlower()')
@@ -4518,7 +4523,7 @@ typeconf 'cocos2d::ParticleGalaxy'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleGalaxy *create()')
     .func(nil, 'static cocos2d::ParticleGalaxy *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleGalaxy()')
@@ -4527,7 +4532,7 @@ typeconf 'cocos2d::ParticleMeteor'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleMeteor *create()')
     .func(nil, 'static cocos2d::ParticleMeteor *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleMeteor()')
@@ -4536,7 +4541,7 @@ typeconf 'cocos2d::ParticleRain'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleRain *create()')
     .func(nil, 'static cocos2d::ParticleRain *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleRain()')
@@ -4545,7 +4550,7 @@ typeconf 'cocos2d::ParticleSmoke'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleSmoke *create()')
     .func(nil, 'static cocos2d::ParticleSmoke *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleSmoke()')
@@ -4554,7 +4559,7 @@ typeconf 'cocos2d::ParticleSnow'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleSnow *create()')
     .func(nil, 'static cocos2d::ParticleSnow *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleSnow()')
@@ -4563,7 +4568,7 @@ typeconf 'cocos2d::ParticleSpiral'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleSpiral *create()')
     .func(nil, 'static cocos2d::ParticleSpiral *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleSpiral()')
@@ -4572,7 +4577,7 @@ typeconf 'cocos2d::ParticleSun'
     .supercls('cocos2d::ParticleSystemQuad')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::ParticleSun *create()')
     .func(nil, 'static cocos2d::ParticleSun *createWithTotalParticles(int numberOfParticles)')
     .func(nil, 'ParticleSun()')
@@ -4581,7 +4586,7 @@ typeconf 'cocos2d::TMXTileFlags'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('kTMXTileHorizontalFlag', 'cocos2d::TMXTileFlags::kTMXTileHorizontalFlag')
     .enum('kTMXTileVerticalFlag', 'cocos2d::TMXTileFlags::kTMXTileVerticalFlag')
     .enum('kTMXTileDiagonalFlag', 'cocos2d::TMXTileFlags::kTMXTileDiagonalFlag')
@@ -4592,7 +4597,7 @@ typeconf 'cocos2d::TMXObjectGroup'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'TMXObjectGroup()')
     .func(nil, 'const std::string &getGroupName()')
     .func(nil, 'void setGroupName(const std::string &groupName)')
@@ -4613,7 +4618,7 @@ typeconf 'cocos2d::TMXLayer'
     .supercls('cocos2d::SpriteBatchNode')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TMXLayer *create(cocos2d::TMXTilesetInfo *tilesetInfo, cocos2d::TMXLayerInfo *layerInfo, cocos2d::TMXMapInfo *mapInfo)')
     .func(nil, 'TMXLayer()')
     .func(nil, 'bool initWithTilesetInfo(cocos2d::TMXTilesetInfo *tilesetInfo, cocos2d::TMXLayerInfo *layerInfo, cocos2d::TMXMapInfo *mapInfo)')
@@ -4648,7 +4653,7 @@ typeconf 'cocos2d::TMXLayerInfo'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'TMXLayerInfo()')
     .func(nil, 'void setProperties(cocos2d::ValueMap properties)')
     .func(nil, 'cocos2d::ValueMap &getProperties()')
@@ -4658,7 +4663,7 @@ typeconf 'cocos2d::TMXMapInfo'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TMXMapInfo *create(const std::string &tmxFile)')
     .func(nil, 'static cocos2d::TMXMapInfo *createWithXML(const std::string &tmxString, const std::string &resourcePath)')
     .func(nil, 'TMXMapInfo()')
@@ -4726,7 +4731,7 @@ typeconf 'cocos2d::TMXTilesetInfo'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'TMXTilesetInfo()')
     .func(nil, 'cocos2d::Rect getRectForGID(uint32_t gid)')
 
@@ -4734,7 +4739,7 @@ typeconf 'cocos2d::TMXTiledMap'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::TMXTiledMap *create(const std::string &tmxFile)')
     .func(nil, 'static cocos2d::TMXTiledMap *createWithXML(const std::string &tmxString, const std::string &resourcePath)')
     .func(nil, 'cocos2d::TMXLayer *getLayer(const std::string &layerName)')
@@ -4768,7 +4773,7 @@ typeconf 'cocos2d::FastTMXTiledMap'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::FastTMXTiledMap *create(const std::string &tmxFile)')
     .func(nil, 'static cocos2d::FastTMXTiledMap *createWithXML(const std::string &tmxString, const std::string &resourcePath)')
     .func(nil, 'cocos2d::FastTMXLayer *getLayer(const std::string &layerName)')
@@ -4795,7 +4800,7 @@ typeconf 'cocos2d::FastTMXLayer'
     .supercls('cocos2d::Node')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('FAST_TMX_ORIENTATION_ORTHO', 'cocos2d::FastTMXLayer::FAST_TMX_ORIENTATION_ORTHO', 'const int')
     .const('FAST_TMX_ORIENTATION_HEX', 'cocos2d::FastTMXLayer::FAST_TMX_ORIENTATION_HEX', 'const int')
     .const('FAST_TMX_ORIENTATION_ISO', 'cocos2d::FastTMXLayer::FAST_TMX_ORIENTATION_ISO', 'const int')
@@ -4832,7 +4837,7 @@ typeconf 'cocos2d::NavMeshAgent::NavMeshAgentSyncFlag'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::NavMeshAgent::NavMeshAgentSyncFlag::NONE')
     .enum('NODE_TO_AGENT', 'cocos2d::NavMeshAgent::NavMeshAgentSyncFlag::NODE_TO_AGENT')
     .enum('AGENT_TO_NODE', 'cocos2d::NavMeshAgent::NavMeshAgentSyncFlag::AGENT_TO_NODE')
@@ -4842,7 +4847,7 @@ typeconf 'cocos2d::NavMeshAgent'
     .supercls('cocos2d::Component')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::NavMeshAgent *create(const cocos2d::NavMeshAgentParam &param)')
     .func(nil, 'static const std::string &getNavMeshAgentComponentName()')
     .func(nil, 'void setRadius(float radius)')
@@ -4876,13 +4881,13 @@ typeconf 'cocos2d::NavMeshAgent'
     .func(nil, 'cocos2d::Vec3 getVelocity()')
     .func(nil, 'NavMeshAgent()')
     .callback {
-        FUNCS =  {
-            'void move(const cocos2d::Vec3 &destination, @local @optional const std::function<void (cocos2d::NavMeshAgent *, float)> &callback)'
+        funcs =  {
+            'void move(const cocos2d::Vec3 &destination, @localvar @optional const std::function<void (cocos2d::NavMeshAgent *, float)> &callback)'
         },
-        TAG_MAKER = 'move',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'move',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('navMeshAgentComponentName', nil, nil)
     .prop('radius', nil, nil)
@@ -4902,7 +4907,7 @@ typeconf 'cocos2d::NavMeshObstacle::NavMeshObstacleSyncFlag'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::NavMeshObstacle::NavMeshObstacleSyncFlag::NONE')
     .enum('NODE_TO_OBSTACLE', 'cocos2d::NavMeshObstacle::NavMeshObstacleSyncFlag::NODE_TO_OBSTACLE')
     .enum('OBSTACLE_TO_NODE', 'cocos2d::NavMeshObstacle::NavMeshObstacleSyncFlag::OBSTACLE_TO_NODE')
@@ -4912,7 +4917,7 @@ typeconf 'cocos2d::NavMeshObstacle'
     .supercls('cocos2d::Component')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::NavMeshObstacle *create(float radius, float height)')
     .func(nil, 'static const std::string &getNavMeshObstacleComponentName()')
     .func(nil, 'void setRadius(float radius)')
@@ -4934,7 +4939,7 @@ typeconf 'cocos2d::NavMesh'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'void update(float dt)')
     .func(nil, 'void debugDraw(cocos2d::Renderer *renderer)')
     .func(nil, 'void setDebugDrawEnable(bool enable)')

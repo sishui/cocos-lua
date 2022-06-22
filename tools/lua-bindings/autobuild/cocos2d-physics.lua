@@ -2,16 +2,17 @@
 
 dofile "autobuild/cocos2d-physics-types.lua"
 
-NAME = "cocos2d_physics"
-PATH = "../../frameworks/libxgame/src/lua-bindings"
-HEADERS = [[
+name = "cocos2d_physics"
+path = "../../frameworks/libxgame/src/lua-bindings"
+headers = [[
     #include "lua-bindings/lua_conv.h"
     #include "lua-bindings/lua_conv_manual.h"
     #include "lua-bindings/LuaCocosAdapter.h"
     #include "cclua/xlua.h"
     #include "cocos2d.h"
 ]]
-CHUNK = nil
+chunk = nil
+luaopen = nil
 
 typeconv 'cocos2d::PhysicsMaterial'
     .var('density', 'float density')
@@ -23,36 +24,36 @@ typeconf 'cocos2d::PhysicsRayCastCallbackFunc'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::PhysicsQueryRectCallbackFunc'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::PhysicsQueryPointCallbackFunc'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
 
 typeconf 'cocos2d::EventListenerPhysicsContact'
     .supercls('cocos2d::EventListenerCustom')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::EventListenerPhysicsContact *create()')
-    .var('onContactBegin', '@nullable @local std::function<bool (cocos2d::PhysicsContact &)> onContactBegin')
-    .var('onContactPreSolve', '@nullable @local std::function<bool (cocos2d::PhysicsContact &, cocos2d::PhysicsContactPreSolve &)> onContactPreSolve')
-    .var('onContactPostSolve', '@nullable @local std::function<void (cocos2d::PhysicsContact &, const cocos2d::PhysicsContactPostSolve &)> onContactPostSolve')
-    .var('onContactSeparate', '@nullable @local std::function<void (cocos2d::PhysicsContact &)> onContactSeparate')
+    .var('onContactBegin', '@nullable @localvar std::function<bool (cocos2d::PhysicsContact &)> onContactBegin')
+    .var('onContactPreSolve', '@nullable @localvar std::function<bool (cocos2d::PhysicsContact &, cocos2d::PhysicsContactPreSolve &)> onContactPreSolve')
+    .var('onContactPostSolve', '@nullable @localvar std::function<void (cocos2d::PhysicsContact &, const cocos2d::PhysicsContactPostSolve &)> onContactPostSolve')
+    .var('onContactSeparate', '@nullable @localvar std::function<void (cocos2d::PhysicsContact &)> onContactSeparate')
 
 typeconf 'cocos2d::EventListenerPhysicsContactWithGroup'
     .supercls('cocos2d::EventListenerPhysicsContact')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::EventListenerPhysicsContactWithGroup *create(int group)')
     .func(nil, 'bool hitTest(cocos2d::PhysicsShape *shapeA, cocos2d::PhysicsShape *shapeB)')
 
@@ -60,7 +61,7 @@ typeconf 'cocos2d::EventListenerPhysicsContactWithBodies'
     .supercls('cocos2d::EventListenerPhysicsContact')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::EventListenerPhysicsContactWithBodies *create(cocos2d::PhysicsBody *bodyA, cocos2d::PhysicsBody *bodyB)')
     .func(nil, 'bool hitTest(cocos2d::PhysicsShape *shapeA, cocos2d::PhysicsShape *shapeB)')
 
@@ -68,7 +69,7 @@ typeconf 'cocos2d::EventListenerPhysicsContactWithShapes'
     .supercls('cocos2d::EventListenerPhysicsContact')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::EventListenerPhysicsContactWithShapes *create(cocos2d::PhysicsShape *shapeA, cocos2d::PhysicsShape *shapeB)')
     .func(nil, 'bool hitTest(cocos2d::PhysicsShape *shapeA, cocos2d::PhysicsShape *shapeB)')
 
@@ -76,7 +77,7 @@ typeconf 'cocos2d::PhysicsBody'
     .supercls('cocos2d::Component')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('COMPONENT_NAME', 'cocos2d::PhysicsBody::COMPONENT_NAME', 'const std::string')
     .func(nil, 'static cocos2d::PhysicsBody *create()', 'static cocos2d::PhysicsBody *create(float mass)', 'static cocos2d::PhysicsBody *create(float mass, float moment)')
     .func(nil, 'static cocos2d::PhysicsBody *createCircle(float radius, @optional const cocos2d::PhysicsMaterial &material, @optional const cocos2d::Vec2 &offset)')
@@ -174,7 +175,7 @@ typeconf 'cocos2d::PhysicsContact::EventCode'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('NONE', 'cocos2d::PhysicsContact::EventCode::NONE')
     .enum('BEGIN', 'cocos2d::PhysicsContact::EventCode::BEGIN')
     .enum('PRESOLVE', 'cocos2d::PhysicsContact::EventCode::PRESOLVE')
@@ -185,7 +186,7 @@ typeconf 'cocos2d::PhysicsContact'
     .supercls('cocos2d::EventCustom')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'cocos2d::PhysicsShape *getShapeA()')
     .func(nil, 'cocos2d::PhysicsShape *getShapeB()')
     .func(nil, 'void *getData()')
@@ -200,7 +201,7 @@ typeconf 'cocos2d::PhysicsContactPostSolve'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'float getRestitution()')
     .func(nil, 'float getFriction()')
     .func(nil, 'cocos2d::Vec2 getSurfaceVelocity()')
@@ -212,7 +213,7 @@ typeconf 'cocos2d::PhysicsContactPreSolve'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'float getRestitution()')
     .func(nil, 'float getFriction()')
     .func(nil, 'cocos2d::Vec2 getSurfaceVelocity()')
@@ -228,7 +229,7 @@ typeconf 'cocos2d::PhysicsJoint'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'cocos2d::PhysicsBody *getBodyA()')
     .func(nil, 'cocos2d::PhysicsBody *getBodyB()')
     .func(nil, 'cocos2d::PhysicsWorld *getWorld()')
@@ -253,7 +254,7 @@ typeconf 'cocos2d::PhysicsJointDistance'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointDistance *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, const cocos2d::Vec2 &anchr1, const cocos2d::Vec2 &anchr2)')
     .func(nil, 'float getDistance()')
     .func(nil, 'void setDistance(float distance)')
@@ -264,7 +265,7 @@ typeconf 'cocos2d::PhysicsJointFixed'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointFixed *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, const cocos2d::Vec2 &anchr)')
     .func(nil, 'bool createConstraints()')
 
@@ -272,7 +273,7 @@ typeconf 'cocos2d::PhysicsJointGear'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointGear *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, float phase, float ratio)')
     .func(nil, 'float getPhase()')
     .func(nil, 'void setPhase(float phase)')
@@ -286,7 +287,7 @@ typeconf 'cocos2d::PhysicsJointGroove'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointGroove *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, const cocos2d::Vec2 &grooveA, const cocos2d::Vec2 &grooveB, const cocos2d::Vec2 &anchr2)')
     .func(nil, 'cocos2d::Vec2 getGrooveA()')
     .func(nil, 'void setGrooveA(const cocos2d::Vec2 &grooveA)')
@@ -303,7 +304,7 @@ typeconf 'cocos2d::PhysicsJointLimit'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointLimit *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, const cocos2d::Vec2 &anchr1, const cocos2d::Vec2 &anchr2)', 'static cocos2d::PhysicsJointLimit *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, const cocos2d::Vec2 &anchr1, const cocos2d::Vec2 &anchr2, float min, float max)')
     .func(nil, 'cocos2d::Vec2 getAnchr1()')
     .func(nil, 'void setAnchr1(const cocos2d::Vec2 &anchr1)')
@@ -323,7 +324,7 @@ typeconf 'cocos2d::PhysicsJointMotor'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointMotor *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, float rate)')
     .func(nil, 'float getRate()')
     .func(nil, 'void setRate(float rate)')
@@ -334,7 +335,7 @@ typeconf 'cocos2d::PhysicsJointPin'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointPin *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, const cocos2d::Vec2 &pivot)', 'static cocos2d::PhysicsJointPin *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, const cocos2d::Vec2 &anchr1, const cocos2d::Vec2 &anchr2)')
     .func(nil, 'bool createConstraints()')
 
@@ -342,7 +343,7 @@ typeconf 'cocos2d::PhysicsJointRatchet'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointRatchet *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, float phase, float ratchet)')
     .func(nil, 'float getAngle()')
     .func(nil, 'void setAngle(float angle)')
@@ -359,7 +360,7 @@ typeconf 'cocos2d::PhysicsJointRotaryLimit'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointRotaryLimit *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, float min, float max)', 'static cocos2d::PhysicsJointRotaryLimit *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b)')
     .func(nil, 'float getMin()')
     .func(nil, 'void setMin(float min)')
@@ -373,7 +374,7 @@ typeconf 'cocos2d::PhysicsJointRotarySpring'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointRotarySpring *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, float stiffness, float damping)')
     .func(nil, 'float getRestAngle()')
     .func(nil, 'void setRestAngle(float restAngle)')
@@ -390,7 +391,7 @@ typeconf 'cocos2d::PhysicsJointSpring'
     .supercls('cocos2d::PhysicsJoint')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsJointSpring *construct(cocos2d::PhysicsBody *a, cocos2d::PhysicsBody *b, const cocos2d::Vec2 &anchr1, const cocos2d::Vec2 &anchr2, float stiffness, float damping)')
     .func(nil, 'cocos2d::Vec2 getAnchr1()')
     .func(nil, 'void setAnchr1(const cocos2d::Vec2 &anchr1)')
@@ -413,7 +414,7 @@ typeconf 'cocos2d::PhysicsShape::Type'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .enum('UNKNOWN', 'cocos2d::PhysicsShape::Type::UNKNOWN')
     .enum('CIRCLE', 'cocos2d::PhysicsShape::Type::CIRCLE')
     .enum('BOX', 'cocos2d::PhysicsShape::Type::BOX')
@@ -429,7 +430,7 @@ typeconf 'cocos2d::PhysicsShape'
     .supercls('cocos2d::Ref')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'cocos2d::PhysicsBody *getBody()')
     .func(nil, 'cocos2d::PhysicsShape::Type getType()')
     .func(nil, 'float getArea()')
@@ -483,7 +484,7 @@ typeconf 'cocos2d::PhysicsShapePolygon'
     .supercls('cocos2d::PhysicsShape')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'cocos2d::Vec2 getPoint(int i)')
     .func(nil, 'int getPointsCount()')
     .prop('pointsCount', nil, nil)
@@ -492,7 +493,7 @@ typeconf 'cocos2d::PhysicsShapeEdgePolygon'
     .supercls('cocos2d::PhysicsShape')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'int getPointsCount()')
     .prop('pointsCount', nil, nil)
 
@@ -500,7 +501,7 @@ typeconf 'cocos2d::PhysicsShapeBox'
     .supercls('cocos2d::PhysicsShapePolygon')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsShapeBox *create(const cocos2d::Size &size, @optional const cocos2d::PhysicsMaterial &material, @optional const cocos2d::Vec2 &offset, @optional float radius)')
     .func(nil, 'cocos2d::Size getSize()')
     .prop('size', nil, nil)
@@ -509,7 +510,7 @@ typeconf 'cocos2d::PhysicsShapeCircle'
     .supercls('cocos2d::PhysicsShape')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsShapeCircle *create(float radius, @optional const cocos2d::PhysicsMaterial &material, @optional const cocos2d::Vec2 &offset)')
     .func(nil, 'static float calculateArea(float radius)')
     .func(nil, 'static float calculateMoment(float mass, float radius, @optional const cocos2d::Vec2 &offset)')
@@ -520,14 +521,14 @@ typeconf 'cocos2d::PhysicsShapeEdgeBox'
     .supercls('cocos2d::PhysicsShapeEdgePolygon')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsShapeEdgeBox *create(const cocos2d::Size &size, @optional const cocos2d::PhysicsMaterial &material, @optional float border, @optional const cocos2d::Vec2 &offset)')
 
 typeconf 'cocos2d::PhysicsShapeEdgeChain'
     .supercls('cocos2d::PhysicsShape')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'int getPointsCount()')
     .prop('pointsCount', nil, nil)
 
@@ -535,7 +536,7 @@ typeconf 'cocos2d::PhysicsShapeEdgeSegment'
     .supercls('cocos2d::PhysicsShape')
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .func(nil, 'static cocos2d::PhysicsShapeEdgeSegment *create(const cocos2d::Vec2 &a, const cocos2d::Vec2 &b, @optional const cocos2d::PhysicsMaterial &material, @optional float border)')
     .func(nil, 'cocos2d::Vec2 getPointA()')
     .func(nil, 'cocos2d::Vec2 getPointB()')
@@ -546,7 +547,7 @@ typeconf 'cocos2d::PhysicsRayCastInfo'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .var('shape', 'cocos2d::PhysicsShape *shape')
     .var('start', 'cocos2d::Vec2 start')
     .var('end', 'cocos2d::Vec2 end')
@@ -559,7 +560,7 @@ typeconf 'cocos2d::PhysicsWorld'
     .supercls(nil)
     .reg_luatype(true)
     .chunk(nil)
-    .require(nil)
+    .luaopen(nil)
     .const('DEBUGDRAW_NONE', 'cocos2d::PhysicsWorld::DEBUGDRAW_NONE', 'const int')
     .const('DEBUGDRAW_SHAPE', 'cocos2d::PhysicsWorld::DEBUGDRAW_SHAPE', 'const int')
     .const('DEBUGDRAW_JOINT', 'cocos2d::PhysicsWorld::DEBUGDRAW_JOINT', 'const int')
@@ -591,49 +592,49 @@ typeconf 'cocos2d::PhysicsWorld'
     .func(nil, 'bool isAutoStep()')
     .func(nil, 'void step(float delta)')
     .callback {
-        FUNCS =  {
-            'void setPreUpdateCallback(@nullable @local const std::function<void ()> &callback)'
+        funcs =  {
+            'void setPreUpdateCallback(@localvar @nullable const std::function<void ()> &callback)'
         },
-        TAG_MAKER = 'PreUpdateCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'PreUpdateCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void setPostUpdateCallback(@nullable @local const std::function<void ()> &callback)'
+        funcs =  {
+            'void setPostUpdateCallback(@localvar @nullable const std::function<void ()> &callback)'
         },
-        TAG_MAKER = 'PostUpdateCallback',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'PostUpdateCallback',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void rayCast(@local cocos2d::PhysicsRayCastCallbackFunc func, const cocos2d::Vec2 &start, const cocos2d::Vec2 &end, void *data)'
+        funcs =  {
+            'void rayCast(@localvar cocos2d::PhysicsRayCastCallbackFunc func, const cocos2d::Vec2 &start, const cocos2d::Vec2 &end, void *data)'
         },
-        TAG_MAKER = 'rayCast',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'rayCast',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void queryRect(@local cocos2d::PhysicsQueryRectCallbackFunc func, const cocos2d::Rect &rect, void *data)'
+        funcs =  {
+            'void queryRect(@localvar cocos2d::PhysicsQueryRectCallbackFunc func, const cocos2d::Rect &rect, void *data)'
         },
-        TAG_MAKER = 'queryRect',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'queryRect',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .callback {
-        FUNCS =  {
-            'void queryPoint(@local cocos2d::PhysicsQueryPointCallbackFunc func, const cocos2d::Vec2 &point, void *data)'
+        funcs =  {
+            'void queryPoint(@localvar cocos2d::PhysicsQueryPointCallbackFunc func, const cocos2d::Vec2 &point, void *data)'
         },
-        TAG_MAKER = 'queryPoint',
-        TAG_MODE = 'OLUA_TAG_REPLACE',
-        TAG_STORE = nil,
-        TAG_SCOPE = 'object',
+        tag_maker = 'queryPoint',
+        tag_mode = 'replace',
+        tag_store = 0,
+        tag_scope = 'object',
     }
     .prop('allBodies', nil, nil)
     .prop('scene', nil, nil)

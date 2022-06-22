@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 codetypes@gmail.com
+ * Copyright (c) 2019-2022 codetypes@gmail.com
  *
  * https://github.com/zhongfq/olua
  *
@@ -47,6 +47,14 @@ extern "C" {
 #include <assert.h>
 #include <math.h>
 
+#if defined(__cplusplus)
+#define OLUA_BEGIN_DECLS   extern "C" {
+#define OLUA_END_DECLS     }
+#else
+#define OLUA_BEGIN_DECLS
+#define OLUA_END_DECLS
+#endif
+
 #ifdef OLUA_DEBUG
 #define olua_assert(e, msg) assert((e) && (msg))
 #else
@@ -56,15 +64,22 @@ extern "C" {
 #ifndef OLUA_API
 #define OLUA_API extern
 #endif
+
+#ifdef _WIN32
+#define OLUA_LIB __declspec(dllexport)
+#else
+#define OLUA_LIB extern
+#endif
     
 // object status
-#define OLUA_OBJ_EXIST  0
-#define OLUA_OBJ_NEW    1
-#define OLUA_OBJ_UPDATE 2   // update object metatable
+#define OLUA_OBJ_EXIST  0   // object exist
+#define OLUA_OBJ_NEW    1   // object new create
+#define OLUA_OBJ_UPDATE 2   // object exist but update object metatable
 
 // default super class of object
 #define OLUA_VOIDCLS "void *"
 
+#if !defined(olua_likely)
 #if defined(__GNUC__) || defined(__clang__)
 #define olua_likely(x)      (__builtin_expect(!!(x), 1))
 #define olua_unlikely(x)    (__builtin_expect(!!(x), 0))
@@ -72,6 +87,7 @@ extern "C" {
 #define olua_likely(x)      (x)
 #define olua_unlikely(x)    (x)
 #endif
+#endif // luai_likely
 
 // stat api
 OLUA_API size_t olua_objcount(lua_State *L);
@@ -95,7 +111,7 @@ OLUA_API lua_Integer olua_context(lua_State *L);
 #define olua_isstring(L,n)          (lua_type(L, (n)) == LUA_TSTRING)
 #define olua_isnumber(L,n)          (lua_type(L, (n)) == LUA_TNUMBER)
 #define olua_isthread(L,n)          (lua_type(L, (n)) == LUA_TTHREAD)
-bool olua_isinteger(lua_State *L, int idx);
+OLUA_API bool olua_isinteger(lua_State *L, int idx);
     
 // check or get raw value
 #define olua_tonumber(L, i)         (lua_tonumber(L, (i)))
@@ -154,15 +170,17 @@ OLUA_API void olua_disable_objpool(lua_State *L);
 OLUA_API size_t olua_push_objpool(lua_State *L);
 OLUA_API void olua_pop_objpool(lua_State *L, size_t position);
 
-// callback functions
-//  obj.uservalue {
-//      |---id---|--class--|--tag--|
-//      .olua.cb#1$classname@onClick = lua_func
-//      .olua.cb#2$classname@onClick = lua_func
-//      .olua.cb#3$classname@update = lua_func
-//      .olua.cb#4$classname@onRemoved = lua_func
-//      ...
-//  }
+/**
+ * callback functions
+ * obj.uservalue {
+ *     |---id---|--class--|--tag--|
+ *     .olua.cb#1$classname@onClick = lua_func
+ *     .olua.cb#2$classname@onClick = lua_func
+ *     .olua.cb#3$classname@update = lua_func
+ *     .olua.cb#4$classname@onRemoved = lua_func
+ *     ...
+ * }
+ */
 // for olua_setcallback
 #define OLUA_TAG_NEW          0
 #define OLUA_TAG_REPLACE      1 // compare substring after '@'
@@ -188,18 +206,20 @@ OLUA_API int olua_ref(lua_State *L, int idx);
 OLUA_API void olua_unref(lua_State *L, int ref);
 OLUA_API void olua_getref(lua_State *L, int ref);
     
-// ref chain, callback stored in the uservalue
-// ref layout:
-//  obj.uservalue {
-//      .olua.ref.component = obj_component  -- OLUA_MODE_SINGLE
-//      .olua.ref.children = {               -- OLUA_MODE_MULTIPLE
-//          obj_child1 = true
-//          obj_child2 = true
-//          ...
-//      }
-//  }
-#define OLUA_MODE_SINGLE    (1 << 1) // add & remove: only ref one
-#define OLUA_MODE_MULTIPLE  (1 << 2) // add & remove: can ref one or more
+/**
+ * ref chain, callback stored in the uservalue
+ * ref layout:
+ * obj.uservalue {
+ *     .olua.ref.component = obj_component  -- OLUA_FLAG_SINGLE
+ *     .olua.ref.children = {               -- OLUA_FLAG_MULTIPLE
+ *         obj_child1 = true
+ *         obj_child2 = true
+ *         ...
+ *     }
+ * }
+ */
+#define OLUA_FLAG_SINGLE    (1 << 1) // add & remove: only ref one
+#define OLUA_FLAG_MULTIPLE  (1 << 2) // add & remove: can ref one or more
 #define OLUA_FLAG_TABLE     (1 << 3) // obj is table
 #define OLUA_FLAG_REMOVE    (1 << 4) // internal use
 typedef bool (*olua_DelRefVisitor)(lua_State *L, int idx);
@@ -209,32 +229,37 @@ OLUA_API void olua_delref(lua_State *L, int idx, const char *name, int obj, int 
 OLUA_API void olua_delallrefs(lua_State *L, int idx, const char *name);
 OLUA_API void olua_visitrefs(lua_State *L, int idx, const char *name, olua_DelRefVisitor walk);
 
-//
-// lua class model
-//  class A = {
-//      __name = 'A'
-//      .classagent = class A agent      -- set funcs, props and consts
-//      .isa = {
-//          copy(B['.isa'])
-//          A = true
-//      }
-//      .func = {
-//          __index = B['.func']    -- cache after access
-//          dosomething = func
-//      }
-//      .get = {
-//          __index = B['.get']     -- cache after access
-//          classname = const_get(obj, "A")
-//          super = const_get(obj, B)
-//          name = get_name(obj, name)
-//      }
-//      .set = {
-//          __index = B['.set']     -- cache after access
-//          name = set_name(obj, name, value)
-//      }
-//      ...__gc = cls_metamethod    -- .func[..._gc]
-//  }
-//
+/**
+ * lua class model
+ * class A = {
+ *     __name = 'A'
+ *     .class = class A
+ *     .classagent = class A agent -- set funcs, props and consts
+ *     .classobj = userdata        -- store static callback
+ *     .super = class B agent
+ *     .isa = {
+ *         copy(B['.isa'])
+ *         A = true
+ *     }
+ *     .func = {
+ *         __index = B['.func']    -- cache after access
+ *         dosomething = func
+ *     }
+ *     .get = {
+ *         __index = B['.get']     -- cache after access
+ *         classname = const_get(obj, "A")
+ *         super = const_get(obj, B['.classagent'])
+ *         name = get_name(obj, name)
+ *         ...
+ *     }
+ *     .set = {
+ *         __index = B['.set']     -- cache after access
+ *          name = set_name(obj, name, value)
+ *          ...
+ *      }
+ *     ...__gc = cls_metamethod    -- .func[..._gc]
+ * }
+ */
 OLUA_API void oluacls_class(lua_State *L, const char *cls, const char *supercls);
 OLUA_API void oluacls_prop(lua_State *L, const char *name, lua_CFunction getter, lua_CFunction setter);
 OLUA_API void oluacls_func(lua_State *L, const char *name, lua_CFunction func);
@@ -263,7 +288,7 @@ OLUA_API bool olua_hasfield(lua_State *L, int idx, const char *field);
 OLUA_API int luaopen_olua(lua_State *L);
     
 #if LUA_VERSION_NUM == 501
-typedef lua_Integer lua_Unsigned;
+typedef unsigned long lua_Unsigned;
 #define LUA_OK 0
 #define LUA_RIDX_MAINTHREAD 1
 #define LUA_RIDX_GLOBALS    2
