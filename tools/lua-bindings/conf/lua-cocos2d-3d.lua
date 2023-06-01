@@ -1,11 +1,10 @@
 module 'cocos2d_3d'
 
-path '../../frameworks/libxgame/src/lua-bindings'
+path '../../frameworks/cclua/src/lua-bindings'
 
 headers [[
-#include "lua-bindings/lua_conv.h"
+#include "lua-bindings/lua_cocos2d_types.h"
 #include "lua-bindings/lua_conv_manual.h"
-#include "cclua/xlua.h"
 #include "cocos2d.h"
 #include "3d/CC3DProgramInfo.h"
 ]]
@@ -17,17 +16,7 @@ luacls(function (cppname)
     return cppname
 end)
 
-include 'conf/exclude-type.lua'
-
-exclude 'cocos2d::AABB'
-exclude 'cocos2d::Material *'
-exclude 'cocos2d::MeshIndexData *'
-exclude 'cocos2d::NodeDatas'
-exclude 'cocos2d::NodeDatas *'
-exclude 'cocos2d::NodeData *'
-exclude 'cocos2d::NodeData'
-
-typeconv 'cocos2d::MeshVertexAttrib'
+typeconf 'cocos2d::MeshVertexAttrib'
 
 typeconf 'cocos2d::NTextureData::Usage'
 typeconf 'cocos2d::shaderinfos::VertexKey'

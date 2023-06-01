@@ -1,12 +1,10 @@
 module 'cocos2d_physics'
 
-path "../../frameworks/libxgame/src/lua-bindings"
+path "../../frameworks/cclua/src/lua-bindings"
 
 headers [[
-#include "lua-bindings/lua_conv.h"
+#include "lua-bindings/lua_cocos2d_types.h"
 #include "lua-bindings/lua_conv_manual.h"
-#include "lua-bindings/LuaCocosAdapter.h"
-#include "cclua/xlua.h"
 #include "cocos2d.h"
 ]]
 
@@ -16,10 +14,11 @@ luacls(function (cppname)
     return cppname
 end)
 
-include "conf/exclude-type.lua"
+luaopen [[cclua::runtime::registerFeature("physics", true);]]
 
-typeconv 'cocos2d::PhysicsMaterial'
+macro '#if CC_USE_PHYSICS'
 
+typeconf 'cocos2d::PhysicsMaterial'
 typeconf 'cocos2d::PhysicsRayCastCallbackFunc'
 typeconf 'cocos2d::PhysicsQueryRectCallbackFunc'
 typeconf 'cocos2d::PhysicsQueryPointCallbackFunc'
@@ -58,3 +57,5 @@ typeconf 'cocos2d::PhysicsRayCastInfo'
 typeconf 'cocos2d::PhysicsWorld'
     .callback 'setPreUpdateCallback' .arg1 '@nullable'
     .callback 'setPostUpdateCallback' .arg1 '@nullable'
+
+macro '' -- CC_USE_PHYSICS

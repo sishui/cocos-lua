@@ -2,452 +2,457 @@
 // AUTO BUILD, DON'T MODIFY!
 //
 #include "lua_talkingdata.h"
+#include "lua-bindings/lua_cocos2d_types.h"
+#include "lua-bindings/lua_conv_manual.h"
+#include "talkingdata/talkingdata.h"
 
 #ifdef CCLUA_BUILD_TALKINGDATA
-static int _cclua_plugin_TCAgent___olua_move(lua_State *L)
+static int _cclua_plugin_talkingdata___gc(lua_State *L)
 {
     olua_startinvoke(L);
 
-    auto self = (cclua::plugin::TCAgent *)olua_toobj(L, 1, "cclua.plugin.TalkingData");
-    olua_push_cppobj(L, self, "cclua.plugin.TalkingData");
+    auto self = (cclua::plugin::talkingdata *)olua_toobj(L, 1, "cclua.plugin.talkingdata");
+    olua_postgc(L, self);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata___olua_move(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    auto self = (cclua::plugin::talkingdata *)olua_toobj(L, 1, "cclua.plugin.talkingdata");
+    olua_push_object(L, self, "cclua.plugin.talkingdata");
 
     olua_endinvoke(L);
 
     return 1;
 }
 
-static int _cclua_plugin_TCAgent_cancelOrder(lua_State *L)
+static int _cclua_plugin_talkingdata_backgroundSessionEnabled(lua_State *L)
 {
     olua_startinvoke(L);
 
-    std::string arg1;       /** orderId */
-    lua_Integer arg2 = 0;       /** amount */
-    std::string arg3;       /** currencyType */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_int(L, 2, &arg2);
-    olua_check_std_string(L, 3, &arg3);
-
-    // static void cancelOrder(const std::string &orderId, int amount, const std::string &currencyType)
-    cclua::plugin::TCAgent::cancelOrder(arg1, (int)arg2, arg3);
+    // static void backgroundSessionEnabled()
+    cclua::plugin::talkingdata::backgroundSessionEnabled();
 
     olua_endinvoke(L);
 
     return 0;
 }
 
-static int _cclua_plugin_TCAgent_init(lua_State *L)
+static int _cclua_plugin_talkingdata_getDeviceId(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    // static std::string getDeviceId()
+    std::string ret = cclua::plugin::talkingdata::getDeviceId();
+    int num_ret = olua_push_string(L, ret);
+
+    olua_endinvoke(L);
+
+    return num_ret;
+}
+
+static int _cclua_plugin_talkingdata_init$1(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** appkey */
+    std::string arg2;       /** channel */
+    std::string arg3;       /** custom */
+
+    olua_check_string(L, 1, &arg1);
+    olua_check_string(L, 2, &arg2);
+    olua_check_string(L, 3, &arg3);
+
+    // static void init(const std::string &appkey, const std::string &channel, @optional const std::string &custom)
+    cclua::plugin::talkingdata::init(arg1, arg2, arg3);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_init$2(lua_State *L)
 {
     olua_startinvoke(L);
 
     std::string arg1;       /** appkey */
     std::string arg2;       /** channel */
 
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_std_string(L, 2, &arg2);
+    olua_check_string(L, 1, &arg1);
+    olua_check_string(L, 2, &arg2);
 
-    // static void init(const std::string &appkey, const std::string &channel)
-    cclua::plugin::TCAgent::init(arg1, arg2);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_onLogin(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** uid */
-    lua_Integer arg2 = 0;       /** type */
-    std::string arg3;       /** name */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_int(L, 2, &arg2);
-    olua_check_std_string(L, 3, &arg3);
-
-    // static void onLogin(const std::string &uid, int type, const std::string &name)
-    cclua::plugin::TCAgent::onLogin(arg1, (int)arg2, arg3);
+    // static void init(const std::string &appkey, const std::string &channel, @optional const std::string &custom)
+    cclua::plugin::talkingdata::init(arg1, arg2);
 
     olua_endinvoke(L);
 
     return 0;
 }
 
-static int _cclua_plugin_TCAgent_onRegister(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** uid */
-    lua_Integer arg2 = 0;       /** type */
-    std::string arg3;       /** name */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_int(L, 2, &arg2);
-    olua_check_std_string(L, 3, &arg3);
-
-    // static void onRegister(const std::string &uid, int type, const std::string &name)
-    cclua::plugin::TCAgent::onRegister(arg1, (int)arg2, arg3);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_payOrder(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** orderId */
-    lua_Integer arg2 = 0;       /** amount */
-    std::string arg3;       /** currencyType */
-    std::string arg4;       /** paymentType */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_int(L, 2, &arg2);
-    olua_check_std_string(L, 3, &arg3);
-    olua_check_std_string(L, 4, &arg4);
-
-    // static void payOrder(const std::string &orderId, int amount, const std::string &currencyType, const std::string &paymentType)
-    cclua::plugin::TCAgent::payOrder(arg1, (int)arg2, arg3, arg4);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_placeOrder(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** orderId */
-    lua_Integer arg2 = 0;       /** amount */
-    std::string arg3;       /** currencyType */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_int(L, 2, &arg2);
-    olua_check_std_string(L, 3, &arg3);
-
-    // static void placeOrder(const std::string &orderId, int amount, const std::string &currencyType)
-    cclua::plugin::TCAgent::placeOrder(arg1, (int)arg2, arg3);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_removeGlobalKV(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** key */
-
-    olua_check_std_string(L, 1, &arg1);
-
-    // static void removeGlobalKV(const std::string &key)
-    cclua::plugin::TCAgent::removeGlobalKV(arg1);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_setGlobalKV1(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** key */
-    bool arg2 = false;       /** value */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_bool(L, 2, &arg2);
-
-    // static void setGlobalKV(const std::string &key, bool value)
-    cclua::plugin::TCAgent::setGlobalKV(arg1, arg2);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_setGlobalKV2(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** key */
-    std::string arg2;       /** value */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_std_string(L, 2, &arg2);
-
-    // static void setGlobalKV(const std::string &key, const std::string &value)
-    cclua::plugin::TCAgent::setGlobalKV(arg1, arg2);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_setGlobalKV3(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** key */
-    lua_Integer arg2 = 0;       /** value */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_int(L, 2, &arg2);
-
-    // static void setGlobalKV(const std::string &key, long value)
-    cclua::plugin::TCAgent::setGlobalKV(arg1, (long)arg2);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_setGlobalKV4(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** key */
-    lua_Number arg2 = 0;       /** value */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_number(L, 2, &arg2);
-
-    // static void setGlobalKV(const std::string &key, double value)
-    cclua::plugin::TCAgent::setGlobalKV(arg1, (double)arg2);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_setGlobalKV(lua_State *L)
+static int _cclua_plugin_talkingdata_init(lua_State *L)
 {
     int num_args = lua_gettop(L);
 
     if (num_args == 2) {
-        if ((olua_is_std_string(L, 1)) && (olua_is_bool(L, 2))) {
-            // static void setGlobalKV(const std::string &key, bool value)
-            return _cclua_plugin_TCAgent_setGlobalKV1(L);
-        }
-
-        if ((olua_is_std_string(L, 1)) && (olua_is_int(L, 2))) {
-            // static void setGlobalKV(const std::string &key, long value)
-            return _cclua_plugin_TCAgent_setGlobalKV3(L);
-        }
-
-        if ((olua_is_std_string(L, 1)) && (olua_is_std_string(L, 2))) {
-            // static void setGlobalKV(const std::string &key, const std::string &value)
-            return _cclua_plugin_TCAgent_setGlobalKV2(L);
-        }
-
-        // if ((olua_is_std_string(L, 1)) && (olua_is_number(L, 2))) {
-            // static void setGlobalKV(const std::string &key, double value)
-            return _cclua_plugin_TCAgent_setGlobalKV4(L);
-        // }
-    }
-
-    luaL_error(L, "method 'cclua::plugin::TCAgent::setGlobalKV' not support '%d' arguments", num_args);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_setLogEnabled(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    bool arg1 = false;       /** value */
-
-    olua_check_bool(L, 1, &arg1);
-
-    // static void setLogEnabled(bool value)
-    cclua::plugin::TCAgent::setLogEnabled(arg1);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_setReportUncaughtExceptions(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    bool arg1 = false;       /** value */
-
-    olua_check_bool(L, 1, &arg1);
-
-    // static void setReportUncaughtExceptions(bool value)
-    cclua::plugin::TCAgent::setReportUncaughtExceptions(arg1);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_trackEvent1(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** event */
-
-    olua_check_std_string(L, 1, &arg1);
-
-    // static void trackEvent(const std::string &event)
-    cclua::plugin::TCAgent::trackEvent(arg1);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_trackEvent2(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** event */
-    std::string arg2;       /** label */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_std_string(L, 2, &arg2);
-
-    // static void trackEvent(const std::string &event, const std::string &label)
-    cclua::plugin::TCAgent::trackEvent(arg1, arg2);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_trackEvent3(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** event */
-    std::string arg2;       /** label */
-    cocos2d::ValueMap arg3;       /** map */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_std_string(L, 2, &arg2);
-    olua_check_cocos2d_ValueMap(L, 3, &arg3);
-
-    // static void trackEvent(const std::string &event, const std::string &label, const cocos2d::ValueMap &map)
-    cclua::plugin::TCAgent::trackEvent(arg1, arg2, arg3);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_trackEvent4(lua_State *L)
-{
-    olua_startinvoke(L);
-
-    std::string arg1;       /** event */
-    std::string arg2;       /** label */
-    cocos2d::ValueMap arg3;       /** map */
-    lua_Number arg4 = 0;       /** value */
-
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_std_string(L, 2, &arg2);
-    olua_check_cocos2d_ValueMap(L, 3, &arg3);
-    olua_check_number(L, 4, &arg4);
-
-    // static void trackEvent(const std::string &event, const std::string &label, const cocos2d::ValueMap &map, double value)
-    cclua::plugin::TCAgent::trackEvent(arg1, arg2, arg3, (double)arg4);
-
-    olua_endinvoke(L);
-
-    return 0;
-}
-
-static int _cclua_plugin_TCAgent_trackEvent(lua_State *L)
-{
-    int num_args = lua_gettop(L);
-
-    if (num_args == 1) {
-        // if ((olua_is_std_string(L, 1))) {
-            // static void trackEvent(const std::string &event)
-            return _cclua_plugin_TCAgent_trackEvent1(L);
-        // }
-    }
-
-    if (num_args == 2) {
-        // if ((olua_is_std_string(L, 1)) && (olua_is_std_string(L, 2))) {
-            // static void trackEvent(const std::string &event, const std::string &label)
-            return _cclua_plugin_TCAgent_trackEvent2(L);
+        // if ((olua_is_string(L, 1)) && (olua_is_string(L, 2))) {
+            // static void init(const std::string &appkey, const std::string &channel, @optional const std::string &custom)
+            return _cclua_plugin_talkingdata_init$2(L);
         // }
     }
 
     if (num_args == 3) {
-        // if ((olua_is_std_string(L, 1)) && (olua_is_std_string(L, 2)) && (olua_is_cocos2d_ValueMap(L, 3))) {
-            // static void trackEvent(const std::string &event, const std::string &label, const cocos2d::ValueMap &map)
-            return _cclua_plugin_TCAgent_trackEvent3(L);
+        // if ((olua_is_string(L, 1)) && (olua_is_string(L, 2)) && (olua_is_string(L, 3))) {
+            // static void init(const std::string &appkey, const std::string &channel, @optional const std::string &custom)
+            return _cclua_plugin_talkingdata_init$1(L);
         // }
     }
 
-    if (num_args == 4) {
-        // if ((olua_is_std_string(L, 1)) && (olua_is_std_string(L, 2)) && (olua_is_cocos2d_ValueMap(L, 3)) && (olua_is_number(L, 4))) {
-            // static void trackEvent(const std::string &event, const std::string &label, const cocos2d::ValueMap &map, double value)
-            return _cclua_plugin_TCAgent_trackEvent4(L);
-        // }
-    }
-
-    luaL_error(L, "method 'cclua::plugin::TCAgent::trackEvent' not support '%d' arguments", num_args);
+    luaL_error(L, "method 'cclua::plugin::talkingdata::init' not support '%d' arguments", num_args);
 
     return 0;
 }
 
-static int _cclua_plugin_TCAgent_trackPageBegin(lua_State *L)
+static int _cclua_plugin_talkingdata_onCreateCard(lua_State *L)
 {
     olua_startinvoke(L);
 
-    std::string arg1;       /** name */
+    std::string arg1;       /** uid */
+    std::string arg2;       /** method */
+    std::string arg3;       /** content */
 
-    olua_check_std_string(L, 1, &arg1);
+    olua_check_string(L, 1, &arg1);
+    olua_check_string(L, 2, &arg2);
+    olua_check_string(L, 3, &arg3);
 
-    // static void trackPageBegin(const std::string &name)
-    cclua::plugin::TCAgent::trackPageBegin(arg1);
+    // static void onCreateCard(const std::string &uid, const std::string &method, const std::string &content)
+    cclua::plugin::talkingdata::onCreateCard(arg1, arg2, arg3);
 
     olua_endinvoke(L);
 
     return 0;
 }
 
-static int _cclua_plugin_TCAgent_trackPageEnd(lua_State *L)
+static int _cclua_plugin_talkingdata_onEvent(lua_State *L)
 {
     olua_startinvoke(L);
 
-    std::string arg1;       /** name */
+    std::string arg1;       /** event */
+    double arg2 = 0;       /** value */
+    cocos2d::ValueMap arg3;       /** data */
 
-    olua_check_std_string(L, 1, &arg1);
+    olua_check_string(L, 1, &arg1);
+    olua_check_number(L, 2, &arg2);
+    olua_check_cocos2d_ValueMap(L, 3, &arg3);
 
-    // static void trackPageEnd(const std::string &name)
-    cclua::plugin::TCAgent::trackPageEnd(arg1);
+    // static void onEvent(const std::string &event, double value, const cocos2d::ValueMap &data)
+    cclua::plugin::talkingdata::onEvent(arg1, arg2, arg3);
 
     olua_endinvoke(L);
 
     return 0;
 }
 
-static int _cclua_plugin_TCAgent_viewItem(lua_State *L)
+static int _cclua_plugin_talkingdata_onFavorite(lua_State *L)
 {
     olua_startinvoke(L);
 
-    std::string arg1;       /** itemId */
-    std::string arg2;       /** category */
-    std::string arg3;       /** name */
-    lua_Integer arg4 = 0;       /** unitPrice */
+    std::string arg1;       /** category */
+    std::string arg2;       /** content */
 
-    olua_check_std_string(L, 1, &arg1);
-    olua_check_std_string(L, 2, &arg2);
-    olua_check_std_string(L, 3, &arg3);
-    olua_check_int(L, 4, &arg4);
+    olua_check_string(L, 1, &arg1);
+    olua_check_string(L, 2, &arg2);
 
-    // static void viewItem(const std::string &itemId, const std::string &category, const std::string &name, int unitPrice)
-    cclua::plugin::TCAgent::viewItem(arg1, arg2, arg3, (int)arg4);
+    // static void onFavorite(const std::string &category, const std::string &content)
+    cclua::plugin::talkingdata::onFavorite(arg1, arg2);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_onLogin(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** uid */
+    cocos2d::ValueMap arg2;       /** data */
+
+    olua_check_string(L, 1, &arg1);
+    olua_check_cocos2d_ValueMap(L, 2, &arg2);
+
+    // static void onLogin(const std::string &uid, const cocos2d::ValueMap &data)
+    cclua::plugin::talkingdata::onLogin(arg1, arg2);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_onPageBegin(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** name */
+
+    olua_check_string(L, 1, &arg1);
+
+    // static void onPageBegin(const std::string &name)
+    cclua::plugin::talkingdata::onPageBegin(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_onPageEnd(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** name */
+
+    olua_check_string(L, 1, &arg1);
+
+    // static void onPageEnd(const std::string &name)
+    cclua::plugin::talkingdata::onPageEnd(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_onProfileUpdate(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    cocos2d::ValueMap arg1;       /** data */
+
+    olua_check_cocos2d_ValueMap(L, 1, &arg1);
+
+    // static void onProfileUpdate(const cocos2d::ValueMap &data)
+    cclua::plugin::talkingdata::onProfileUpdate(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_onPunch(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** uid */
+    std::string arg2;       /** punchid */
+
+    olua_check_string(L, 1, &arg1);
+    olua_check_string(L, 2, &arg2);
+
+    // static void onPunch(const std::string &uid, const std::string &punchid)
+    cclua::plugin::talkingdata::onPunch(arg1, arg2);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_onReceiveDeepLink(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** link */
+
+    olua_check_string(L, 1, &arg1);
+
+    // static void onReceiveDeepLink(const std::string &link)
+    cclua::plugin::talkingdata::onReceiveDeepLink(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_onRegister(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** uid */
+    cocos2d::ValueMap arg2;       /** data */
+    std::string arg3;       /** invitationCode */
+
+    olua_check_string(L, 1, &arg1);
+    olua_check_cocos2d_ValueMap(L, 2, &arg2);
+    olua_check_string(L, 3, &arg3);
+
+    // static void onRegister(const std::string &uid, const cocos2d::ValueMap &data, const std::string &invitationCode)
+    cclua::plugin::talkingdata::onRegister(arg1, arg2, arg3);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_onSearch(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    cocos2d::ValueMap arg1;       /** data */
+
+    olua_check_cocos2d_ValueMap(L, 1, &arg1);
+
+    // static void onSearch(const cocos2d::ValueMap &data)
+    cclua::plugin::talkingdata::onSearch(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_onShare(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** uid */
+    std::string arg2;       /** content */
+
+    olua_check_string(L, 1, &arg1);
+    olua_check_string(L, 2, &arg2);
+
+    // static void onShare(const std::string &uid, const std::string &content)
+    cclua::plugin::talkingdata::onShare(arg1, arg2);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_removeGlobalKV(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** key */
+
+    olua_check_string(L, 1, &arg1);
+
+    // static void removeGlobalKV(const std::string &key)
+    cclua::plugin::talkingdata::removeGlobalKV(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_setConfigurationDisable(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    uint64_t arg1 = 0;       /** options */
+
+    olua_check_integer(L, 1, &arg1);
+
+    // static void setConfigurationDisable(uint64_t options)
+    cclua::plugin::talkingdata::setConfigurationDisable(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_setExceptionReportEnabled(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    bool arg1 = false;       /** value */
+
+    olua_check_bool(L, 1, &arg1);
+
+    // static void setExceptionReportEnabled(bool value)
+    cclua::plugin::talkingdata::setExceptionReportEnabled(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_setGlobalKV(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** key */
+    cocos2d::Value arg2;       /** value */
+
+    olua_check_string(L, 1, &arg1);
+    olua_check_cocos2d_Value(L, 2, &arg2);
+
+    // static void setGlobalKV(const std::string &key, const cocos2d::Value &value)
+    cclua::plugin::talkingdata::setGlobalKV(arg1, arg2);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_setLocation(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    double arg1 = 0;       /** latitude */
+    double arg2 = 0;       /** longitude */
+
+    olua_check_number(L, 1, &arg1);
+    olua_check_number(L, 2, &arg2);
+
+    // static void setLocation(double latitude, double longitude)
+    cclua::plugin::talkingdata::setLocation(arg1, arg2);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_setSignalReportEnabled(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    bool arg1 = false;       /** value */
+
+    olua_check_bool(L, 1, &arg1);
+
+    // static void setSignalReportEnabled(bool value)
+    cclua::plugin::talkingdata::setSignalReportEnabled(arg1);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_setVendorId(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    std::string arg1;       /** vendorId */
+    int arg2 = 0;       /** type */
+
+    olua_check_string(L, 1, &arg1);
+    olua_check_integer(L, 2, &arg2);
+
+    // static void setVendorId(const std::string &vendorId, int type)
+    cclua::plugin::talkingdata::setVendorId(arg1, arg2);
+
+    olua_endinvoke(L);
+
+    return 0;
+}
+
+static int _cclua_plugin_talkingdata_setVerboseLogDisable(lua_State *L)
+{
+    olua_startinvoke(L);
+
+    // static void setVerboseLogDisable()
+    cclua::plugin::talkingdata::setVerboseLogDisable();
 
     olua_endinvoke(L);
 
@@ -455,27 +460,37 @@ static int _cclua_plugin_TCAgent_viewItem(lua_State *L)
 }
 
 OLUA_BEGIN_DECLS
-OLUA_LIB int luaopen_cclua_plugin_TCAgent(lua_State *L)
+OLUA_LIB int luaopen_cclua_plugin_talkingdata(lua_State *L)
 {
-    oluacls_class(L, "cclua.plugin.TalkingData", nullptr);
-    oluacls_func(L, "__olua_move", _cclua_plugin_TCAgent___olua_move);
-    oluacls_func(L, "cancelOrder", _cclua_plugin_TCAgent_cancelOrder);
-    oluacls_func(L, "init", _cclua_plugin_TCAgent_init);
-    oluacls_func(L, "onLogin", _cclua_plugin_TCAgent_onLogin);
-    oluacls_func(L, "onRegister", _cclua_plugin_TCAgent_onRegister);
-    oluacls_func(L, "payOrder", _cclua_plugin_TCAgent_payOrder);
-    oluacls_func(L, "placeOrder", _cclua_plugin_TCAgent_placeOrder);
-    oluacls_func(L, "removeGlobalKV", _cclua_plugin_TCAgent_removeGlobalKV);
-    oluacls_func(L, "setGlobalKV", _cclua_plugin_TCAgent_setGlobalKV);
-    oluacls_func(L, "setLogEnabled", _cclua_plugin_TCAgent_setLogEnabled);
-    oluacls_func(L, "setReportUncaughtExceptions", _cclua_plugin_TCAgent_setReportUncaughtExceptions);
-    oluacls_func(L, "trackEvent", _cclua_plugin_TCAgent_trackEvent);
-    oluacls_func(L, "trackPageBegin", _cclua_plugin_TCAgent_trackPageBegin);
-    oluacls_func(L, "trackPageEnd", _cclua_plugin_TCAgent_trackPageEnd);
-    oluacls_func(L, "viewItem", _cclua_plugin_TCAgent_viewItem);
+    oluacls_class<cclua::plugin::talkingdata>(L, "cclua.plugin.talkingdata");
+    oluacls_func(L, "__gc", _cclua_plugin_talkingdata___gc);
+    oluacls_func(L, "__olua_move", _cclua_plugin_talkingdata___olua_move);
+    oluacls_func(L, "backgroundSessionEnabled", _cclua_plugin_talkingdata_backgroundSessionEnabled);
+    oluacls_func(L, "getDeviceId", _cclua_plugin_talkingdata_getDeviceId);
+    oluacls_func(L, "init", _cclua_plugin_talkingdata_init);
+    oluacls_func(L, "onCreateCard", _cclua_plugin_talkingdata_onCreateCard);
+    oluacls_func(L, "onEvent", _cclua_plugin_talkingdata_onEvent);
+    oluacls_func(L, "onFavorite", _cclua_plugin_talkingdata_onFavorite);
+    oluacls_func(L, "onLogin", _cclua_plugin_talkingdata_onLogin);
+    oluacls_func(L, "onPageBegin", _cclua_plugin_talkingdata_onPageBegin);
+    oluacls_func(L, "onPageEnd", _cclua_plugin_talkingdata_onPageEnd);
+    oluacls_func(L, "onProfileUpdate", _cclua_plugin_talkingdata_onProfileUpdate);
+    oluacls_func(L, "onPunch", _cclua_plugin_talkingdata_onPunch);
+    oluacls_func(L, "onReceiveDeepLink", _cclua_plugin_talkingdata_onReceiveDeepLink);
+    oluacls_func(L, "onRegister", _cclua_plugin_talkingdata_onRegister);
+    oluacls_func(L, "onSearch", _cclua_plugin_talkingdata_onSearch);
+    oluacls_func(L, "onShare", _cclua_plugin_talkingdata_onShare);
+    oluacls_func(L, "removeGlobalKV", _cclua_plugin_talkingdata_removeGlobalKV);
+    oluacls_func(L, "setConfigurationDisable", _cclua_plugin_talkingdata_setConfigurationDisable);
+    oluacls_func(L, "setExceptionReportEnabled", _cclua_plugin_talkingdata_setExceptionReportEnabled);
+    oluacls_func(L, "setGlobalKV", _cclua_plugin_talkingdata_setGlobalKV);
+    oluacls_func(L, "setLocation", _cclua_plugin_talkingdata_setLocation);
+    oluacls_func(L, "setSignalReportEnabled", _cclua_plugin_talkingdata_setSignalReportEnabled);
+    oluacls_func(L, "setVendorId", _cclua_plugin_talkingdata_setVendorId);
+    oluacls_func(L, "setVerboseLogDisable", _cclua_plugin_talkingdata_setVerboseLogDisable);
+    oluacls_prop(L, "deviceId", _cclua_plugin_talkingdata_getDeviceId, nullptr);
 
-    olua_registerluatype<cclua::plugin::TCAgent>(L, "cclua.plugin.TalkingData");
-    cclua::runtime::registerFeature("talkingdata", true);
+    cclua::runtime::registerFeature("cclua.plugin.talkingdata.ios", true);
 
     return 1;
 }
@@ -486,7 +501,7 @@ OLUA_BEGIN_DECLS
 OLUA_LIB int luaopen_talkingdata(lua_State *L)
 {
 #ifdef CCLUA_BUILD_TALKINGDATA
-    olua_require(L, "cclua.plugin.TalkingData", luaopen_cclua_plugin_TCAgent);
+    olua_require(L, "cclua.plugin.talkingdata", luaopen_cclua_plugin_talkingdata);
 #endif
 
     return 0;

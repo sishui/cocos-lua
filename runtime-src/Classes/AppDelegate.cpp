@@ -24,11 +24,11 @@
 
 #include "AppDelegate.h"
 
-#include "cclua/xlua.h"
-#include "cclua/preferences.h"
-#include "cclua/FileFinder.h"
+#include "cclua/cclua.h"
 
+#if COCOS2D_VERSION >= 0x00040000
 #include "lua-bindings/lua_cocos2d_3d.h"
+#endif
 
 extern "C" {
 #include "luaopenssl/openssl.h"
@@ -86,9 +86,16 @@ extern "C" {
 #include "bugly/CrashReport.h"
 #endif
 
-#if defined(CCLUA_BUILD_JPUSH) || defined(CCLUA_BUILD_JANALYTICS) || defined(CCLUA_BUILD_JAUTH)
-#include "jiguang/lua_jiguang.h"
-#include "jiguang/JiGuang.h"
+#ifdef CCLUA_BUILD_JANALYTICS
+#include "janalytics/lua_janalytics.h"
+#endif
+
+#ifdef CCLUA_BUILD_JAUTH
+#include "jauth/lua_jauth.h"
+#endif
+
+#ifdef CCLUA_BUILD_JPUSH
+#include "jpush/lua_jpush.h"
 #endif
 
 #ifdef CCLUA_BUILD_TALKINGDATA
@@ -96,11 +103,26 @@ extern "C" {
 #endif
 
 #ifdef CCLUA_BUILD_WECHAT
-#include "wechat/WeChat.h"
 #include "wechat/lua_wechat.h"
 #endif
 
-#if defined(CCLUA_BUILD_APPLE_AUTH) || defined(CCLUA_BUILD_APPLE_IAP)
+#ifdef CCLUA_BUILD_ALIPAY
+#include "alipay/lua_alipay.h"
+#endif
+
+#ifdef CCLUA_BUILD_HUAWEI
+#include "huawei/lua_huawei.h"
+#endif
+
+#ifdef CCLUA_BUILD_OPPO
+#include "oppo/lua_oppo.h"
+#endif
+
+#ifdef CCLUA_BUILD_VIVO
+#include "vivo/lua_vivo.h"
+#endif
+
+#ifdef CCLUA_OS_IOS
 #include "apple/lua_apple.h"
 #endif
 
@@ -113,30 +135,32 @@ USING_NS_CCLUA;
 
 static int _open_plugins(lua_State *L)
 {
-    olua_callfunc(L, luaopen_cocos2d_3d);
+#if COCOS2D_VERSION >= 0x00040000
+    olua_import(L, luaopen_cocos2d_3d);
+#endif
     
 #ifdef CCLUA_BUILD_COCOSSTUDIO
-    olua_callfunc(L, luaopen_cocos2d_studio);
+    olua_import(L, luaopen_cocos2d_studio);
 #endif
     
 #ifdef CCLUA_BUILD_DRAGONBONES
-    olua_callfunc(L, luaopen_dragonbones);
+    olua_import(L, luaopen_dragonbones);
 #endif
 
 #ifdef CCLUA_BUILD_FAIRYGUI
-    olua_callfunc(L, luaopen_fairygui);
+    olua_import(L, luaopen_fairygui);
 #endif
 
 #ifdef CCLUA_BUILD_SPINE
-	olua_callfunc(L, luaopen_spine);
+    olua_import(L, luaopen_spine);
 #endif
     
 #ifdef CCLUA_BUILD_BOX2D
-    olua_callfunc(L, luaopen_box2d);
+    olua_import(L, luaopen_box2d);
 #endif
     
 #ifdef CCLUA_BUILD_SWF
-    olua_callfunc(L, luaopen_swf);
+    olua_import(L, luaopen_swf);
 #endif
     
     olua_require(L, "openssl", luaopen_openssl);
@@ -148,7 +172,7 @@ static int _open_plugins(lua_State *L)
 #ifdef CCLUA_BUILD_LUASOCKET
     olua_require(L, "socket.core", luaopen_socket_core);
     olua_require(L, "mime.core", luaopen_mime_core);
-    olua_callfunc(L, luaopen_luasocket_scripts);
+    olua_import(L, luaopen_luasocket_scripts);
 #endif // CCLUA_BUILD_LUASOCKET
 
 #ifdef CCLUA_BUILD_SPROTO
@@ -163,20 +187,44 @@ static int _open_plugins(lua_State *L)
     olua_require(L, "protobuf.c", luaopen_protobuf_c);
 #endif // CCLUA_BUILD_PBC
     
-#if defined(CCLUA_BUILD_JPUSH) || defined(CCLUA_BUILD_JANALYTICS) || defined(CCLUA_BUILD_JAUTH)
-    olua_callfunc(L, luaopen_jiguang);
+#ifdef CCLUA_BUILD_JANALYTICS
+    olua_import(L, luaopen_janalytics);
+#endif
+    
+#ifdef CCLUA_BUILD_JAUTH
+    olua_import(L, luaopen_jauth);
+#endif
+    
+#ifdef CCLUA_BUILD_JPUSH
+    olua_import(L, luaopen_jpush);
 #endif
     
 #ifdef CCLUA_BUILD_TALKINGDATA
-    olua_callfunc(L, luaopen_talkingdata);
+    olua_import(L, luaopen_talkingdata);
 #endif
     
 #ifdef CCLUA_BUILD_WECHAT
-    olua_callfunc(L, luaopen_wechat);
+    olua_import(L, luaopen_wechat);
 #endif
     
-#if defined(CCLUA_BUILD_APPLE_AUTH) || defined(CCLUA_BUILD_APPLE_IAP)
-    olua_callfunc(L, luaopen_apple);
+#ifdef CCLUA_BUILD_ALIPAY
+    olua_import(L, luaopen_alipay);
+#endif
+    
+#ifdef CCLUA_BUILD_HUAWEI
+    olua_import(L, luaopen_huawei);
+#endif
+
+#ifdef CCLUA_BUILD_OPPO
+    olua_import(L, luaopen_oppo);
+#endif
+
+#ifdef CCLUA_BUILD_VIVO
+    olua_import(L, luaopen_vivo);
+#endif
+    
+#ifdef CCLUA_OS_IOS
+    olua_import(L, luaopen_apple);
 #endif
     return 0;
 }
@@ -206,13 +254,11 @@ bool AppDelegate::applicationDidFinishLaunching()
 #endif
     
 #if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)
-    CrashReport::setVersion(runtime::getVersion().c_str());
-    CrashReport::setChannel(runtime::getChannel().c_str());
+    bugly::setVersion(runtime::getVersion().c_str());
+    bugly::setChannel(runtime::getChannel().c_str());
 #else
-    runtime::setEnv("cclua.debug", "true", true);
+    runtime::setEnv("cclua.debug", "ON", true);
 #endif
-    
-    // runtime::setEnv("cclua.metadata.key", "hello");
     
     initGLView(APP_NAME);
     runtime::luaOpen(_open_plugins);

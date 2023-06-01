@@ -4,31 +4,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "run-app",
-            "type": "shell",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "args": ["-workdir", "${workspaceFolder}/assets"],
-            "windows": {
-                "command": "./runtime-src/proj.win32/Debug.win32/cocos-lua.exe",
-            },
-            "osx": {
-                "command": "./runtime/mac/cocos-lua-desktop.app/Contents/MacOS/cocos-lua-desktop",
-            }
-        },
-        {
-            "label": "kill-app",
-            "type": "shell",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "command":"killall cocos-lua-desktop",
-            "windows": {
-                "command": ""
-            }
-        },
-        {
             "label": "build-builtin-manifest",
             "type": "shell",
             "options": {

@@ -1,8 +1,7 @@
 wwwroot/*
 build/
-assets/builtin.metadata
+assets/builtin.manifest
 assets/assets.bundle
 .DS_Store
 ._*
 Icon*
-frameworks/libxgame/src/lua51

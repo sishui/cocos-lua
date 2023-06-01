@@ -1,13 +1,11 @@
 module 'cocos2d_action'
 
-path '../../frameworks/libxgame/src/lua-bindings'
+path '../../frameworks/cclua/src/lua-bindings'
 
 headers [[
-#include "lua-bindings/lua_conv.h"
+#include "lua-bindings/lua_cocos2d_types.h"
 #include "lua-bindings/lua_conv_manual.h"
-#include "lua-bindings/LuaCocosAdapter.h"
 #include "cocos2d.h"
-#include "cclua/xlua.h"
 ]]
 
 luacls(function (cppname)
@@ -15,8 +13,6 @@ luacls(function (cppname)
     cppname = string.gsub(cppname, "::", ".")
     return cppname
 end)
-
-include "conf/exclude-type.lua"
 
 local function typeconf(cppcls)
     local cls = _ENV.typeconf(cppcls)
@@ -40,6 +36,7 @@ typeconf 'cocos2d::Action'
     .exclude 'initWithTwoActions'
     .exclude 'setReverseAction'
 
+typeconf 'cocos2d::ActionTweenDelegate'
 typeconf 'cocos2d::FiniteTimeAction'
 
 typeconf 'cocos2d::Speed'
@@ -60,7 +57,7 @@ typeconf 'cocos2d::Sequence'
         .arg1 '@addref(actions |)'
         .arg2 '@addref(actions |)'
     .func 'create'
-        .arg1 '@pack@addref(actions |)'
+        .arg1 '@addref(actions |)'
 
 typeconf 'cocos2d::Repeat'
     .func 'create'
@@ -83,7 +80,7 @@ typeconf 'cocos2d::Spawn'
         .arg1 '@addref(actions |)'
         .arg2 '@addref(actions |)'
     .func 'create'
-        .arg1 '@pack@addref(actions |)'
+        .arg1 '@addref(actions |)'
 
 typeconf 'cocos2d::RotateTo'
 typeconf 'cocos2d::RotateFrom'
@@ -258,3 +255,9 @@ typeconf 'cocos2d::WavesTiles3D'
 typeconf 'cocos2d::JumpTiles3D'
 typeconf 'cocos2d::SplitRows'
 typeconf 'cocos2d::SplitCols'
+
+typeconf 'cocos2d::LuaTweenNode'
+    .callback 'create'
+        .tag_maker 'ActionTween'
+        .tag_mode 'new'
+        .tag_store '-1'

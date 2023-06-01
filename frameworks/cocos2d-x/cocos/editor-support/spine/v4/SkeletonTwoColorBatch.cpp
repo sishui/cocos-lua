@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated January 1, 2020. Replaces all prior versions.
+ * Last updated September 24, 2021. Replaces all prior versions.
  *
- * Copyright (c) 2013-2020, Esoteric Software LLC
+ * Copyright (c) 2013-2021, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -321,7 +321,7 @@ namespace spine {
 	unsigned short *SkeletonTwoColorBatch::allocateIndices(uint32_t numIndices) {
 		if (_indices.getCapacity() - _indices.size() < numIndices) {
 			unsigned short *oldData = _indices.buffer();
-			int oldSize = _indices.size();
+			int oldSize = (int)_indices.size();
 			_indices.ensureCapacity(_indices.size() + numIndices);
 			unsigned short *newData = _indices.buffer();
 			for (uint32_t i = 0; i < this->_nextFreeCommand; i++) {
@@ -406,8 +406,8 @@ namespace spine {
 
 	TwoColorTrianglesCommand *SkeletonTwoColorBatch::nextFreeCommand() {
 		if (_commandsPool.size() <= _nextFreeCommand) {
-			unsigned int newSize = _commandsPool.size() * 2 + 1;
-			for (int i = _commandsPool.size(); i < newSize; i++) {
+			unsigned int newSize = (int)_commandsPool.size() * 2 + 1;
+			for (int i = (int)_commandsPool.size(); i < newSize; i++) {
 				_commandsPool.push_back(new TwoColorTrianglesCommand());
 			}
 		}

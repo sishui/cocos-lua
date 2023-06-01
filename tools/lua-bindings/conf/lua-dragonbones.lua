@@ -1,14 +1,15 @@
 module 'dragonbones'
 
-path "../../frameworks/libxgame/src/lua-bindings"
+path "../../frameworks/cclua/src/lua-bindings"
 
 headers [[
-#include "lua-bindings/lua_conv.h"
+#include "lua-bindings/lua_cocos2d_types.h"
 #include "lua-bindings/lua_conv_manual.h"
-#include "cclua/xlua.h"
 #include "cocos2d.h"
 #include "CCDragonBonesHeaders.h"
 ]]
+
+luaopen [[cclua::runtime::registerFeature("dragonbones", true);]]
 
 luacls(function (cppname)
     cppname = string.gsub(cppname, "^dragonBones::CC", "db.")
@@ -17,24 +18,12 @@ luacls(function (cppname)
     return cppname
 end)
 
-include "conf/exclude-type.lua"
+excludetype 'dragonBones::Matrix'
+excludetype 'dragonBones::Transform'
+excludetype 'dragonBones::ColorTransform'
+excludetype 'dragonBones::MeshDisplayData'
 
-exclude 'dragonBones::Matrix *'
-exclude 'dragonBones::Matrix'
-exclude 'dragonBones::WorldClock'
-exclude 'dragonBones::Transform *'
-exclude 'dragonBones::Transform'
-exclude 'dragonBones::Point'
-exclude 'dragonBones::ColorTransform'
-exclude 'dragonBones::ColorTransform *'
-exclude 'dragonBones::Rectangle *'
-exclude 'dragonBones::MeshDisplayData *'
-exclude 'dragonBones::CanvasData *'
-exclude 'dragonBones::IArmatureProxy *'
-exclude 'dragonBones::IEventDispatcher *'
-exclude 'std::vector *'
-
-typeconv 'dragonBones::Rectangle'
+typeconf 'dragonBones::Rectangle'
 
 typeconf 'dragonBones::BinaryOffset'
 typeconf 'dragonBones::ArmatureType'
@@ -48,6 +37,7 @@ typeconf 'dragonBones::TimelineType'
 typeconf 'dragonBones::AnimationFadeOutMode'
 typeconf 'dragonBones::TextureFormat'
 
+typeconf 'dragonBones::DragonBones'
 typeconf 'dragonBones::BaseObject'
 typeconf 'dragonBones::EventObject'
 typeconf 'dragonBones::TransformObject'
@@ -58,10 +48,25 @@ typeconf 'dragonBones::TimelineData'
 
 typeconf 'dragonBones::IAnimatable'
 typeconf 'dragonBones::WorldClock'
+    .exclude 'clock'
+    .prop 'clock'
+        .get [[
+        {
+            olua_pushobj(L, &dragonBones::WorldClock::clock);
+            return 1;
+        }]]
 
 typeconf 'dragonBones::Slot'
     .exclude 'getDisplayList'
     .exclude 'setDisplayList'
+    .exclude '_updateVisible'
+    .exclude '_updateBlendMode'
+    .exclude '_updateColor'
+    .exclude '_setDisplayIndex'
+    .exclude '_setZorder'
+    .exclude '_setDisplayList'
+    .exclude 'getRawDisplayDatas'
+    .exclude 'setRawDisplayDatas'
 
 typeconf 'dragonBones::Bone'
 typeconf 'dragonBones::DisplayData'
@@ -80,37 +85,51 @@ typeconf 'dragonBones::TextureData'
 typeconf 'dragonBones::ArmatureData'
 
 typeconf 'dragonBones::SkinData'
-    .exclude 'getSlotDisplays'
     .exclude 'displays'
+    .exclude 'getDisplays'
+    .exclude 'getSlotDisplays'
 
 typeconf 'dragonBones::BoneData'
 typeconf 'dragonBones::SlotData'
 typeconf 'dragonBones::AnimationState'
 
 typeconf 'dragonBones::AnimationData'
-    .exclude 'boneTimelines'
-    .exclude 'slotTimelines'
-    .exclude 'constraintTimelines'
     .exclude 'boneCachedFrameIndices'
+    .exclude 'boneTimelines'
+    .exclude 'constraintTimelines'
+    .exclude 'getBoneTimelines'
+    .exclude 'getConstraintTimelines'
+    .exclude 'getBoneCachedFrameIndices'
+    .exclude 'getSlotCachedFrameIndices'
+    .exclude 'getSlotTimelines'
     .exclude 'slotCachedFrameIndices'
+    .exclude 'slotTimelines'
 
 typeconf 'dragonBones::AnimationConfig'
 typeconf 'dragonBones::DragonBonesData'
+    .exclude 'getFrameIndices'
 
 typeconf 'dragonBones::BaseFactory'
     .exclude 'getAllTextureAtlasData'
+    .exclude 'getTextureAtlasData'
 
 typeconf 'dragonBones::Armature'
     .supercls 'dragonBones::BaseObject'
+    .exclude '_addBone'
+    .exclude '_addConstraint'
+    .exclude '_addSlot'
+    .exclude '_bufferAction'
 
 typeconf 'dragonBones::Animation'
 typeconf 'dragonBones::CCFactory'
 
+typeconf 'dragonBones::IEventDispatcher'
+typeconf 'dragonBones::IArmatureProxy'
 typeconf 'dragonBones::CCArmatureDisplay'
     .callback 'addDBEventListener'
         .tag_maker '(#1)'
         .tag_mode 'new'
     .callback 'removeDBEventListener'
         .tag_maker '(#1)'
-        .tag_mode 'subequal'
+        .tag_mode 'equal'
         .arg2 '@nullable'

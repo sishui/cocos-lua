@@ -1,16 +1,66 @@
-#import "TalkingData.h"
+#import "talkingdata.h"
 
-USING_NS_CCLUA_PLUGIN;
+#if defined(CCLUA_BUILD_TALKINGDATA) && defined(CCLUA_OS_IOS)
 
-#if defined(CCLUA_OS_IOS)
-#import "ios/TalkingData.h"
+#import "ios/TalkingDataSDK.h"
 #import "cclua/AppContext-ios.h"
 #import "cclua/plugin-ios.h"
+
+USING_NS_CCLUA;
+USING_NS_CCLUA_PLUGIN;
+
+#define setValue(OBJ, NAME, DATA, FUNC) do {            \
+    if (DATA.find(#NAME) != DATA.end()) {               \
+        OBJ.NAME = FUNC(DATA[#NAME]);                   \
+    }                                                   \
+} while (0)
+
+#define setEnum(OBJ, NAME, DATA, ENUM) do {             \
+    if (DATA.find(#NAME) != DATA.end()) {               \
+        OBJ.NAME = (ENUM)DATA[#NAME].asInt();           \
+    }                                                   \
+} while (0)
+
+#define setNumber(OBJ, NAME, DATA, ASNUM) do {          \
+    if (DATA.find(#NAME) != DATA.end()) {               \
+        OBJ.NAME = DATA[#NAME].ASNUM();                 \
+    }                                                   \
+} while (0)
+
+#define setProperty(OBJ, NAME, DATA) do {               \
+    if (DATA.find(#NAME) != DATA.end()) {               \
+        auto &value = DATA[#NAME];                      \
+        OBJ.NAME = toNSObject(value);                   \
+    }                                                   \
+} while (0)
+
+static TalkingDataProfile *toProfile(const cocos2d::ValueMap &value)
+{
+    cocos2d::ValueMap &data = *const_cast<cocos2d::ValueMap *>(&value);
+    TalkingDataProfile *profile = [TalkingDataProfile createProfile];
+    setValue(profile, name, data, toNSString);
+    setEnum(profile, type, data, TalkingDataProfileType);
+    setEnum(profile, gender, data, TalkingDataGender);
+    setNumber(profile, age, data, asInt);
+    setProperty(profile, property1, data);
+    setProperty(profile, property2, data);
+    setProperty(profile, property3, data);
+    setProperty(profile, property4, data);
+    setProperty(profile, property5, data);
+    setProperty(profile, property6, data);
+    setProperty(profile, property7, data);
+    setProperty(profile, property8, data);
+    setProperty(profile, property9, data);
+    setProperty(profile, property10, data);
+    
+    return profile;
+}
 
 @interface TalkingDataDelegate : NSObject<UIApplicationDelegate>
 
 @property(nonatomic, strong) NSString *appkey;
 @property(nonatomic, strong) NSString *channel;
+@property(nonatomic, strong) NSString *custom;
 
 - (instancetype)init;
 + (instancetype) defaultDelegate;
@@ -40,8 +90,8 @@ USING_NS_CCLUA_PLUGIN;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     @autoreleasepool {
-        cclua::runtime::log("init talkingdata %s", [self.appkey UTF8String]);
-        [TalkingData sessionStarted:self.appkey withChannelId:self.channel];
+        runtime::log("init talkingdata %s", [self.appkey UTF8String]);
+        [TalkingDataSDK init:self.appkey channelId:self.channel custom:self.custom];
         return YES;
     }
 }
@@ -57,147 +107,174 @@ static NSDictionary<NSString *, NSObject *> *toNSDictionary(const cocos2d::Value
     return map;
 }
 
-void TCAgent::setLogEnabled(bool value)
+std::string talkingdata::getDeviceId()
 {
     @autoreleasepool {
-        [TalkingData setLogEnabled:value];
+        return std::string([[TalkingDataSDK getDeviceId] UTF8String]);
     }
 }
 
-void TCAgent::init(const std::string &appkey, const std::string &channel)
+void talkingdata::setVerboseLogDisable()
+{
+    @autoreleasepool {
+        [TalkingDataSDK setVerboseLogDisable];
+    }
+}
+
+void talkingdata::setConfigurationDisable(uint64_t options)
+{
+    @autoreleasepool {
+        [TalkingDataSDK setConfigurationDisable:(TalkingDataDisable)options];
+    }
+}
+
+void talkingdata::backgroundSessionEnabled()
+{
+    @autoreleasepool {
+        [TalkingDataSDK backgroundSessionEnabled];
+    }
+}
+
+void talkingdata::init(const std::string &appkey, const std::string &channel, const std::string &custom)
 {
     @autoreleasepool {
         TalkingDataDelegate *delegate = [TalkingDataDelegate defaultDelegate];
         delegate.appkey = toNSString(appkey);
         delegate.channel = toNSString(channel);
+        if (custom.size() > 0) {
+            delegate.custom = toNSString(custom);
+        }
     }
 }
 
-void TCAgent::onRegister(const std::string &uid, int type, const std::string &name)
+void talkingdata::setVendorId(const std::string &vendorId, int type)
 {
     @autoreleasepool {
-        [TalkingData onRegister:toNSString(uid) type:(TDProfileType)type name:toNSString(name)];
+        [TalkingDataSDK setVendorId:toNSString(vendorId) ofType:(TalkingDataVendorIdType)type];
     }
 }
 
-void TCAgent::onLogin(const std::string &uid, int type, const std::string &name)
+void talkingdata::setLocation(double latitude, double longitude)
 {
     @autoreleasepool {
-        [TalkingData onLogin:toNSString(uid) type:(TDProfileType)type name:toNSString(name)];
+        [TalkingDataSDK setLatitude:latitude longitude:longitude];
     }
 }
 
-void TCAgent::setReportUncaughtExceptions(bool value)
+void talkingdata::setExceptionReportEnabled(bool value)
 {
     @autoreleasepool {
-        [TalkingData setExceptionReportEnabled:value];
+        [TalkingDataSDK setExceptionReportEnabled:value];
     }
 }
 
-void TCAgent::trackPageBegin(const std::string &name)
+void talkingdata::setSignalReportEnabled(bool value)
 {
     @autoreleasepool {
-        [TalkingData trackPageBegin:toNSString(name)];
+        [TalkingDataSDK setSignalReportEnabled:value];
     }
 }
 
-void TCAgent::trackPageEnd(const std::string &name)
+void talkingdata::onPageBegin(const std::string &name)
 {
     @autoreleasepool {
-        [TalkingData trackPageEnd:toNSString(name)];
+        [TalkingDataSDK onPageBegin:toNSString(name)];
     }
 }
 
-void TCAgent::trackEvent(const std::string &event)
+void talkingdata::onPageEnd(const std::string &name)
 {
     @autoreleasepool {
-        [TalkingData trackEvent:toNSString(event)];
+        [TalkingDataSDK onPageEnd:toNSString(name)];
     }
 }
 
-void TCAgent::trackEvent(const std::string &event, const std::string &label)
+void talkingdata::onReceiveDeepLink(const std::string &link)
 {
     @autoreleasepool {
-        [TalkingData trackEvent:toNSString(event) label:toNSString(label)];
+        [TalkingDataSDK onReceiveDeepLink:[NSURL URLWithString:toNSString(link)]];
     }
 }
 
-void TCAgent::trackEvent(const std::string &event, const std::string &label, const cocos2d::ValueMap &map)
+void talkingdata::onRegister(const std::string &uid, const cocos2d::ValueMap &data, const std::string &invitationCode)
 {
     @autoreleasepool {
-        [TalkingData trackEvent:toNSString(event) label:toNSString(label) parameters:toNSDictionary(map)];
+        [TalkingDataSDK onRegister:toNSString(uid) profile:toProfile(data) invitationCode:toNSString(invitationCode)];
     }
 }
 
-void TCAgent::trackEvent(const std::string &event, const std::string &label, const cocos2d::ValueMap &map, double value)
+void talkingdata::onLogin(const std::string &uid, const cocos2d::ValueMap &data)
 {
     @autoreleasepool {
-        [TalkingData trackEvent:toNSString(event) label:toNSString(label) parameters:toNSDictionary(map) value: value];
+        [TalkingDataSDK onLogin:toNSString(uid) profile:toProfile(data)];
     }
 }
 
-void TCAgent::setGlobalKV(const std::string &key, bool value)
+void talkingdata::onProfileUpdate(const cocos2d::ValueMap &data)
 {
     @autoreleasepool {
-        [TalkingData setGlobalKV:toNSString(key) value:[NSNumber numberWithBool:value]];
+        [TalkingDataSDK onProfileUpdate:toProfile(data)];
     }
 }
 
-void TCAgent::setGlobalKV(const std::string &key, const std::string &value)
+void talkingdata::onCreateCard(const std::string &uid, const std::string &method, const std::string &content)
 {
     @autoreleasepool {
-        [TalkingData setGlobalKV:toNSString(key) value:toNSString(value)];
+        [TalkingDataSDK onCreateCard:toNSString(uid) method:toNSString(method) content:toNSString(content)];
     }
 }
 
-void TCAgent::setGlobalKV(const std::string &key, long value)
+void talkingdata::onFavorite(const std::string &category, const std::string &content)
 {
     @autoreleasepool {
-        [TalkingData setGlobalKV:toNSString(key) value:[NSNumber numberWithLong:value]];
+        [TalkingDataSDK onFavorite:toNSString(category) content:toNSString(content)];
     }
 }
 
-void TCAgent::setGlobalKV(const std::string &key, double value)
+void talkingdata::onShare(const std::string &uid, const std::string &content)
 {
     @autoreleasepool {
-        [TalkingData setGlobalKV:toNSString(key) value:[NSNumber numberWithDouble:value]];
+        [TalkingDataSDK onShare:toNSString(uid) content:toNSString(content)];
     }
 }
 
-void TCAgent::removeGlobalKV(const std::string &key)
+void talkingdata::onPunch(const std::string &uid, const std::string &punchid)
 {
     @autoreleasepool {
-        [TalkingData removeGlobalKV:toNSString(key)];
+        [TalkingDataSDK onPunch:toNSString(uid) punchId:toNSString(punchid)];
     }
 }
 
-void TCAgent::placeOrder(const std::string &orderId, int amount, const std::string &currencyType)
+void talkingdata::onSearch(const cocos2d::ValueMap &value)
 {
     @autoreleasepool {
-        [TalkingData onPlaceOrder:toNSString(orderId) amount:amount currencyType:toNSString(currencyType)];
+        TalkingDataSearch *search = [TalkingDataSearch createSearch];
+        cocos2d::ValueMap &data = *const_cast<cocos2d::ValueMap *>(&value);
+        setValue(search, content, data, toNSString);
+        setValue(search, category, data, toNSString);
+        [TalkingDataSDK onSearch:search];
     }
 }
 
-void TCAgent::payOrder(const std::string &orderId, int amount, const std::string &currencyType, const std::string &paymentType)
+void talkingdata::onEvent(const std::string &event, double value, const cocos2d::ValueMap &data)
 {
     @autoreleasepool {
-        [TalkingData onOrderPaySucc:toNSString(orderId) amount:amount currencyType:toNSString(currencyType) paymentType:toNSString(paymentType)];
+        [TalkingDataSDK onEvent:toNSString(event) value:value parameters:toNSDictionary(data)];
     }
 }
 
-void TCAgent::cancelOrder(const std::string &orderId, int amount, const std::string &currencyType)
+void talkingdata::setGlobalKV(const std::string &key, const cocos2d::Value &value)
 {
     @autoreleasepool {
-        [TalkingData onCancelOrder:toNSString(orderId) amount:amount currencyType:toNSString(currencyType)];
+        [TalkingDataSDK setGlobalKV:toNSString(key) value:toNSObject(value)];
     }
 }
 
-void TCAgent::viewItem(const std::string &itemId, const std::string &category, const std::string &name, int unitPrice)
+void talkingdata::removeGlobalKV(const std::string &key)
 {
     @autoreleasepool {
-        [TalkingData onViewItem:toNSString(itemId) category:toNSString(category) name:toNSString(name) unitPrice:unitPrice];
+        [TalkingDataSDK removeGlobalKV:toNSString(key)];
     }
 }
-
 
 #endif

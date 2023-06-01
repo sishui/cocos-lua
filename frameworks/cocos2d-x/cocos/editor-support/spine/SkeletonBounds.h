@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated January 1, 2020. Replaces all prior versions.
+ * Last updated September 24, 2021. Replaces all prior versions.
  *
- * Copyright (c) 2013-2020, Esoteric Software LLC
+ * Copyright (c) 2013-2021, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -81,7 +81,18 @@ namespace spine {
 		/// Returns true if the polygon contains the line segment.
 		bool intersectsSegment(Polygon *polygon, float x1, float y1, float x2, float y2);
 
+        /// Returns the polygon for the given bounding box attachment or null if no
+        /// polygon can be found for the attachment. Requires a call to update() first.
 		Polygon *getPolygon(BoundingBoxAttachment *attachment);
+
+        /// Returns the bounding box for the given polygon or null. Requires a call to update() first.
+        BoundingBoxAttachment * getBoundingBox(Polygon *polygon);
+
+        /// Returns all polygons or an empty vector. Requires a call to update() first.
+        Vector<Polygon *> &getPolygons();
+
+        /// Returns all bounding boxes. Requires a call to update() first.
+        Vector<BoundingBoxAttachment *> &getBoundingBoxes();
 
 		float getWidth();
 

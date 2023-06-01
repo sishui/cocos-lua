@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated January 1, 2020. Replaces all prior versions.
+ * Last updated September 24, 2021. Replaces all prior versions.
  *
- * Copyright (c) 2013-2020, Esoteric Software LLC
+ * Copyright (c) 2013-2021, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -112,6 +112,12 @@ namespace spine {
 		/// Computes the world transform using the parent bone and the specified local transform.
 		void
 		updateWorldTransform(float x, float y, float rotation, float scaleX, float scaleY, float shearX, float shearY);
+
+        /// Computes the individual applied transform values from the world transform. This can be useful to perform processing using
+		/// the applied transform after the world transform has been modified directly (eg, by a constraint)..
+		///
+		/// Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation.
+		void updateAppliedTransform();
 
 		void setToSetupPose();
 
@@ -260,12 +266,6 @@ namespace spine {
 		float _c, _d, _worldY;
 		bool _sorted;
 		bool _active;
-
-		/// Computes the individual applied transform values from the world transform. This can be useful to perform processing using
-		/// the applied transform after the world transform has been modified directly (eg, by a constraint)..
-		///
-		/// Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation.
-		void updateAppliedTransform();
 	};
 }
 

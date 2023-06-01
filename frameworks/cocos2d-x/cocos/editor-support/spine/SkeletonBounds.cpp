@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated January 1, 2020. Replaces all prior versions.
+ * Last updated September 24, 2021. Replaces all prior versions.
  *
- * Copyright (c) 2013-2020, Esoteric Software LLC
+ * Copyright (c) 2013-2021, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -26,10 +26,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
-
-#ifdef SPINE_UE4
-#include "SpinePluginPrivatePCH.h"
-#endif
 
 #include <spine/SkeletonBounds.h>
 
@@ -78,7 +74,7 @@ void SkeletonBounds::update(Skeleton &skeleton, bool updateAabb) {
 		Polygon &polygon = *polygonP;
 
 		size_t count = boundingBox->getWorldVerticesLength();
-		polygon._count = count;
+		polygon._count = (int) count;
 		if (polygon._vertices.size() < count) {
 			polygon._vertices.setSize(count, 0);
 		}
@@ -187,6 +183,19 @@ bool SkeletonBounds::intersectsSegment(spine::Polygon *polygon, float x1, float 
 spine::Polygon *SkeletonBounds::getPolygon(BoundingBoxAttachment *attachment) {
 	int index = _boundingBoxes.indexOf(attachment);
 	return index == -1 ? NULL : _polygons[index];
+}
+
+BoundingBoxAttachment *SkeletonBounds::getBoundingBox(spine::Polygon *polygon) {
+	int index = _polygons.indexOf(polygon);
+	return index == -1 ? NULL : _boundingBoxes[index];
+}
+
+Vector<spine::Polygon *> &SkeletonBounds::getPolygons() {
+	return _polygons;
+}
+
+Vector<BoundingBoxAttachment *> &SkeletonBounds::getBoundingBoxes() {
+	return _boundingBoxes;
 }
 
 float SkeletonBounds::getWidth() {

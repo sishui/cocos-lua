@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated January 1, 2020. Replaces all prior versions.
+ * Last updated September 24, 2021. Replaces all prior versions.
  *
- * Copyright (c) 2013-2020, Esoteric Software LLC
+ * Copyright (c) 2013-2021, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -40,6 +40,7 @@ using std::max;
 
 #include "renderer/backend/Device.h"
 #include "renderer/ccShaders.h"
+#include "renderer/backend/Types.h"
 
 namespace spine {
 
@@ -89,17 +90,17 @@ namespace spine {
 	void SkeletonBatch::updateProgramStateLayout(cocos2d::backend::ProgramState *programState) {
 		auto vertexLayout = programState->getVertexLayout();
 
-		auto locPosition = programState->getAttributeLocation("a_position");
-		auto locTexcoord = programState->getAttributeLocation("a_texCoord");
-		auto locColor = programState->getAttributeLocation("a_color");
-		vertexLayout->setAttribute("a_position", locPosition, backend::VertexFormat::FLOAT3, offsetof(V3F_C4B_T2F, vertices), false);
-		vertexLayout->setAttribute("a_color", locColor, backend::VertexFormat::UBYTE4, offsetof(V3F_C4B_T2F, colors), true);
-		vertexLayout->setAttribute("a_texCoord", locTexcoord, backend::VertexFormat::FLOAT2, offsetof(V3F_C4B_T2F, texCoords), false);
+		auto locPosition = programState->getAttributeLocation(backend::ATTRIBUTE_NAME_POSITION);
+		auto locTexcoord = programState->getAttributeLocation(backend::ATTRIBUTE_NAME_TEXCOORD);
+		auto locColor = programState->getAttributeLocation(backend::ATTRIBUTE_NAME_COLOR);
+		vertexLayout->setAttribute(backend::ATTRIBUTE_NAME_POSITION, locPosition, backend::VertexFormat::FLOAT3, offsetof(V3F_C4B_T2F, vertices), false);
+		vertexLayout->setAttribute(backend::ATTRIBUTE_NAME_COLOR, locColor, backend::VertexFormat::UBYTE4, offsetof(V3F_C4B_T2F, colors), true);
+		vertexLayout->setAttribute(backend::ATTRIBUTE_NAME_TEXCOORD, locTexcoord, backend::VertexFormat::FLOAT2, offsetof(V3F_C4B_T2F, texCoords), false);
 		vertexLayout->setLayout(sizeof(_vertices[0]));
 
 
-		_locMVP = programState->getUniformLocation("u_MVPMatrix");
-		_locTexture = programState->getUniformLocation("u_texture");
+		_locMVP = programState->getUniformLocation(backend::UNIFORM_NAME_MVP_MATRIX);
+		_locTexture = programState->getUniformLocation(backend::UNIFORM_NAME_TEXTURE);
 	}
 
 	void SkeletonBatch::update(float delta) {
@@ -131,7 +132,7 @@ namespace spine {
 	unsigned short *SkeletonBatch::allocateIndices(uint32_t numIndices) {
 		if (_indices.getCapacity() - _indices.size() < numIndices) {
 			unsigned short *oldData = _indices.buffer();
-			int oldSize = _indices.size();
+			int oldSize = (int)_indices.size();
 			_indices.ensureCapacity(_indices.size() + numIndices);
 			unsigned short *newData = _indices.buffer();
 			for (uint32_t i = 0; i < this->_nextFreeCommand; i++) {
@@ -186,8 +187,8 @@ namespace spine {
 
 	cocos2d::TrianglesCommand *SkeletonBatch::nextFreeCommand() {
 		if (_commandsPool.size() <= _nextFreeCommand) {
-			unsigned int newSize = _commandsPool.size() * 2 + 1;
-			for (int i = _commandsPool.size(); i < newSize; i++) {
+			unsigned int newSize = (int)_commandsPool.size() * 2 + 1;
+			for (int i = (int)_commandsPool.size(); i < newSize; i++) {
 				_commandsPool.push_back(createNewTrianglesCommand());
 			}
 		}

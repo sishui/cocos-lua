@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated January 1, 2020. Replaces all prior versions.
+ * Last updated September 24, 2021. Replaces all prior versions.
  *
- * Copyright (c) 2013-2020, Esoteric Software LLC
+ * Copyright (c) 2013-2021, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -45,7 +45,7 @@
 
 namespace spine {
 	enum EventType {
-		EventType_Start,
+		EventType_Start = 0,
 		EventType_Interrupt,
 		EventType_End,
 		EventType_Complete,
@@ -130,6 +130,10 @@ namespace spine {
 		bool getReverse();
 
 		void setReverse(bool inValue);
+
+		bool getShortestRotation();
+
+		void setShortestRotation(bool inValue);
 
 		/// Seconds to postpone playing the animation. When a track entry is the current track entry, delay postpones incrementing
 		/// the track time. When a track entry is queued, delay is the time from the start of the previous animation to when the
@@ -275,7 +279,7 @@ namespace spine {
 		TrackEntry *_mixingTo;
 		int _trackIndex;
 
-		bool _loop, _holdPrevious, _reverse;
+		bool _loop, _holdPrevious, _reverse, _shortestRotation;
 		float _eventThreshold, _attachmentThreshold, _drawOrderThreshold;
 		float _animationStart, _animationEnd, _animationLast, _nextAnimationLast;
 		float _delay, _trackTime, _trackLast, _nextTrackLast, _trackEnd, _timeScale;
@@ -307,14 +311,13 @@ namespace spine {
 	private:
 		Vector<EventQueueEntry> _eventQueueEntries;
 		AnimationState &_state;
-		Pool<TrackEntry> &_trackEntryPool;
 		bool _drainDisabled;
 
-		static EventQueue *newEventQueue(AnimationState &state, Pool<TrackEntry> &trackEntryPool);
+		static EventQueue *newEventQueue(AnimationState &state);
 
 		static EventQueueEntry newEventQueueEntry(EventType eventType, TrackEntry *entry, Event *event = NULL);
 
-		EventQueue(AnimationState &state, Pool<TrackEntry> &trackEntryPool);
+		EventQueue(AnimationState &state);
 
 		~EventQueue();
 
@@ -425,6 +428,12 @@ namespace spine {
 
 		void enableQueue();
 
+		void setManualTrackEntryDisposal(bool inValue);
+
+        bool getManualTrackEntryDisposal();
+
+		void disposeTrackEntry(TrackEntry *entry);
+
 	private:
 		static const int Subsequent = 0;
 		static const int First = 1;
@@ -451,6 +460,8 @@ namespace spine {
 		int _unkeyedState;
 
 		float _timeScale;
+
+		bool _manualTrackEntryDisposal;
 
 		static Animation *getEmptyAnimation();
 

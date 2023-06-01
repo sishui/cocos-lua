@@ -1,15 +1,14 @@
 module 'cocos2d_ui'
 
-path '../../frameworks/libxgame/src/lua-bindings'
+path '../../frameworks/cclua/src/lua-bindings'
 
 headers [[
-#include "lua-bindings/lua_conv.h"
+#include "lua-bindings/lua_cocos2d_types.h"
 #include "lua-bindings/lua_conv_manual.h"
-#include "lua-bindings/LuaCocosAdapter.h"
-#include "cclua/xlua.h"
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include "ui/UIScrollViewBar.h"
+#include "ui/UILayoutManager.h"
 ]]
 
 luacls(function (cppname)
@@ -18,9 +17,7 @@ luacls(function (cppname)
     return cppname
 end)
 
-include 'conf/exclude-type.lua'
-
-exclude 'cocos2d::ui::PageViewIndicator'
+excludetype 'cocos2d::ui::PageViewIndicator'
 
 typeconf 'cocos2d::ui::Widget::FocusDirection'
 typeconf 'cocos2d::ui::Widget::PositionType'
@@ -32,6 +29,9 @@ typeconf 'cocos2d::ui::Widget::ccWidgetTouchCallback'
 typeconf 'cocos2d::ui::Widget::ccWidgetClickCallback'
 typeconf 'cocos2d::ui::Widget::ccWidgetEventCallback'
 
+typeconf 'cocos2d::ui::LayoutManager'
+typeconf 'cocos2d::ui::LayoutParameterProtocol'
+typeconf 'cocos2d::ui::LayoutProtocol'
 typeconf 'cocos2d::ui::Widget'
     .exclude 'createInstance'
     .func 'getVirtualRenderer' .ret '@addref(protectedChildren |)'
@@ -67,7 +67,7 @@ typeconf 'cocos2d::ui::HBox'
 typeconf 'cocos2d::ui::VBox'
 typeconf 'cocos2d::ui::RelativeBox'
 
-ifdef 'defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)'
+macro '#if defined(CCLUA_OS_IOS) || defined(CCLUA_OS_ANDROID)'
 typeconf 'cocos2d::ui::WebView::ccWebViewCallback'
 typeconf 'cocos2d::ui::WebView'
     .callback 'setOnShouldStartLoading' .arg1 '@nullable' .localvar 'false'
@@ -82,7 +82,7 @@ typeconf 'cocos2d::ui::VideoPlayer'
         .tag_maker 'videoPlayerCallback'
         .tag_mode 'replace'
         .localvar 'false'
-endif ''
+macro ''
 
 typeconf 'cocos2d::ui::AbstractCheckButton'
     .func 'getRendererBackground' .ret '@addref(protectedChildren |)'
